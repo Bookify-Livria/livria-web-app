@@ -2,6 +2,7 @@
 import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
 import {UserApiService} from "../service/user-api.service.js";
 import confirmation from "../components/Subscription-confirmation.component.vue"
+import {notifyEvent} from "../../public/shared-services/to-notify.js";
 
 export default {
   name: "CommunityPlanComponent",
@@ -17,10 +18,18 @@ export default {
   },
 
   methods: {
-    goCommunities(){
+    goCommunities(){ // Permite al usuario acceder directamente a la ruta de "communitites"
       this.$router.push('/communities');
     },
-    async updateSubs() {
+    youveGotANoti() { // Muestra un mensaje flotante (Toast) para informar al usuario que recibió una notificación
+      this.$toast.add({
+        severity: 'secondary',
+        summary: this.$t('noti.notice'),
+        detail: this.$t('noti.info'),
+        life: 3000
+      });
+    },
+    async updateSubs() { // Permite asignar el valor de la suscripción del usuario loggeado a "verdadero"
       const service = new UserApiService();
       const freshUser = await getLoggedInUser();
       this.user = freshUser;
@@ -33,7 +42,8 @@ export default {
         });
         this.showConfirmation = true;
         console.log('showConfirmation:', this.showConfirmation);
-
+        await notifyEvent("plan");
+        this.youveGotANoti();
       } catch (error) {
         console.error('Fail!!!!!!!', error);
       }
@@ -43,7 +53,7 @@ export default {
 </script>
 
 <template>
-  <div class="plan-container">
+  <div class="plan-container" aria-label="Subscription info section">
     <div class="intro-content">
       <h1 class="h1__title">{{ $t("plan")}}</h1>
       <h3 class="h3__title">
@@ -80,11 +90,13 @@ export default {
           </div>
 
           <div class="nav-buttons">
+            <pv-toast position="top-right" style="margin-top: 8.5rem" />
             <button
                 class="pay-button"
                 type="button"
                 :disabled="!acceptedTerms || !acceptedPrivacy"
                 @click="updateSubs"
+                aria-label="Pay subscription"
             >
               {{ $t("purchase.pay") }}
             </button>

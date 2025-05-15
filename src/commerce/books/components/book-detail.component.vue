@@ -4,6 +4,9 @@ import { CartApiService} from "../../shared-services/cart-api.service.js";
 
 import bookmarkIcon from "../../../assets/images/icons/Bookmark.svg";
 import minusIcon from "../../../assets/images/icons/Minus.svg";
+import {CommunityApiService} from "../../../communities/service/community-api.service.js";
+import {getLoggedInUser} from "../../../public/shared-services/get-logged-user.js";
+import {Book} from "../model/book.entity.js";
 
 export default {
   name: 'BookDetail',
@@ -20,16 +23,19 @@ export default {
   data() {
     return {
       book: null,
-      quantity: 1
+      quantity: 1,
+      newReview: {
+        content: ''
+      }
     }
   },
   methods: {
-    loadBook() {
+    loadBook() { // Obtiene información del libro seleccionado y asigna su valor a una variable
       const service = new BookApiService()
       const bookTitle = this.$route.params.title
 
       service.getBooks().then(data => {
-        this.book = data.find(b => b.title.toString().toLowerCase() === bookTitle.toLowerCase())
+        this.book = data.find(b => b.title.toString().toLowerCase() === bookTitle.toLowerCase()) // Busca el título del libro dentro de la Fake API y obtiene sus datos
         if (this.book) {
           this.$emit('book-loaded', this.book.title)
         }
@@ -37,7 +43,7 @@ export default {
         console.error('Error loading book:', error)
       })
     },
-    async addToCart(book, quantity) {
+    async addToCart(book, quantity) { // Agrega al carrito de compras el libro seleccionado, con una cantidad seleccionada por el usuario
       try {
         const service = new CartApiService();
         const currentCart = await service.getCart();
@@ -58,7 +64,8 @@ export default {
         console.error("Error adding item:", error)
       }
     },
-    showConfirmation() {
+
+    showConfirmation() { // Muestra un mensaje flotante (Toast) que indica una inserción exitosa al carrito de compras
       try {
         this.$toast.add({
           severity: 'success',
@@ -69,17 +76,50 @@ export default {
       } catch (error) {
         console.error("Error adding item:", error)
       }
+    },
+    async makeReview() { // Permite al usuario registrar una reseña del libro en pantalla
+      try {
+        const service = new BookApiService();
+        const currentUser = await getLoggedInUser();
+
+        if (!this.newReview.content.trim()) {
+          return;
+        }
+
+        const newId = this.book.reviews?.length
+            ? String(Math.max(...this.book.reviews.map(p => parseInt(p.id))) + 1)
+            : "1";
+
+        const newReview = {
+          id: newId,
+          username: currentUser.user,
+          content: this.newReview.content,
+        };
+
+        const updatedReviews = {
+          ...this.book,
+          reviews: [...(this.book.reviews || []), newReview]
+        };
+
+        await service.updateBook(updatedReviews);
+
+        this.book.reviews.push(newReview);
+        this.newReview.content = '';
+
+      } catch (error) {
+        console.error('Error posting!!!', error);
+      }
     }
   },
   mounted() {
-    this.loadBook()
+    this.loadBook() // Carga la información del libro al iniciar el componente
   }
 }
 </script>
 
 <template>
 
-  <div class="book-detail__container" v-if="book">
+  <div class="book-detail__container" v-if="book" aria-label="Book detail section">
     <div class="book-detail__left-section">
       <div class="book-detail__image-container">
         <img :src="book.cover" :alt="book.title" class="book-detail__image-cover" />
@@ -98,28 +138,35 @@ export default {
       </div>
 
       <div class="book-detail__actions">
-        <select v-model="quantity" class="quantity">
+        <select v-model="quantity" class="quantity" aria-label="Select quantity">
           <option>1</option>
           <option>2</option>
           <option>3</option>
         </select>
         <div class="book-detail__add-cart">
           <pv-toast position="top-right" style="margin-top: 8.5rem" />
-          <button @click="addToCart(book, quantity); showConfirmation()">{{ $t('add-to-cart') }}</button>
+          <button @click="addToCart(book, quantity); showConfirmation()" aria-label="Add to cart">{{ $t('add-to-cart') }}</button>
         </div>
-        <span><bookmarkIcon /></span>
-        <span><minusIcon /></span>
+        <span aria-label="Mark as 'interesting'"><bookmarkIcon /></span>
+        <span aria-label="Mark as 'not insteresting'"><minusIcon /></span>
       </div>
 
       <div class="book-detail__opinion">
         <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
-        <div class="comments">
-          <h3 class="h3__title go--orange">{{$t('comments')}}</h3>
+        <h3 class="h3__title go--orange">{{$t('comments')}}</h3>
+        <div class="book-detail__opinion-post">
+          <form @submit.prevent="makeReview">
+            <textarea v-model="newReview.content" :placeholder="$t('comm.thoughts')" aria-label="Add comment section"></textarea>
+            <button type="submit" class="" aria-label="Publish comment">{{ $t("comm.post")}}</button>
+          </form>
+        </div>
+        <div
+            v-for="review in book.reviews.slice().reverse()"
+            :key="review.id"
+            class="comments"
+        >
           <div class="comment">
-            <strong>@noaaa</strong> — de mis libros favoritos, 100% recomendado
-          </div>
-          <div class="comment">
-            <strong>@marcelobindap</strong> — me encantó, muy profundo
+            <strong>@{{ review.username }}</strong> — {{ review.content }}
           </div>
         </div>
       </div>
@@ -139,6 +186,7 @@ export default {
   padding: 0 2rem;
   margin: 0 2rem;
   position: relative;
+  height: auto;
 }
 
 .book-detail__left-section {
@@ -150,6 +198,7 @@ export default {
   background-color: var(--color-light);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   padding: 2rem;
+  height: 70vh;
 }
 
 .book-detail__image-container {
@@ -214,23 +263,50 @@ export default {
 }
 
 .book-detail__opinion {
-  margin-top: auto;
+  margin-top: 21rem;
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
 }
 
-.book-detail__opinion span {
-  font-size: 1.5rem;
-  color: gold;
-  margin-right: 0.25rem;
+.book-detail__opinion-post {
+  margin-bottom: 1rem;
+}
+
+.book-detail__opinion-post form {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.book-detail__opinion-post textarea {
+  flex: 1;
+  resize: none;
+  padding: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background-color: rgba(var(--color-blue-rgb), 0.15);
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.book-detail__opinion-post textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-secondary);
+}
+
+.book-detail__opinion-post button {
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+  height: auto;
 }
 
 .comments {
-  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 6px;
 }
 
-.comment {
-  background-color: var(--color-light);
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 0.5rem;
-}
 </style>

@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import 'primeicons/primeicons.css';
 import {UserApiService} from "../service/user-api.service.js";
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
+import {notifyEvent} from "../../public/shared-services/to-notify.js";
 
 export default {
   name: "Register",
@@ -24,21 +25,21 @@ export default {
       info: []
     }
   },
-
   methods: {
-    InvocaAPI() {
+    InvocaAPI() { // Permite obtener la información de los usuarios registrados en la Fake API
       const service = new UserApiService()
       service.getUsers().then(data => {
         this.info = data
         console.log(this.info)
       })
     },
-
-    goToLogin() {
+    goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
-
-    showFail() {
+    goToHome() { // Permite al usuario acceder a la ruta de "Home"
+      this.$router.push('/home');
+    },
+    showFail() { // Muestra un mensaje flotante (Toast) de error si es que ocurre un error de validación para registro
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -50,8 +51,7 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
-    showSuccess() {
+    showSuccess() { // Muestra un mensaje flotante (Toast) de confirmación si es que se registra el usuario correctamente
       try {
         this.$refs.toast.add({
           severity: 'success',
@@ -63,37 +63,7 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-    async createUserr() {
-      try {
-        const service = new UserApiService();
-        const users = await service.getUsers();
-
-        const newId = String(
-            users.length > 0
-                ? Math.max(...users.map(item => parseInt(item.id))) + 1
-                : 1
-        );
-
-        const newUser = {
-          id: newId,
-          display: this.userDisplay,
-          user: this.userUser,
-          email: this.userEmail,
-          icon: this.userIcon,
-          password: this.userPassword,
-          phrase: this.userPhrase,
-          order: this.userOrder,
-          orderStatus: this.userOrderStatus,
-          subscription: this.userSubscription
-        };
-        await service.createUser(newUser);
-
-      } catch (error) {
-        console.error("Error creating user:", error);
-      }
-    },
-
-    async createUserWithAutoId() {
+    async createUserWithAutoId() { // Permite registrar un nuevo usuario con una id auto asignada en base a la cantidad de usuario registrados
       if (
           this.value6 === this.value7 &&
           this.value1 &&
@@ -116,17 +86,17 @@ export default {
           const newUser = {
             id: newId,
             display: this.value1,
-            user: this.value2,
+            username: this.value2,
             email: this.value5,
             icon: this.value4,
             password: this.value6,
             phrase: this.value3,
-            order: '',
-            orderStatus: '',
+            order: [],
             subscription: false
           };
 
           await service.createUser(newUser);
+          await notifyEvent("welcome");
           this.goToLogin()
 
         } catch (error) {
@@ -136,7 +106,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted() { // Al iniciar el componente, se obtienen los datos de todos los usuario registrados en la Fake API
     this.InvocaAPI();
   }
 }
@@ -157,21 +127,21 @@ export default {
 
           <div class="form-group">
             <div class="label-class">
-              <label class="form-label">{{ $t('userinput') }}</label>
+              <label class="form-label">{{ $t('displayinput') }}</label>
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value1" class="form-input"/>
+              <pv-input-text v-model="value1" class="form-input" aria-label="Username input"/>
             </div>
           </div>
 
           <div class="form-group">
             <div class="label-class">
-              <label class="form-label">{{ $t('displayinput') }}</label>
+              <label class="form-label">{{ $t('userinput') }}</label>
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value2" class="form-input"/>
+              <pv-input-text v-model="value2" class="form-input" aria-label="Display name input"/>
             </div>
           </div>
 
@@ -181,7 +151,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value3" class="form-input"/>
+              <pv-input-text v-model="value3" class="form-input" aria-label="Phrase input"/>
             </div>
           </div>
 
@@ -191,7 +161,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value4" class="form-input"/>
+              <pv-input-text v-model="value4" class="form-input" aria-label="Icon URL input"/>
             </div>
           </div>
 
@@ -201,7 +171,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text inputmode="email" v-model="value5" class="form-input"/>
+              <pv-input-text inputmode="email" v-model="value5" class="form-input" aria-label="Email input"/>
             </div>
           </div>
 
@@ -211,7 +181,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-password v-model="value6" :feedback="false" class="form-input"/>
+              <pv-password v-model="value6" :feedback="false" class="form-input" aria-label="Password input"/>
             </div>
           </div>
 
@@ -221,7 +191,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-password v-model="value7" :feedback="false" class="form-input"/>
+              <pv-password v-model="value7" :feedback="false" class="form-input" aria-label="Confirm password input"/>
             </div>
           </div>
         </template>
@@ -229,7 +199,7 @@ export default {
         <template #footer class="foter">
           <pv-toast ref="toast" position="top-right" style="margin-top: 8.5rem"/>
           <pv-button @click="goToLogin()" class="form-button">{{ $t('back') }}</pv-button>
-          <pv-button type="submit" @click="createUserWithAutoId()" class="form-button">{{ $t('register') }}</pv-button>
+          <pv-button type="submit" @click="createUserWithAutoId()" class="form-button" aria-label="Register button">{{ $t('register') }}</pv-button>
         </template>
       </pv-card>
     </div>
