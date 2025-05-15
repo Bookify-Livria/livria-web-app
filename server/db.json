@@ -2,6 +2,7 @@
   "users": [
     {
       "id": "1",
+<<<<<<< Updated upstream
       "display": "a",
       "user": "a",
       "email": "a",
@@ -9,6 +10,21 @@
       "password": "e",
       "phrase": "a",
       "order": "",
+=======
+      "display": "Alice",
+      "user": "jabberwock",
+      "email": "alice.jabberwock.1951@gmail.com",
+      "icon": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhuVjgb8MySnWy78K7s5vVjTyM8z3PxqXe2iRNtV8MTLGvqcDuptmtaMg4sMBzfmaT41sSqbjdgo8JpyPmexNpTp9KuUeu5K2F5Qhaoc8OMHFkxy-Cr-stKrJva0ro7pYapzeoo5OGKiwjv/s752/jabberwocky-illustration-by-john-tenniel-500x752.jpg",
+      "password": "madhatter",
+      "phrase": "We're all mad here. I'm mad. You're mad.",
+      "order": [
+        {
+          "id": "1",
+          "code": "7LZ1KL",
+          "orderstatus": "delivered"
+        }
+      ],
+>>>>>>> Stashed changes
       "subscription": true
     }
   ],
@@ -25,7 +41,44 @@
       "name": "Detectives de tinta",
       "description": "Para los fans de novelas de misterio y detectives.",
       "type": "ficcion",
+<<<<<<< Updated upstream
       "image": "https://i.imgur.com/lZSIKt1.jpg"
+=======
+      "image": "https://i.imgur.com/lZSIKt1.jpg",
+      "banner": "https://i.imgur.com/leM9X71,jpg",
+      "posts": [
+        {
+          "id": "1",
+          "username": "cluehunter",
+          "content": "¡Acabo de terminar 'El nombre de la rosa' y no puedo superar ese final!",
+          "img": ""
+        },
+        {
+          "id": "2",
+          "username": "misterylover",
+          "content": "¿Alguien más piensa que Poirot es más astuto que Sherlock?",
+          "img": "https://i.imgur.com/FWIytkN.jpg"
+        },
+        {
+          "id": "3",
+          "username": "noirreader",
+          "content": "Los thrillers escandinavos tienen algo que me atrapa. ¿Recomendaciones?",
+          "img": ""
+        },
+        {
+          "id": "4",
+          "username": "agathafangirl",
+          "content": "No hay nada como una novela de Agatha Christie para una noche de lluvia ☔📚",
+          "img": "https://i.imgur.com/4Q1R6Na.jpg"
+        },
+        {
+          "id": "5",
+          "username": "bibliodetective",
+          "content": "Estoy escribiendo mi propia historia de detectives, ¡pronto la subo!",
+          "img": ""
+        }
+      ]
+>>>>>>> Stashed changes
     },
     {
       "id": "3",
@@ -942,6 +995,26 @@
       "id": "1",
       "username": "a",
       "password": "e"
+    }
+  ],
+  "notificaciones": [
+    {
+      "id": "1",
+      "date": "2025-05-14T13:21:43.689Z",
+      "title": "Plan Activated",
+      "content": "You just subscribed to a community plan. Enjoy the perks!"
+    },
+    {
+      "id": "1",
+      "date": "2025-05-14T13:24:33.588Z",
+      "title": "Welcome back!",
+      "content": "Nice to see you again. Let’s continue exploring."
+    },
+    {
+      "id": "1",
+      "date": "2025-05-14T13:39:03.555Z",
+      "title": "Welcome back!",
+      "content": "Nice to see you again. Let’s continue exploring."
     }
   ]
 }

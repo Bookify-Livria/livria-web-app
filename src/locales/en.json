@@ -1,10 +1,9 @@
 {
   "toolbar": {
     "search": "Search",
-    "notifications": "Notifications",
     "account": "Account"
   },
-
+  "notifications": "Notifications",
   "cart-toolbar": "Cart",
   "shop": "Shop",
   "literature": "Literature",
@@ -27,6 +26,12 @@
     "reminder": "We hope you like them! Remember, you can mark your interest in each book with the bookmark and negative icons, respectively."
   },
 
+<<<<<<< Updated upstream
+=======
+  "address": "Address",
+  "empty-list": "Empty Notifications List",
+
+>>>>>>> Stashed changes
   "Search": "Search for: ",
   "NoSearch": "No results found in the search",
   "RecoSearch": "The following recommendations might interest you",
@@ -188,6 +193,7 @@
     "next": "Next",
     "pay": "Complete Order",
     "notice": "Wait!!!",
+    "cart-empty": "We can't proceed with the purchase because your cart is empty.",
     "field-missing": "We can't proceed with the purchase because there's one or more fields missing.",
     "info-recipient": "Recipient Information",
     "delivery": "Delivery Information",
@@ -207,6 +213,11 @@
     "izipay": "All our payments are made through Izipay. Upon accepting the terms and conditions, you will be redirected to the Izipay page where you can make your payment. A payment confirmation will be sent to your email.",
     "terms": "I have read and authorize the processing of my data according to the Privacy Policy and Terms and Conditions.",
     "privacy": "I authorize the processing of my data for commercial promotion purposes according to the Privacy Policy."
+  },
+
+  "noti": {
+    "notice": "You have a new notification!",
+    "info": "Press 'Notifications' in the toolbar for more information..."
   },
 
   "confirmation": {
