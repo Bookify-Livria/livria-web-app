@@ -4,7 +4,7 @@ import Button from 'primevue/button'
 
 import toolbarComponent from "../components/toolbar.component.vue"
 import footerComponent from "../components/footer-content.component.vue"
-import bookCarousel from "../../books/components/books-carousel.component.vue"
+import bookCarousel from "../../commerce/books/components/books-carousel.component.vue"
 
 export default {
   name: "home.component",
@@ -49,6 +49,7 @@ export default {
 </script>
 
 <template>
+  <!-- Header -->
   <toolbarComponent />
 
   <div class="home-container">
@@ -171,18 +172,6 @@ export default {
   text-decoration: none;
   font-size: 32px;
   font-weight: 600;
-}
-
-.go--orange {
-  color: #ff9800;
-}
-
-.go--yellow {
-  color: #ffeb3b;
-}
-
-.go--blue {
-  color: #2196f3;
 }
 
 .carousel__section-fullwidth,

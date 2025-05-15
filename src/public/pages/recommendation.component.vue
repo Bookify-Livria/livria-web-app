@@ -1,7 +1,7 @@
 <script>
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
-import recommendedBooks from "../../books/components/recommended-books.component.vue";
+import recommendedBooks from "../../commerce/books/components/recommended-books.component.vue";
 
 export default {
   name: "recomendation.component",
@@ -14,8 +14,16 @@ export default {
 </script>
 
 <template>
+  <!-- Header -->
   <toolbarComponent />
+
   <div class="book-container">
+
+    <div class="title__container">
+      <h2 class="h1__title">{{ $t("recommended.title") }}</h2>
+      <p class="h3__title">{{ $t("recommended.subtitle") }}</p>
+    </div>
+
     <div class="book__fullwidth">
       <div class="cards__container">
         <recommendedBooks />
