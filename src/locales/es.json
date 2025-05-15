@@ -1,11 +1,11 @@
 {
-
   "toolbar": {
     "search": "Buscar",
-    "kart": "Carrito",
+    "cart": "Carrito",
     "notifications": "Notificaciones",
     "account": "Cuenta"
   },
+
   "shop": "Tienda",
   "literature": "Literatura",
   "non-fiction": "No Ficción",
@@ -16,7 +16,38 @@
   "ebooks-audiobooks": "Ebooks Y Audiobooks",
   "recommendations": "Recomendaciones",
   "communities": "Comunidades",
-  "genre": "Genero",
+  "genre": "Género",
+
+  "recommended": {
+    "title": "RECOMENDACIONES PARA TI",
+    "subtitle": "¡Hola! En base a tus preferencias, te dejamos las siguientes recomendaciones..."
+  },
+
+  "carousel": {
+    "community": {
+      "title": "PLAN COMUNIDAD",
+      "description": "Conecta con otros lectores, comparte tus opiniones y forma parte de espacios donde la lectura cobra vida."
+    },
+    "worlds": {
+      "title": "DESCUBRE NUEVOS MUNDOS",
+      "description": "Explora lecturas recomendadas por la comunidad y abre las puertas a historias fascinantes."
+    },
+    "passion": {
+      "title": "COMPARTE TU PASIÓN",
+      "description": "Recomienda libros, escribe reseñas y crea conexiones con otros amantes de la lectura."
+    },
+    "button": "OBTÉNLO AQUÍ"
+  },
+
+  "loading-book": "Cargando Libro...",
+  "synopsis": "Sinópsis",
+  "comments": "Comentarios",
+  "languages": {
+    "es": "Español",
+    "en": "Inglés"
+  },
+  "add-to-cart": "Añadir al carrito",
+
   "genres": {
     "literatura": "Literatura",
     "ficcion": "Ficción",
@@ -28,6 +59,15 @@
     "default": "Género"
   },
 
+  "sort": "Ordenar por",
+  "language": "Idioma",
+  "titleaz": "Título A-Z",
+  "titleza": "Título Z-A",
+  "pricelower": "Menor a mayor precio",
+  "pricehigher": "Mayor a menor precio",
+  "english": "Inglés",
+  "spanish": "Español",
+  "delete": "Borrar selección",
   "phrase": "Descubre el placer de leer en una vibrante comunidad literaria.",
   "navigation": "Navegación",
   "home": "Inicio",
@@ -57,12 +97,6 @@
     "current-password": "Contraseña actual",
     "new-password": "Nueva contraseña"
   },
-  "yes": "Sí",
-  "no": "No",
-  "public": "Público",
-  "private": "Privado",
-  "change": "Cambiar",
-  "save": "Guardar",
 
 
   "communities-intro": "Conecta con lectores con gustos similares a los tuyos al unirte a las comunidades de Livria. ¡También puedes crear una propia!",
@@ -73,6 +107,31 @@
     "category": "Categoría",
     "image": "URL de la imagen"
   },
-  "see-more": "Ver Más +"
+  "see-more": "Ver Más +",
+
+  "yes": "Sí",
+  "no": "No",
+  "order": "Orden",
+
+  "public": "Público",
+  "private": "Privado",
+
+  "save": "Guardar",
+  "change": "Cambiar",
+  "delete1": "Borrar cuenta",
+
+  "login": "Iniciar sesión",
+  "userinput": "Usuario",
+  "passinput": "Contraseña",
+  "passforg": "¿Olvidaste tu contraseña?",
+  "login-google":"Iniciar sesión con Google",
+  "login-apple":"Iniciar sesión con Apple",
+  "logout": "Cerrar sesión",
+  "confpass": "Confirmar contraseña",
+  "emailinput": "Correo electrónico",
+  "register": "Registrarse",
+  "emailerror": "Ingrese un correo electrónico válido",
+
+  "or": "O"
 
 }

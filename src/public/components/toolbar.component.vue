@@ -1,8 +1,9 @@
 <script>
 import LanguageSwitcher from "./language-switcher.component.vue";
+import CartDrawer from "../../cart/components/cart-drawer.component.vue"
 
 //icons
-import kartIcon from "../../assets/images/icons/Shop_kart.svg";
+import cartIcon from "../../assets/images/icons/Shop_kart.svg";
 import locationIcon from "../../assets/images/icons/Location.svg";
 import bellIcon from "../../assets/images/icons/Bell.svg";
 import userIcon from "../../assets/images/icons/User_alt.svg";
@@ -13,7 +14,8 @@ export default {
   name: "Toolbar.component",
   components:{
     LanguageSwitcher,
-    kartIcon,
+    CartDrawer,
+    cartIcon,
     locationIcon,
     bellIcon,
     userIcon,
@@ -22,7 +24,18 @@ export default {
   },
   data() {
     return {
-      value1: ""
+      value1: "",
+      isCartActive: false
+    }
+  },
+  methods: {
+    openCart() {
+      this.isCartActive = true
+      this.$refs.cartDrawerRef.toggleDrawer()
+    },
+    updateCartVisibility(val) {
+      console.log('Drawer visible?', val)
+      this.isCartActive = val
     }
   }
 }
@@ -49,16 +62,17 @@ export default {
         <nav class="header__nav" aria-label="Main Navigation">
           <ul class="header__nav-list">
             <li class="header__nav-item">
-              <router-link to="" class="header__nav-link"><kartIcon class="nav-icon" />{{ $t('toolbar.kart') }}</router-link>
+              <pv-button @click="openCart" :class="['header__nav-link', { active: isCartActive }]"><cartIcon class="nav-icon" />{{ $t('toolbar.cart') }}</pv-button>
+              <CartDrawer ref="cartDrawerRef" @visibility-change="updateCartVisibility" />
             </li>
             <li class="header__nav-item">
-              <router-link to="" class="header__nav-link"><locationIcon class="nav-icon"/>{{ $t('shop') }}</router-link>
+              <router-link to="/nofuncatodav" class="header__nav-link" exact exact-active-class="active"><locationIcon class="nav-icon"/>{{ $t('shop') }}</router-link>
             </li>
             <li class="header__nav-item">
-              <router-link to="" class="header__nav-link"><bellIcon class="nav-icon"/>{{ $t('toolbar.notifications') }}</router-link>
+              <router-link to="/nofuncatodav" class="header__nav-link" exact exact-active-class="active"><bellIcon class="nav-icon"/>{{ $t('toolbar.notifications') }}</router-link>
             </li>
             <li class="header__nav-item">
-              <router-link to="/account" class="header__nav-link"><userIcon class="nav-icon"/>{{ $t('toolbar.account') }}</router-link>
+              <router-link to="/account" class="header__nav-link" exact exact-active-class="active"><userIcon class="nav-icon"/>{{ $t('toolbar.account') }}</router-link>
             </li>
             <li class="header__nav-item">
               <language-switcher/>
@@ -79,7 +93,7 @@ export default {
     </div>
 
     <div class="header">
-      <div class="header__nav-subitem"><router-link to="" class="header__nav-link go--orange">{{ $t('recommendations') }}</router-link></div>
+      <div class="header__nav-subitem"><router-link to="/recommendations" class="header__nav-link go--orange">{{ $t('recommendations') }}</router-link></div>
       <div class="header__nav-subitem"><router-link to="/bookl" class="header__nav-link go--orange">{{ $t('literature') }}</router-link></div>
       <div class="header__nav-subitem"><router-link to="/booknf" class="header__nav-link go--orange">{{ $t('non-fiction') }}</router-link></div>
       <div class="header__nav-subitem"><router-link to="/bookf" class="header__nav-link go--yellow">{{ $t('fiction') }}</router-link></div>
