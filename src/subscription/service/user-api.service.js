@@ -3,33 +3,43 @@ import { UserAssembler } from './user.assembler.js';
 
 export class UserApiService {
     getUsers() {
-        return axios.get('http://localhost:3000/users')
+        return axios.get('https://livria-6efh.onrender.com/users')
             .then(response => UserAssembler.toEntitiesFromResponse(response))
             .catch(error => {
                 console.error('Error fetching users:', error);
                 throw error;
             });
     }
-    createUser(user) {
-        return fetch('http://localhost:3000/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        }).then(res => res.json())
+    createUser(rawResource) {
+        const adapted = UserAssembler.toResource(rawResource);
+        return axios.post('https://livria-6efh.onrender.com/users', adapted)
+            .catch(error => {
+                console.error('Error creating order:', error);
+                throw error;
+            });
     }
 
+
     updateUser(user) {
-        return axios.put(`http://localhost:3000/users/${user.id}`, user)
+        return axios.put(`https://livria-6efh.onrender.com/users/${user.id}`, user)
             .catch(error => {
                 console.error('Error updating users:', error);
                 throw error;
             });
     }
 
-    deleteUser(user) {
-        return axios.delete('http://localhost:3000/users/${user.id}')
+
+    getUserById(id) {
+        return axios.get(`https://livria-6efh.onrender.com/users/${id}`)
+            .then(response => response.data)
+            .catch(error => {
+                console.error('Error getting user:', error);
+                throw error;
+            });
+    }
+
+    deleteUser(id) {
+        return axios.delete(`https://livria-6efh.onrender.com/users/${id}`)
             .catch(error => {
                 console.error('Error deleting user:', error);
                 throw error;

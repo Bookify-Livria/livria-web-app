@@ -1,10 +1,12 @@
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 
 import toolbarComponent from "../components/toolbar.component.vue"
 import footerComponent from "../components/footer-content.component.vue"
 import bookCarousel from "../../commerce/books/components/books-carousel.component.vue"
+import { getLoggedInUser } from "../shared-services/get-logged-user.js";
 
 export default {
   name: "home.component",
@@ -15,6 +17,22 @@ export default {
     Button
   },
   setup() {
+    const router = useRouter();
+
+    const goToCommunity = async () => {
+      try {
+        const user = await getLoggedInUser();
+        if (user.subscription) {
+          router.push("/communities");
+        } else {
+          router.push("/subscription");
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+        router.push("/subscription");
+      }
+    };
+
     const slides = ref([
       {
         tituloKey: 'carousel.community.title',
@@ -31,7 +49,7 @@ export default {
         descripcionKey: 'carousel.passion.description',
         imagen: 'https://i.imgur.com/CTvddky.jpg'
       }
-    ])
+    ]);
 
     const genres = ref([
       { id: 'literatura', label: 'literature', colorClass: 'go--orange' },
@@ -41,11 +59,11 @@ export default {
       { id: 'juvenil', label: 'juvenile', colorClass: 'go--yellow' },
       { id: 'infantil', label: 'children', colorClass: 'go--blue' },
       { id: 'ebooks', label: 'ebooks and audiobooks', colorClass: 'go--orange' },
-    ])
+    ]);
 
-    return { slides, genres }
+    return { slides, genres, goToCommunity };
   }
-}
+};
 </script>
 
 <template>
@@ -65,7 +83,21 @@ export default {
             <p class="carousel-description">
               {{ $t(slotProps.data.descripcionKey) }}
             </p>
-            <pv-button :label="$t('carousel.button')" class="carousel-button" />
+
+            <pv-button
+                v-if="slotProps.data.tituloKey === 'carousel.community.title'"
+                :label="$t('carousel.button-1')"
+                class="carousel-button"
+                @click="goToCommunity"
+            />
+
+            <router-link
+                v-else-if="slotProps.data.tituloKey === 'carousel.worlds.title'"
+                to="/recommendations"
+            >
+              <pv-button :label="$t('carousel.button-2')" class="carousel-button" />
+            </router-link>
+
           </div>
         </div>
       </template>
@@ -139,14 +171,13 @@ export default {
 }
 
 .carousel-button {
-  background-color: #ffffff !important;
+  background-color: var(--color-background) !important;
   color: #1a237e !important;
   font-weight: 600;
   padding: 0.75rem 2rem;
   border-radius: 8px;
 }
 
-/* === Sección de géneros === */
 .carousels__section {
   padding: 1rem;
 }
@@ -171,18 +202,6 @@ export default {
   text-decoration: none;
   font-size: 32px;
   font-weight: 600;
-}
-
-.go--orange {
-  color: #ff9800;
-}
-
-.go--yellow {
-  color: #ffeb3b;
-}
-
-.go--blue {
-  color: #2196f3;
 }
 
 .carousel__section-fullwidth,

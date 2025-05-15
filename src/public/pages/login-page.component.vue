@@ -1,7 +1,7 @@
 <script>
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
-import Login from "../../users/components/Login.component.vue";
+import Login from "../../subscription/components/Login.component.vue";
 
 export default {
   name: "login-page",
@@ -11,13 +11,9 @@ export default {
     Login,
   }
 }
-
 </script>
 
-
 <template>
-  <!-- Header -->
-  <toolbarComponent/>
 
   <!-- Login form -->
   <div class="login__container">
@@ -28,6 +24,8 @@ export default {
 
 <style scoped>
 .login__container {
-  margin-top: 200px;
+  margin: 5rem calc(-1 * ((100vw - 100%) / 2));
+  width: 100vw;
+  padding: 0 3rem;
 }
 </style>

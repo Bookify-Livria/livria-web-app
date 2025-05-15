@@ -17,10 +17,10 @@ export default {
     }
   },
   computed: {
-    searchQuery() {
+    searchQuery() { // Permite al sistema obtener un valor de búsqueda desde la URL
       return this.$route.query.q?.toLowerCase() || ''
     },
-    filteredBooks() {
+    filteredBooks() { // Permite al usuario aplicar filtros sobre los libros mostrados en pantalla, en base al valor obtenido por searchQuery
       let filtered = this.books.filter(book =>
           book.title.toLowerCase().includes(this.searchQuery) ||
           book.author.toLowerCase().includes(this.searchQuery) )
@@ -45,21 +45,21 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted() { // Al iniciar el componente, se carga la información de todos los libros en la Fake API
     const service = new BookApiService()
     service.getBooks().then(data => {
       this.books = data
     })
   },
   methods: {
-    toggleLanguage(lang) {
+    toggleLanguage(lang) { // Permite al usuario alternar el filtro de idioma (inglés o español)
       if (this.selectedLanguages.includes(lang)) {
         this.selectedLanguages = this.selectedLanguages.filter(l => l !== lang)
       } else {
         this.selectedLanguages.push(lang)
       }
     },
-    resetFilters() {
+    resetFilters() { // Elimina todos los filtros de visualización
       this.sortOption = ''
       this.selectedLanguages = []
     }
@@ -68,11 +68,6 @@ export default {
 </script>
 
 <template>
-  <div class="search-title">
-    <h1 class="h1__title">
-      {{ $t('Search') }} "<span class="highlight">{{ $route.query.q }}</span>"
-    </h1>
-  </div>
 
   <div class="book-view-container">
 
@@ -101,10 +96,10 @@ export default {
 
           <div class="filter-section">
             <div class="filter-options">
-              <span @click="sortOption = 'titleAsc'" :class="{ active: sortOption === 'titleAsc' }">{{ $t('titleaz') }}</span>
-              <span @click="sortOption = 'titleDesc'" :class="{ active: sortOption === 'titleDesc' }">{{ $t('titleza') }}</span>
-              <span @click="sortOption = 'priceAsc'" :class="{ active: sortOption === 'priceAsc' }">{{ $t('pricelower') }}</span>
-              <span @click="sortOption = 'priceDesc'" :class="{ active: sortOption === 'priceDesc' }">{{ $t('pricehigher') }}</span>
+              <span @click="sortOption = 'titleAsc'" :class="{ active: sortOption === 'titleAsc' }" aria-label="Sort books by title (ascending order)">{{ $t('titleaz') }}</span>
+              <span @click="sortOption = 'titleDesc'" :class="{ active: sortOption === 'titleDesc' }" aria-label="Sort books by title (descending order)">{{ $t('titleza') }}</span>
+              <span @click="sortOption = 'priceAsc'" :class="{ active: sortOption === 'priceAsc' }" aria-label="Sort books by price (ascending order)">{{ $t('pricelower') }}</span>
+              <span @click="sortOption = 'priceDesc'" :class="{ active: sortOption === 'priceDesc' }" aria-label="Sort books by price (descending order)">{{ $t('pricehigher') }}</span>
             </div>
 
             <div class="subsection">
@@ -113,15 +108,17 @@ export default {
                   class="language-option"
                   :class="{ selected: selectedLanguages.includes('en') }"
                   @click="toggleLanguage('en')"
+                  aria-label="Filter books by language (English)"
               >{{ $t('english') }}</span>
               <span
                   class="language-option"
                   :class="{ selected: selectedLanguages.includes('es') }"
                   @click="toggleLanguage('es')"
+                  aria-label="Filter books by language (Spanish)"
               >{{ $t('spanish') }}</span>
             </div>
 
-            <button @click="resetFilters" class="reset-button">{{ $t('delete') }}</button>
+            <button @click="resetFilters" aria-label="Reset all filters">>{{ $t('delete') }}</button>
           </div>
         </template>
       </pv-card>
@@ -133,34 +130,19 @@ export default {
 
 <style scoped>
 
-.search-title{
-  margin-top: 10rem;
-  margin-right: 19rem;
-}
 .book-view-container {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   padding: 2rem;
-  flex-wrap: wrap;
 }
 
 .book-grid {
   display: flex;
   flex-wrap: wrap;
   row-gap: 3rem;
-  column-gap: 1rem;
+  column-gap: 2rem;
   flex: 3;
-}
-
-.custom-card-wrapper {
-  width: 300px;
-}
-
-.p-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.2s ease;
+  justify-content: flex-start;
 }
 
 .p-card:hover {
@@ -169,16 +151,16 @@ export default {
 
 .filter-panel {
   flex: 1;
-  min-width: 280px;
-  max-width: 300px;
+  min-width: 350px;
+  max-width: 370px;
   position: sticky;
   top: 2rem;
   height: fit-content;
 }
 
 .filter-panel .p-card {
-  background: #eefafa;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  background: rgba(var(--color-secondary-rgb), 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   border-radius: 16px;
 }
@@ -186,7 +168,7 @@ export default {
 .filter-title {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #f2540e;
+  color: var(--color-accent-orange);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -195,7 +177,7 @@ export default {
 
 .filter-icon {
   font-size: 1.2rem;
-  color: #f2540e;
+  color: currentColor;
 }
 
 .filter-options {
@@ -203,49 +185,45 @@ export default {
   flex-direction: column;
   gap: 0.3rem;
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 .filter-options span {
   cursor: pointer;
-  color: #f2a700;
+  color: var(--color-accent-yellow);
   transition: font-weight 0.2s;
 }
 
-.filter-options .active {
-  font-weight: bold;
-  text-decoration: underline;
-}
-
 .subsection {
-  margin-top: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
 }
 
 .subsection h4 {
-  color: #003b5c;
+  color: var(--color-primary);
   font-weight: bold;
   margin-bottom: 0.5rem;
+}
+
+.checkbox-group p {
+  margin: 0.3rem 0;
+  color: var(--color-primary);
 }
 
 .language-option {
   display: inline-block;
   margin-right: 1rem;
-  color: #f2a700;
+  color: var(--color-accent-yellow);
   cursor: pointer;
 }
 
-.language-option.selected {
+.language-option:hover,
+.language-option.selected,
+.filter-options span:hover,
+.filter-options .active {
   font-weight: bold;
   text-decoration: underline;
+  color: var(--color-accent-orange);
 }
 
-.reset-button {
-  margin-top: 2rem;
-  background-color: #d3f1f8;
-  border: none;
-  color: #008c9e;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
 </style>

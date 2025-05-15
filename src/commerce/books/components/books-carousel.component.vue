@@ -24,7 +24,7 @@ export default {
     }
   },
   mounted() {
-    const service = new BookApiService()
+    const service = new BookApiService() // Al iniciar el componente, obtiene la información de todos los libros almacenados en la Fake API
     service.getBooks().then(data => {
       this.books = data.filter(book => book.genre?.toLowerCase() === this.genre.toLowerCase())
     })
@@ -42,9 +42,10 @@ export default {
         circular
         :autoplayInterval="5000"
         showNavigators
+        aria-label="Book carousel section"
     >
       <template #item="slotProps">
-        <div >
+        <div class="card-wrapper">
           <BookItem :book="slotProps.data" />
         </div>
       </template>
@@ -57,6 +58,10 @@ export default {
   width: 100%;
   padding: 0 2rem 2rem;
   margin: 0;
+}
+
+.card-wrapper {
+  margin: 1rem;
 }
 
 </style>

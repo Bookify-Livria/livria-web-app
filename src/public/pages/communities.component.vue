@@ -2,12 +2,10 @@
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
 import communityGrid from "../../communities/components/Community-Grid.component.vue";
-import bookCarousel from "../../commerce/books/components/books-carousel.component.vue";
 
 export default {
   name: "home.component",
   components: {
-    bookCarousel,
     toolbarComponent,
     footerComponent,
     communityGrid,
@@ -29,7 +27,7 @@ export default {
 
       <!-- Communities Cards Section -->
       <div class="cards__container">
-        <p>{{ $t('communities-intro')}}</p>
+        <p class="h3__title">{{ $t('communities-intro')}}</p>
         <community-grid/>
       </div>
     </div>
@@ -44,7 +42,6 @@ export default {
 <style scoped>
 .community-container {
   margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
-  margin-top: 200px;
 }
 
 .community__fullwidth,
@@ -54,7 +51,7 @@ export default {
 }
 
 .cards__container p {
-  margin: 0 0 3rem;
+  margin: 0 0 4rem;
 }
 
 </style>

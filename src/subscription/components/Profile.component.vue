@@ -36,6 +36,7 @@ export default {
     const valueA = ref('');
     const valueB = ref('');
     const valueC = ref('');
+    const valueD = ref('');
 
     return {
       options1,
@@ -48,10 +49,10 @@ export default {
       value4,
       valueA,
       valueB,
-      valueC
+      valueC,
+      valueD,
     };
   },
-
   data() {
     return {
       info: [],
@@ -63,13 +64,14 @@ export default {
         icon: '',
         password: 'Loading...',
         phrase: 'Loading...',
-        order: '000000',
-        orderstatus: 'pending'
-      }
+        order: [],
+        subscription: 'false',
+      },
     };
   },
   methods: {
-    showSuccess() {
+
+    showSuccess() { // Muestra un mensaje flotante (Toast) de confirmación de actualización de contraseña
       try {
         this.$refs.toast.add({
           severity: 'success',
@@ -82,7 +84,7 @@ export default {
       }
     },
 
-    showFailFill() {
+    showFailFill() { // Muestra un mensaje flotante (Toast) de error si es que el usuario no ha llenado todos los campos del formulario
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -95,7 +97,7 @@ export default {
       }
     },
 
-    showFailPassword() {
+    showFailPassword() { // Muestra un mensaje flotante (Toast) de error si es que la contraseña es incorrecta
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -108,7 +110,7 @@ export default {
       }
     },
 
-    showFailConfirm() {
+    showFailConfirm() { // Muestra un mensaje flotante (Toast) de error si es que la nueva contraseña no coincide con "confirmar contraseña"
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -121,7 +123,7 @@ export default {
       }
     },
 
-    async InvocaAPI() {
+    async InvocaAPI() { // Obtiene la información de los usuario registrados en la Fake API y asigna los valores del usuario loggeado a una variable contenedor
       const service = new UserApiService();
 
       try {
@@ -133,7 +135,6 @@ export default {
 
         if (loggedInUserId) {
           this.user = this.info.find(user => String(user.id) === String(loggedInUserId));
-          console.log("Matched user:", this.user);
         } else {
           console.warn("No logged-in user found.");
         }
@@ -142,9 +143,9 @@ export default {
       }
     },
 
-    async getLoggedInUserId() {
+    async getLoggedInUserId() { // Obtiene y devuelve la id del usuario loggeado
       try {
-        const response = await axios.get('http://localhost:3000/userlogin');
+        const response = await axios.get('https://livria-6efh.onrender.com/userlogin');
         const loginEntries = response.data;
 
         if (loginEntries.length > 0) {
@@ -161,16 +162,20 @@ export default {
       }
     },
 
-    goToLogin() {
+    goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
 
-    async changePassword(currentPassword, newPassword, confirmPassword) {
+    async changePassword(currentPassword, newPassword, confirmPassword) { // Permite validar los datos insertados en el formulario de cambio de contraseña y actualizar la información
       if (!currentPassword || !newPassword || !confirmPassword) {
         this.showFailFill();
         console.warn('All password fields must be filled.');
         return;
       }
+
+      const service = new UserApiService();
+      const freshUser = await service.getUserById(this.user.id);
+      this.user = freshUser;
 
       if (currentPassword !== this.user.password) {
         console.warn('Current password is incorrect.');
@@ -183,31 +188,47 @@ export default {
         return;
       }
 
-      const service = new UserApiService();
       try {
         await service.updateUser({
           ...this.user,
           password: newPassword
         });
 
-        await this.InvocaAPI();
-        this.valueA = '';
-        this.valueB = '';
-        this.valueC = '';
-        this.showLogin();
+        this.showSuccess();
+        this.goToLogin();
       } catch (error) {
         console.error('Failed to update password:', error);
-        this.showSuccess();
+      }
+    },
+
+    async deleteAccount() { // Permite al usuario borrar su cuenta de la Fake API
+      const service = new UserApiService();
+      this.goToLogin();
+
+      try {
+        await service.deleteUser(this.user.id);
+
+        await this.clearLogin();
+
+        this.$refs.toast.add({
+          severity: 'success',
+          summary: this.$t('account-deleted'),
+          detail: this.$t('account-deleted-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error('Failed to delete account:', error);
+
+        this.$refs.toast.add({
+          severity: 'error',
+          summary: this.$t('account-delete-fail'),
+          detail: this.$t('account-delete-fail-details'),
+          life: 3000
+        });
       }
     }
-    ,
-
-    async DeleteUser() {
-      const service = new UserApiService();
-      service.deleteUser(this.getLoggedInUserId());
-    }
   },
-  mounted() {
+  mounted() { // Al iniciar el componente, se carga la información de los usuarios almacenados en la Fake API y se asigna un valor al usuario loggeado
     this.InvocaAPI();
   }
 }
@@ -217,13 +238,11 @@ export default {
 <template>
   <div class="profile">
     <div class="account__profile-details">
-      <div>
-        <pv-image :src="user.icon" alt="Foto de perfil" width="200" height="200" class="pfp"></pv-image>
-        <div>
-          <p class="account__profile-display-name">{{ user.display }}</p>
-          <p class="account__profile-username">@{{ user.username }}</p>
-          <p class="account__profile-email">{{ user.email }}</p>
-        </div>
+      <pv-image :src="user.icon" alt="Foto de perfil" width="100%" height="auto" class="pfp"></pv-image>
+      <div class="account__profile-text">
+        <p class="account__profile-display-name">{{ user.display }}</p>
+        <p class="account__profile-username">@{{ user.username }}</p>
+        <p class="account__profile-email">{{ user.email }}</p>
       </div>
     </div>
 
@@ -235,21 +254,44 @@ export default {
             <p v-if="user.phrase !== ''">"{{ user.phrase }}"</p>
             <p v-if="user.phrase === ''">{{ $t('no-phrase') }} </p>
           </template>
+          <template #footer>
+            <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('subscription') }}</h3>
+            <p v-if="user.subscription">{{ $t('yes-subs') }}</p>
+            <p v-if="!user.subscription">{{ $t('no-subs') }}</p>
+          </template>
         </pv-card>
       </div>
 
-      <div class="profile__info-half">
+      <div class="profile__info-half" v-if="user.order">
         <pv-card>
           <template #title>{{ $t('recent-orders') }}</template>
           <template #content>
-            <div class="same-line">
-              <p v-if="user.order !== ''">{{ $t('order') }} #{{ user.order }}</p>
-              <p v-if="user.order === ''">{{ $t('no-order') }}</p>
-              <div>
-                <pv-message v-if="user.orderstatus === 'pending'" class="flex flex-wrap gap-4 justify-center align-center" severity="warn">{{ $t('pending') }}</pv-message>
-                <pv-message v-if="user.orderstatus === 'delivered'" class="flex flex-wrap gap-4 justify-center align-center" severity="success">{{ $t('delivered') }}</pv-message>
+            <div v-if="user.order && user.order.length">
+              <div
+                  class="same-line"
+                  v-for="order in user.order.slice().reverse()"
+                  :key="order.id"
+              >
+                <p>{{ $t('order') }} #{{ order.code }}</p>
+                <div>
+                  <pv-message
+                      v-if="order.orderstatus === 'pending'"
+                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      aria-label="pending"
+                  >
+                    {{ $t('pending') }}
+                  </pv-message>
+                  <pv-message
+                      v-else-if="order.orderstatus === 'delivered'"
+                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      aria-label="delivered"
+                  >
+                    {{ $t('delivered') }}
+                  </pv-message>
+                </div>
               </div>
             </div>
+            <p v-else>{{ $t('no-order') }}</p>
           </template>
         </pv-card>
       </div>
@@ -261,46 +303,47 @@ export default {
         <template #content>
           <div class="same-line">
             <p>{{ $t('setting.allow-not')}}</p>
-            <pv-select-button v-model="value1" :default-value="value1" :options="options1" optionLabel="name"/>
+            <pv-select-button v-model="value1" :default-value="value1" :options="options1" optionLabel="name" aria-label="Yes / No"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.not-status')}}</p>
-            <pv-select-button v-model="value2" :default-value="value2" :options="options2" optionLabel="name"/>
+            <pv-select-button v-model="value2" :default-value="value2" :options="options2" optionLabel="name" aria-label="Yes / No"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.not-email')}}</p>
-            <pv-select-button v-model="value3" :default-value="value3" :options="options3" optionLabel="name"/>
+            <pv-select-button v-model="value3" :default-value="value3" :options="options3" optionLabel="name" aria-label="Yes / No"/>
           </div>
 
           <div class="same-line">
             <p>{{ $t('setting.visibility')}}</p>
-            <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name"/>
+            <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name" aria-label="Public / Private"/>
           </div>
-          <div class="same-line">
-            <p>{{ $t('setting.current-password')}}</p>
-            <p>*********</p>
-            <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
-          </div>
+
+          <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('setting.change-pass') }}</h3>
           <div class="same-line">
             <p>{{ $t('passinput')}}</p>
-            <pv-password v-model="valueA" class="pas" :feedback="false" />
+            <pv-password v-model="valueA" class="pas" :feedback="false" aria-label="Password input"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.new-password')}}</p>
-            <pv-password v-model="valueB" class="pas" :feedback="false" />
+            <pv-password v-model="valueB" class="pas" :feedback="false" aria-label="New password input" />
           </div>
           <div class="same-line">
             <p>{{ $t('confpass')}}</p>
-            <pv-password v-model="valueC" class="pas" :feedback="false" />
+            <pv-password v-model="valueC" class="pas" :feedback="false" aria-label="Confirm new password"/>
+          </div>
+          <div class="same-line">
+            <p></p>
+            <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
+            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
           </div>
           <div class="set-options">
             <div class="buton">
-              <pv-button class="but-set delete" severity="danger">{{ $t('delete1')}}</pv-button>
+              <pv-button @click="deleteAccount()" class="but-set delete" severity="danger" aria-label="Delete account">{{ $t('delete1')}}</pv-button>
             </div>
             <div class="butons">
-              <pv-button @click="goToLogin()" class="but-set logout" severity="warn">{{ $t('logout')}}</pv-button>
-              <pv-button class="but-set save" severity="success">{{ $t('save')}}</pv-button>
+              <pv-button @click="goToLogin()" class="but-set logout" severity="warn" aria-label="Log out">{{ $t('logout')}}</pv-button>
+              <pv-button class="but-set save" severity="success" aria-label="Save changes">{{ $t('save')}}</pv-button>
             </div>
           </div>
         </template>
@@ -358,7 +401,7 @@ export default {
 .account__profile-username {
   margin-top:0;
   color: var(--color-accent-yellow);
-  font-size: 24px;
+  font-size: 20px;
   text-align: left;
   margin-bottom: 0;
 }
@@ -366,7 +409,7 @@ export default {
 .account__profile-email {
   margin-top:0;
   color: var(--color-blue);
-  font-size: 24px;
+  font-size: 20px;
   text-align: left;
 }
 
@@ -375,7 +418,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .profile__info {
@@ -462,7 +505,7 @@ export default {
 }
 
 .pfp {
-  color: black;
+  color: var(--color-text);
 }
 
 .delete {
@@ -475,7 +518,7 @@ export default {
 
 .logout {
   background-color: var(--color-accent-light-yellow);
-  color: black;
+  color: var(--color-text);
   width: 150px;
   height: 50px;
   border-radius: 15px;
@@ -503,7 +546,7 @@ export default {
 }
 
 ::v-deep(.p-message-text) {
-  color: black;
+  color: var(--color-text);
   text-align: center;
 }
 
