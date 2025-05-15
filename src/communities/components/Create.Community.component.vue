@@ -9,17 +9,19 @@ export default {
         name: '',
         description: '',
         type: '',
-        image: ''
+        image: '',
+        banner: '',
+        posts: []
       }
     }
   },
   methods: {
     saveCommunity() {
       const service = new CommunityApiService()
-      const neww = { ...this.newCommunity, id: Date.now() }
+      const neww = { ...this.newCommunity, id: Date.now().toString() }
       service.createCommunity(neww).then(() => {
         this.$emit('created', neww)
-        this.newCommunity = { name: '', description: '', type: '', image: '' }
+        this.newCommunity = { name: '', description: '', type: '', image: '', banner: '', posts: [] }
       })
     },
     closeForm() {
@@ -34,24 +36,30 @@ export default {
     <div id="overlay" @click="closeForm"></div>
     <div id="formContainer">
       <form @submit.prevent="saveCommunity">
-        <pv-button type="submit" class="submit-button">{{ $t('create-community')}}</pv-button>
         <input type="text" v-model="newCommunity.name" :placeholder="$t('form.name')" class="form-input" required>
         <textarea v-model="newCommunity.type" :placeholder="$t('form.category')" class="form-input" required></textarea>
         <input type="text" v-model="newCommunity.description" :placeholder="$t('form.description')" class="form-input" required>
         <input type="url" v-model="newCommunity.image" :placeholder="$t('form.image')" class="form-input" required>
+        <input type="url" v-model="newCommunity.banner" :placeholder="$t('form.sidebar')" class="form-input" required>
+        <pv-button type="submit" class="submit-button">{{ $t('create-community')}}</pv-button>
       </form>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+*{
+  outline: none;
+}
+
 #overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 998;
 }
 
@@ -90,6 +98,7 @@ export default {
 .form-input,
 textarea {
   color: var(--color-text);
+  resize: none;
 }
 
 .form-input::placeholder,

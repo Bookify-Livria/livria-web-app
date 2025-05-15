@@ -11,6 +11,7 @@ export default {
     Button,
     CreateCommunity
   },
+
   data() {
     return {
       communities: [],
@@ -36,6 +37,9 @@ export default {
     handleCommunityCreated(newCommunity) {
       this.communities.push(newCommunity)
       this.hideCreateForm()
+    },
+    goToDetail(community) {
+      this.$router.push({ name: 'CommunityView', params: { name: community.name } })
     }
   }
 }
@@ -43,6 +47,7 @@ export default {
 
 <template>
   <div class="community-grid">
+    <!-- Create Button -->
     <div class="custom-card-wrapper">
       <pv-card class="create-card">
         <template #content>
@@ -55,8 +60,12 @@ export default {
         </template>
       </pv-card>
     </div>
-
-    <div v-for="community in communities" :key="community.id" class="custom-card-wrapper">
+    <!-- Communities Grid -->
+    <div
+        v-for="community in communities"
+        :key="community.id"
+        class="custom-card-wrapper"
+    >
       <pv-card>
         <template #header>
           <img :src="community.image" :alt="community.name" class="community-cover" />
@@ -66,7 +75,7 @@ export default {
         </template>
         <template #footer>
           <div class="flex justify-end">
-            <pv-button :label="$t('see-more')" class="p-button-sm" />
+            <button @click="goToDetail(community)" class="see-more-btn">{{$t('see-more')}}</button>
           </div>
         </template>
       </pv-card>
@@ -80,8 +89,8 @@ export default {
 .community-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
+  justify-content: flex-start;
+  gap: 4.5rem;
   padding: 0;
 }
 
@@ -90,10 +99,15 @@ export default {
   background-color: #f9f9f9;
   padding: 1rem;
   border-radius: 12px;
-  box-shadow: 3px 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 3px 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: .3s;
+}
+
+.custom-card-wrapper:hover{
+  transform: scale(1.02);
 }
 
 .community-cover {
@@ -102,6 +116,7 @@ export default {
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: .5s;
 }
 
 .community-title {
@@ -156,6 +171,16 @@ export default {
   margin-top: 1rem;
   color: #f4511e;
   text-transform: uppercase;
+}
+
+.see-more-btn {
+  background-color: transparent;
+  border: none;
+  color: var(--color-accent-yellow);
+}
+
+.see-more-btn:hover {
+  color: var(--color-accent-orange);
 }
 
 
