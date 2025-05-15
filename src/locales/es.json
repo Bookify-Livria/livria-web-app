@@ -1,11 +1,11 @@
 {
-
   "toolbar": {
     "search": "Buscar",
-    "kart": "Carrito",
+    "cart": "Carrito",
     "notifications": "Notificaciones",
     "account": "Cuenta"
   },
+
   "shop": "Tienda",
   "literature": "Literatura",
   "non-fiction": "No Ficción",
@@ -16,7 +16,37 @@
   "ebooks-audiobooks": "Ebooks Y Audiobooks",
   "recommendations": "Recomendaciones",
   "communities": "Comunidades",
+  "genre": "Género",
 
+  "loading-book": "Cargando Libro...",
+  "synopsis": "Sinópsis",
+  "comments": "Comentarios",
+  "languages": {
+    "es": "Español",
+    "en": "Inglés"
+  },
+  "add-to-cart": "Añadir al carrito",
+
+  "genres": {
+    "literatura": "Literatura",
+    "ficcion": "Ficción",
+    "noficcion": "No Ficción",
+    "mangasycomics": "Mangas y Cómics",
+    "juvenil": "Juvenil",
+    "infantil": "Infantil",
+    "ebooks": "eBooks",
+    "default": "Género"
+  },
+
+  "sort": "Ordenar por",
+  "language": "Idioma",
+  "titleaz": "Título A-Z",
+  "titleza": "Título Z-A",
+  "pricelower": "Menor a mayor precio",
+  "pricehigher": "Mayor a menor precio",
+  "english": "Inglés",
+  "spanish": "Español",
+  "delete": "Borrar selección",
   "phrase": "Descubre el placer de leer en una vibrante comunidad literaria.",
   "navigation": "Navegación",
   "home": "Inicio",
