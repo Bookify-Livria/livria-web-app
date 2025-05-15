@@ -4,9 +4,14 @@ import axios from 'axios';
 import { ref } from 'vue';
 import 'primeicons/primeicons.css';
 import {UserApiService} from "../service/user-api.service.js";
+import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
+import {notifyEvent} from "../../public/shared-services/to-notify.js";
 
 export default {
   name: "Register",
+  components: {
+    LanguageSwitcher,
+  },
   data() {
     return {
 
@@ -20,7 +25,6 @@ export default {
       info: []
     }
   },
-
   methods: {
     InvocaAPI() {
       const service = new UserApiService()
@@ -29,11 +33,12 @@ export default {
         console.log(this.info)
       })
     },
-
     goToLogin() {
       this.$router.push('/login');
     },
-
+    goToHome() {
+      this.$router.push('/home');
+    },
     showFail() {
       try {
         this.$refs.toast.add({
@@ -46,7 +51,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
     showSuccess() {
       try {
         this.$refs.toast.add({
@@ -59,36 +63,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-    async createUserr() {
-      try {
-        const service = new UserApiService();
-        const users = await service.getUsers();
-
-        const newId = String(
-            users.length > 0
-                ? Math.max(...users.map(item => parseInt(item.id))) + 1
-                : 1
-        );
-
-        const newUser = {
-          id: newId,
-          display: this.userDisplay,
-          user: this.userUser,
-          email: this.userEmail,
-          icon: this.userIcon,
-          password: this.userPassword,
-          phrase: this.userPhrase,
-          order: this.userOrder,
-          orderStatus: this.userOrderStatus,
-          subscription: this.userSubscription
-        };
-        await service.createUser(newUser);
-
-      } catch (error) {
-        console.error("Error creating user:", error);
-      }
-    },
-
     async createUserWithAutoId() {
       if (
           this.value6 === this.value7 &&
@@ -117,13 +91,13 @@ export default {
             icon: this.value4,
             password: this.value6,
             phrase: this.value3,
-            order: '',
-            orderStatus: '',
+            order: [],
             subscription: false
           };
 
           await service.createUser(newUser);
-          this.goToLogin()
+          await notifyEvent("welcome");
+          this.goToHome()
 
         } catch (error) {
           console.error("Error creating user:", error);
@@ -142,9 +116,9 @@ export default {
   <div class="all">
     <div class="head">
       <div class="same-line">
-        <img src="https://i.imgur.com/dZ7eqsw.jpg" alt="Logo" width="60px" height="60px">
-        <h1 class="name">Livria</h1>
+        <img src="../../assets/images/logo/logo.png" alt="Logo" height="60px">
       </div>
+      <language-switcher />
     </div>
     <div class="content">
       <pv-card>
@@ -224,8 +198,8 @@ export default {
 
         <template #footer class="foter">
           <pv-toast ref="toast" position="top-right" style="margin-top: 8.5rem"/>
+          <pv-button @click="goToLogin()" class="form-button">{{ $t('back') }}</pv-button>
           <pv-button type="submit" @click="createUserWithAutoId()" class="form-button">{{ $t('register') }}</pv-button>
-          <pv-button @click="goToLogin()" class="form-button">{{ $t('login') }}</pv-button>
         </template>
       </pv-card>
     </div>
@@ -239,7 +213,6 @@ export default {
   background: white;
   justify-content: space-around;
   justify-items: center;
-  width: 70vw;
   height: 100%;
   top: 0;
   right: 0;
@@ -251,25 +224,32 @@ export default {
 
 ::v-deep(.p-card-title) {
   text-align: center;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--color-blue);
+  margin: 0;
 }
 
 .same-line {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  margin: 2rem;
 }
 
 .head {
   display: flex;
-  justify-content: center;
+  justify-items: center;
+  justify-content: flex-end;
+  gap: 20rem;
+  color: var(--color-text);
   width: 100%;
-  margin-bottom: 1rem;
+  padding-right: 27%;
 }
 
-
-.name {
-  margin-left: 15px;
-}
 
 .form-group {
   display: block;
@@ -297,27 +277,17 @@ export default {
 
 .form-input {
   width: 100%;
-  border: 2px solid black;
+  border: 2px solid var(--color-text);
   justify-self: center;
   padding: 0.5rem;
   border-radius: 5px;
 }
 
-.p-card {
-  width: 100%;
-}
-
 .content {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
+  width: 50%;
   justify-items: center;
   justify-content: center;
   align-items: center;
-}
-
-::v-deep(.p-card-title) {
-  font-size: 2.5rem;
 }
 
 ::v-deep(.p-card-body) {
@@ -348,20 +318,20 @@ export default {
 }
 
 ::v-deep(.p-button:hover) {
-  border: 2px solid black;
+  border: 2px solid var(--color-text);
 }
 
 .p-card {
-  background: #F4F5F7;
   border: 2px solid transparent;
-  padding: 2rem;
+  padding: 3rem 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
-  color: black;
+  color: var(--color-text);
   text-align: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   align-items: center;
   justify-content: center;
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
   width: 100%;
 }
 
@@ -369,15 +339,15 @@ export default {
   background-color: transparent;
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
-  width: 170px;
-  height: 40px;
+  width: 200px;
+  height: 60px;
   border-radius: 15px;
   font-size: 20px;
   text-align: center;
   justify-content: center;
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-top: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .foter {

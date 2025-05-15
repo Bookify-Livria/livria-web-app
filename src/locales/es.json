@@ -1,11 +1,9 @@
 {
   "toolbar": {
     "search": "Buscar",
-    "notifications": "Notificaciones",
     "account": "Cuenta"
   },
-
-
+  "notifications": "Notificaciones",
   "cart-toolbar": "Carrito",
   "shop": "Tienda",
   "literature": "Literatura",
@@ -18,7 +16,7 @@
   "recommendations": "Recomendaciones",
   "communities": "Comunidades",
   "genre": "Género",
-  "plan": "COMMUNITY PLAN",
+  "plan": "PLAN COMUNIDAD",
   "plan-content-1": "Descubre un nuevo nivel de conexión en Livria con el Plan Comunidad y su sección de \"Comunidades\". Sumérgete en un espacio donde los intereses compartidos cobran vida, permitiéndote unirte a comunidades creadas por otros usuarios con afinidades similares.",
   "plan-content-2": "En cada comunidad, podrás expresar tus ideas a través de publicaciones y enriquecer las interacciones participando en los debates mediante comentarios en las publicaciones de los demás.",
 
@@ -29,6 +27,7 @@
   },
 
   "address": "Dirección",
+  "empty-list": "Vaciar Lista de Notificaciones",
 
   "Search": "Resultados de: ",
   "NoSearch": "No se encontraron resultados para la búsqueda",
@@ -114,7 +113,7 @@
     "not-status": "Notificaciones de estado de pedido",
     "not-email": "Notificaciones por correo",
     "visibility": "Visibilidad del perfil",
-    "current-password": "Contraseña actual",
+    "current-password": "Cambiar contraseña",
     "new-password": "Nueva contraseña"
   },
 
@@ -160,6 +159,9 @@
   "emailerror": "Ingrese un correo electrónico válido",
 
   "createacc": "¿No tienes una cuenta?",
+  "subscription": "Suscripción",
+  "yes-subs": "Plan Communidad",
+  "no-subs": "Plan Free",
   "no-phrase": "Ninguna frase",
   "no-order": "Ninguna orden registrada",
   "password-error": "Error de contraseña",
@@ -198,6 +200,7 @@
     "next": "Siguiente",
     "pay": "Completar Orden",
     "notice": "Espera!!!",
+    "cart-empty": "No podemos continuar con la compra porque su carrito está vacío.",
     "field-missing": "No podemos continuar con la compra porque faltan uno o más campos.",
     "info-recipient": "Información del Destinatario",
     "delivery": "Información de Entrega",
@@ -217,6 +220,11 @@
     "izipay": "Todos nuestros pagos se realizan a través de Izipay. Al aceptar los términos y condiciones, será redirigido a la página de Izipay donde podrá realizar su pago. Recibirá una confirmación de pago en su correo electrónico.",
     "terms": "He leído y autorizo el tratamiento de mis datos de acuerdo con la Política de Privacidad y los Términos y Condiciones.",
     "privacy": "Autorizo el tratamiento de mis datos con fines de promoción comercial según la Política de Privacidad."
+  },
+
+  "noti": {
+    "notice": "¡Tienes una nueva notificación!",
+    "info": "Pulsa \"Notificaciones\" en la barra de herramientas para más información..."
   },
 
   "confirmation": {
