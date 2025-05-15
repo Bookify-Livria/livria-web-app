@@ -5,7 +5,6 @@
     "account": "Cuenta"
   },
 
-
   "cart-toolbar": "Carrito",
   "shop": "Tienda",
   "literature": "Literatura",
@@ -18,12 +17,17 @@
   "recommendations": "Recomendaciones",
   "communities": "Comunidades",
   "genre": "Género",
+  "plan": "PLAN COMUNIDAD",
+  "plan-content-1": "Descubre un nuevo nivel de conexión en Livria con el Plan Comunidad y su sección de \"Comunidades\". Sumérgete en un espacio donde los intereses compartidos cobran vida, permitiéndote unirte a comunidades creadas por otros usuarios con afinidades similares.",
+  "plan-content-2": "En cada comunidad, podrás expresar tus ideas a través de publicaciones y enriquecer las interacciones participando en los debates mediante comentarios en las publicaciones de los demás.",
 
   "recommended": {
     "title": "RECOMENDACIONES PARA TI",
     "subtitle": "¡Hola! En base a tus preferencias, te dejamos las siguientes recomendaciones...",
     "reminder": "¡Ojalá te gusten! Recuerda que puedes marcar tu interés en cada libro con los íconos del marcador y del signo negativo, respectivamente."
   },
+
+  "address": "Dirección",
 
   "Search": "Resultados de: ",
   "NoSearch": "No se encontraron resultados para la búsqueda",
@@ -36,13 +40,14 @@
     },
     "worlds": {
       "title": "DESCUBRE NUEVOS MUNDOS",
-      "description": "Explora lecturas recomendadas por la comunidad y abre las puertas a historias fascinantes."
+      "description": "Explora lecturas recomendadas por la aplicación y abre las puertas a historias fascinantes."
     },
     "passion": {
       "title": "COMPARTE TU PASIÓN",
-      "description": "Recomienda libros, escribe reseñas y crea conexiones con otros amantes de la lectura."
+      "description": "Califica libros, escribe reseñas y conéctate con otros amantes de los libros."
     },
-    "button": "OBTÉNLO AQUÍ"
+    "button-1": "OBTENLO AQUÍ",
+    "button-2": "DESCUBRE AQUÍ"
   },
 
   "loading-book": "Cargando Libro...",
@@ -81,6 +86,7 @@
   "english": "Inglés",
   "spanish": "Español",
   "delete": "Borrar selección",
+
   "phrase": "Descubre el placer de leer en una vibrante comunidad literaria.",
   "navigation": "Navegación",
   "home": "Inicio",
@@ -107,7 +113,7 @@
     "not-status": "Notificaciones de estado de pedido",
     "not-email": "Notificaciones por correo",
     "visibility": "Visibilidad del perfil",
-    "current-password": "Contraseña actual",
+    "current-password": "Cambiar contraseña",
     "new-password": "Nueva contraseña"
   },
 
@@ -121,6 +127,13 @@
     "image": "URL de la imagen"
   },
   "see-more": "Ver Más +",
+
+  "comm" : {
+    "thoughts": "¿En qué estás pensando?",
+    "join": "Unirse +",
+    "post": "Publicar",
+    "image": "Pega aquí la URL de una imagen que quieras agregar."
+  },
 
   "yes": "Sí",
   "no": "No",
@@ -146,6 +159,9 @@
   "emailerror": "Ingrese un correo electrónico válido",
 
   "createacc": "¿No tienes una cuenta?",
+  "subscription": "Suscripción",
+  "yes-subs": "Plan Communidad",
+  "no-subs": "Plan Free",
   "no-phrase": "Ninguna frase",
   "no-order": "Ninguna orden registrada",
   "password-error": "Error de contraseña",

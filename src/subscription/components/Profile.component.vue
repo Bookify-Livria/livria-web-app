@@ -36,6 +36,7 @@ export default {
     const valueA = ref('');
     const valueB = ref('');
     const valueC = ref('');
+    const valueD = ref('');
 
     return {
       options1,
@@ -48,7 +49,8 @@ export default {
       value4,
       valueA,
       valueB,
-      valueC
+      valueC,
+      valueD,
     };
   },
 
@@ -64,11 +66,13 @@ export default {
         password: 'Loading...',
         phrase: 'Loading...',
         order: '000000',
-        orderstatus: 'pending'
+        orderstatus: 'pending',
+        subscription: 'false',
       }
     };
   },
   methods: {
+
     showSuccess() {
       try {
         this.$refs.toast.add({
@@ -172,6 +176,10 @@ export default {
         return;
       }
 
+      const service = new UserApiService();
+      const freshUser = await service.getUserById(this.user.id);
+      this.user = freshUser;
+
       if (currentPassword !== this.user.password) {
         console.warn('Current password is incorrect.');
         this.showFailPassword();
@@ -183,28 +191,44 @@ export default {
         return;
       }
 
-      const service = new UserApiService();
       try {
         await service.updateUser({
           ...this.user,
           password: newPassword
         });
 
-        await this.InvocaAPI();
-        this.valueA = '';
-        this.valueB = '';
-        this.valueC = '';
-        this.showLogin();
+        this.showSuccess();
+        this.goToLogin();
       } catch (error) {
         console.error('Failed to update password:', error);
-        this.showSuccess();
       }
-    }
-    ,
+    },
 
-    async DeleteUser() {
+    async deleteAccount() {
       const service = new UserApiService();
-      service.deleteUser(this.getLoggedInUserId());
+      this.goToLogin();
+
+      try {
+        await service.deleteUser(this.user.id);
+
+        await this.clearLogin();
+
+        this.$refs.toast.add({
+          severity: 'success',
+          summary: this.$t('account-deleted'),
+          detail: this.$t('account-deleted-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error('Failed to delete account:', error);
+
+        this.$refs.toast.add({
+          severity: 'error',
+          summary: this.$t('account-delete-fail'),
+          detail: this.$t('account-delete-fail-details'),
+          life: 3000
+        });
+      }
     }
   },
   mounted() {
@@ -232,6 +256,11 @@ export default {
           <template #content>
             <p v-if="user.phrase !== ''">"{{ user.phrase }}"</p>
             <p v-if="user.phrase === ''">{{ $t('no-phrase') }} </p>
+          </template>
+          <template #footer>
+            <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('subscription') }}</h3>
+            <p v-if="user.subscription !== ''">{{ $t('yes-subs') }}</p>
+            <p v-if="user.subscription === ''">{{ $t('no-subs') }}</p>
           </template>
         </pv-card>
       </div>
@@ -274,12 +303,8 @@ export default {
             <p>{{ $t('setting.visibility')}}</p>
             <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name"/>
           </div>
-          <div class="same-line">
-            <p>{{ $t('setting.current-password')}}</p>
-            <p>*********</p>
-            <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
-          </div>
+
+          <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('setting.change-pass') }}</h3>
           <div class="same-line">
             <p>{{ $t('passinput')}}</p>
             <pv-password v-model="valueA" class="pas" :feedback="false" />
@@ -292,9 +317,14 @@ export default {
             <p>{{ $t('confpass')}}</p>
             <pv-password v-model="valueC" class="pas" :feedback="false" />
           </div>
+          <div class="same-line">
+            <p></p>
+            <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
+            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
+          </div>
           <div class="set-options">
             <div class="buton">
-              <pv-button class="but-set delete" severity="danger">{{ $t('delete1')}}</pv-button>
+              <pv-button @click="deleteAccount()" class="but-set delete" severity="danger">{{ $t('delete1')}}</pv-button>
             </div>
             <div class="butons">
               <pv-button @click="goToLogin()" class="but-set logout" severity="warn">{{ $t('logout')}}</pv-button>

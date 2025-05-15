@@ -17,12 +17,17 @@
   "recommendations": "Recommendations",
   "communities": "Communities",
   "genre": "Genre",
+  "plan": "COMMUNITY PLAN",
+  "plan-content-1": "Discover a new level of connection on Livria with the Community Plan and its \"Communities\" section. Immerse yourself in a space where shared interests come to life, allowing you to join communities created by other users with similar affinities.",
+  "plan-content-2": "In each community, you can express your ideas through posts and enrich interactions by participating in discussions by commenting on other people's posts.",
 
   "recommended": {
     "title": "RECOMMENDATIONS FOR YOU",
     "subtitle": "Hi! Based on your preferences, here are some recommendations...",
     "reminder": "We hope you like them! Remember, you can mark your interest in each book with the bookmark and negative icons, respectively."
   },
+
+  "address": "Address",
 
   "Search": "Search for: ",
   "NoSearch": "No results found in the search",
@@ -35,13 +40,14 @@
     },
     "worlds": {
       "title": "DISCOVER NEW WORLDS",
-      "description": "Explore community-recommended readings and open the doors to fascinating stories."
+      "description": "Explore recommended readings through the app and open the door to fascinating stories."
     },
     "passion": {
       "title": "SHARE YOUR PASSION",
-      "description": "Recommend books, write reviews, and connect with fellow book lovers."
+      "description": "Rate books, write reviews, and connect with other book lovers."
     },
-    "button": "GET IT HERE"
+    "button-1": "GET IT HERE",
+    "button-2": "DISCOVER HERE"
   },
 
   "loading-book": "Loading Book...",
@@ -80,6 +86,7 @@
   "english": "English",
   "spanish": "Spanish",
   "delete": "Delete selection",
+
   "phrase": "Discover the joy of reading in a vibrant literary community.",
   "navigation": "Navegation",
   "home": "Home",
@@ -92,7 +99,7 @@
   "help": "Help",
   "frequent-questions": "Frequent Questions",
   "contact-us": "Contact Us",
-  "copyrights":"Â© 2025 Bookify - Livria. All rights reserved.",
+  "copyrights":"© 2025 Bookify - Livria. All rights reserved.",
 
 
   "profile": "Profile",
@@ -106,10 +113,9 @@
     "not-status": "Allow notifications for order status",
     "not-email": "Allow email notifications",
     "visibility": "Profile visibility",
-    "current-password": "Current password",
+    "change-pass": "Change password",
     "new-password": "New password"
   },
-
 
   "communities-intro": "Connect with readers with similar interests by joining Livria communities. You can also create your own!",
   "create-community": "Create Community",
@@ -117,9 +123,17 @@
     "name": "Name",
     "description": "Description",
     "category": "Category",
-    "image": "Image URL"
+    "image": "Profile Image URL",
+    "sidebar": "Banner Image URL"
   },
   "see-more": "See More +",
+
+  "comm" : {
+    "thoughts": "What are your thoughts?",
+    "join": "Join +",
+    "post": "Post",
+    "image": "Paste here the url from an image you'd like to add."
+  },
 
   "yes": "Yes",
   "no": "No",
@@ -145,6 +159,9 @@
   "emailerror": "Please enter a valid email address",
 
   "createacc": "Don't have an account?",
+  "subscription": "Subscription",
+  "yes-subs": "Community Plan",
+  "no-subs": "Free Plan",
   "no-phrase": "No phrase yet",
   "no-order": "No orders yet",
   "password-error": "Password error",

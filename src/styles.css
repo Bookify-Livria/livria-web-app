@@ -51,6 +51,8 @@ p {
   text-align: justify;
 }
 
+
+
 .h1__title {
   font-family: var(--font-heading);
   text-transform: uppercase;
@@ -58,6 +60,16 @@ p {
   font-size: 40px;
   font-weight: 600;
   color: var(--color-blue);
+  margin: 0;
+}
+
+.h2__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-accent-yellow);
   margin: 0;
 }
 
