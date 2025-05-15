@@ -33,6 +33,9 @@ export default {
     const value2 = ref(options2.value[0]);
     const value3 = ref(options3.value[0]);
     const value4 = ref(options4.value[0]);
+    const valueA = ref('');
+    const valueB = ref('');
+    const valueC = ref('');
 
     return {
       options1,
@@ -42,34 +45,166 @@ export default {
       value1,
       value2,
       value3,
-      value4
+      value4,
+      valueA,
+      valueB,
+      valueC
     };
   },
 
   data() {
     return {
       info: [],
-      kingTurkey: {
+      user: {
         id: '',
         display: 'Loading...',
-        username: '@loading',
+        username: 'loading',
         email: 'loading@example.com',
         icon: '',
         password: 'Loading...',
-        phrase: 'Loading...'
+        phrase: 'Loading...',
+        order: '000000',
+        orderstatus: 'pending'
       }
     };
   },
   methods: {
-    InvocaAPI() {
-      const service = new UserApiService()
-      service.getUsers().then(data => {
-        this.info = data
-        console.log(this.info)
+    showSuccess() {
+      try {
+        this.$refs.toast.add({
+          severity: 'success',
+          summary: this.$t('update-success'),
+          detail: this.$t('update-success-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error("Error adding toast:", error);
+      }
+    },
 
-        this.kingTurkey = this.info.find(user => user.id === "1");
-        console.log(this.kingTurkey);
-      })
+    showFailFill() {
+      try {
+        this.$refs.toast.add({
+          severity: 'error',
+          summary: this.$t('update-fill-fail'),
+          detail: this.$t('update-fill-fail-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error("Error adding toast:", error);
+      }
+    },
+
+    showFailPassword() {
+      try {
+        this.$refs.toast.add({
+          severity: 'error',
+          summary: this.$t('update-password-fail'),
+          detail: this.$t('update-password-fail-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error("Error adding toast:", error);
+      }
+    },
+
+    showFailConfirm() {
+      try {
+        this.$refs.toast.add({
+          severity: 'error',
+          summary: this.$t('update-confirm-fail'),
+          detail: this.$t('update-confirm-fail-details'),
+          life: 3000
+        });
+      } catch (error) {
+        console.error("Error adding toast:", error);
+      }
+    },
+
+    async InvocaAPI() {
+      const service = new UserApiService();
+
+      try {
+        const data = await service.getUsers();
+        this.info = data;
+        console.log("All users:", this.info);
+
+        const loggedInUserId = await this.getLoggedInUserId();
+
+        if (loggedInUserId) {
+          this.user = this.info.find(user => String(user.id) === String(loggedInUserId));
+          console.log("Matched user:", this.user);
+        } else {
+          console.warn("No logged-in user found.");
+        }
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+      }
+    },
+
+    async getLoggedInUserId() {
+      try {
+        const response = await axios.get('http://localhost:3000/userlogin');
+        const loginEntries = response.data;
+
+        if (loginEntries.length > 0) {
+          const loggedInUserId = loginEntries[0].id;
+          console.log("Logged in user ID:", loggedInUserId);
+          return loggedInUserId;
+        } else {
+          console.warn("No user is currently logged in.");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching logged-in user ID:", error);
+        return null;
+      }
+    },
+
+    goToLogin() {
+      this.$router.push('/login');
+    },
+
+    async changePassword(currentPassword, newPassword, confirmPassword) {
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        this.showFailFill();
+        console.warn('All password fields must be filled.');
+        return;
+      }
+
+      if (currentPassword !== this.user.password) {
+        console.warn('Current password is incorrect.');
+        this.showFailPassword();
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        this.showFailConfirm();
+        return;
+      }
+
+      const service = new UserApiService();
+      try {
+        await service.updateUser({
+          ...this.user,
+          password: newPassword
+        });
+
+        await this.InvocaAPI();
+        this.valueA = '';
+        this.valueB = '';
+        this.valueC = '';
+        this.showLogin();
+      } catch (error) {
+        console.error('Failed to update password:', error);
+        this.showSuccess();
+      }
+    }
+    ,
+
+    async DeleteUser() {
+      const service = new UserApiService();
+      service.deleteUser(this.getLoggedInUserId());
     }
   },
   mounted() {
@@ -81,37 +216,36 @@ export default {
 
 <template>
   <div class="profile">
-    <!-- Left Panel -->
     <div class="account__profile-details">
-      <div>
-        <pv-image :src="kingTurkey.icon" alt="Foto de perfil" width="200" height="200" class="pfp"></pv-image>
-        <div>
-          <p class="account__profile-display-name">{{ kingTurkey.display }}</p>
-          <p class="account__profile-username">{{ kingTurkey.username }}</p>
-          <p class="account__profile-email">{{ kingTurkey.email }}</p>
-        </div>
+      <pv-image :src="user.icon" alt="Foto de perfil" width="100%" height="auto" class="pfp"></pv-image>
+      <div class="account__profile-text">
+        <p class="account__profile-display-name">{{ user.display }}</p>
+        <p class="account__profile-username">@{{ user.username }}</p>
+        <p class="account__profile-email">{{ user.email }}</p>
       </div>
     </div>
 
-    <!-- Middle Panel -->
     <div class="profile__info">
       <div class="profile__info-half">
         <pv-card>
           <template #title>{{ $t('profile') }}</template>
           <template #content>
-            <p>{{ kingTurkey.phrase }}</p>
+            <p v-if="user.phrase !== ''">"{{ user.phrase }}"</p>
+            <p v-if="user.phrase === ''">{{ $t('no-phrase') }} </p>
           </template>
         </pv-card>
       </div>
+
       <div class="profile__info-half">
         <pv-card>
           <template #title>{{ $t('recent-orders') }}</template>
           <template #content>
             <div class="same-line">
-              <p>{{ $t('order') }} #123112</p>
+              <p v-if="user.order !== ''">{{ $t('order') }} #{{ user.order }}</p>
+              <p v-if="user.order === ''">{{ $t('no-order') }}</p>
               <div>
-                <!--<pv-message class="flex flex-wrap gap-4 justify-center align-center" severity="warn">{{ $t('pending') }}</pv-message>-->
-                <pv-message class="flex flex-wrap gap-4 justify-center align-center" severity="success">{{ $t('delivered') }}</pv-message>
+                <pv-message v-if="user.orderstatus === 'pending'" class="flex flex-wrap gap-4 justify-center align-center" severity="warn">{{ $t('pending') }}</pv-message>
+                <pv-message v-if="user.orderstatus === 'delivered'" class="flex flex-wrap gap-4 justify-center align-center" severity="success">{{ $t('delivered') }}</pv-message>
               </div>
             </div>
           </template>
@@ -119,7 +253,6 @@ export default {
       </div>
     </div>
 
-    <!-- Right Panel -->
     <div class="profile__config">
       <pv-card>
         <template #title>{{ $t('settings') }}</template>
@@ -136,6 +269,7 @@ export default {
             <p>{{ $t('setting.not-email')}}</p>
             <pv-select-button v-model="value3" :default-value="value3" :options="options3" optionLabel="name"/>
           </div>
+
           <div class="same-line">
             <p>{{ $t('setting.visibility')}}</p>
             <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name"/>
@@ -143,30 +277,34 @@ export default {
           <div class="same-line">
             <p>{{ $t('setting.current-password')}}</p>
             <p>*********</p>
-            <button>{{ $t('change')}}</button>
+            <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
+            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
+          </div>
+          <div class="same-line">
+            <p>{{ $t('passinput')}}</p>
+            <pv-password v-model="valueA" class="pas" :feedback="false" />
           </div>
           <div class="same-line">
             <p>{{ $t('setting.new-password')}}</p>
-            <pv-password class="pas" :feedback="false" toggle-mask/>
+            <pv-password v-model="valueB" class="pas" :feedback="false" />
           </div>
           <div class="same-line">
             <p>{{ $t('confpass')}}</p>
-            <pv-password class="pas" :feedback="false" toggle-mask/>
+            <pv-password v-model="valueC" class="pas" :feedback="false" />
           </div>
           <div class="set-options">
             <div class="buton">
-              <button>{{ $t('delete1')}}</button>
+              <pv-button class="but-set delete" severity="danger">{{ $t('delete1')}}</pv-button>
             </div>
             <div class="butons">
-              <button>{{ $t('logout')}}</button>
-              <button>{{ $t('save')}}</button>
+              <pv-button @click="goToLogin()" class="but-set logout" severity="warn">{{ $t('logout')}}</pv-button>
+              <pv-button class="but-set save" severity="success">{{ $t('save')}}</pv-button>
             </div>
           </div>
         </template>
       </pv-card>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -218,7 +356,7 @@ export default {
 .account__profile-username {
   margin-top:0;
   color: var(--color-accent-yellow);
-  font-size: 24px;
+  font-size: 20px;
   text-align: left;
   margin-bottom: 0;
 }
@@ -226,7 +364,7 @@ export default {
 .account__profile-email {
   margin-top:0;
   color: var(--color-blue);
-  font-size: 24px;
+  font-size: 20px;
   text-align: left;
 }
 
@@ -235,7 +373,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .profile__info {
@@ -267,34 +405,47 @@ export default {
   gap: 20px;
 }
 
-::v-deep(.p-selectbutton) {
+.buttonn {
   background-color: transparent;
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
-  border-radius: 5px;
-  width: 200px;
+  width: 100px;
+  height: 40px;
+  border-radius: 15px;
+}
+
+::v-deep(.p-selectbutton) {
+  gap: 10px;
+}
+
+::v-deep(.p-togglebutton) {
+  background-color: transparent;
+  color: #2364A0;
+  border-color: #2364A0;
+  width: 80px;
+  height: 40px;
+  font-weight: normal;
+}
+
+::v-deep(.p-togglebutton.p-togglebutton-checked) {
+  color: white;
+  background-color: var(--color-accent-orange);
+  width: 80px;
   height: 40px;
 }
 
-::v-deep(.p-selectbutton.p-selectbutton-checked) {
-  background-color: var(--color-accent-light-yellow);
-  color: var(--color-accent-orange);
+::v-deep(.p-togglebutton-checked .p-togglebutton-content) {
+  background: var(--color-accent-orange);
 }
 
-::v-deep(.p-selectbutton-checked .p-selectbutton-content) {
-  background-color:  var(--color-accent-light-yellow);
-}
-
-::v-deep(.p-selectbutton:hover) {
-  background-color: var(--color-accent-orange);
-  color: var(--color-background);
+::v-deep(.p-togglebutton:hover) {
+  background: var(--color-accent-orange);
 }
 
 ::v-deep(.p-password-input) {
   background: transparent;
   color: var(--color-text);
 }
-
 
 .buton {
   width: 50%;
@@ -312,10 +463,34 @@ export default {
   color: black;
 }
 
+.delete {
+  background-color: var(--color-accent-orange);
+  color: white;
+  width: 170px;
+  height: 50px;
+  border-radius: 15px;
+}
+
+.logout {
+  background-color: var(--color-accent-light-yellow);
+  color: black;
+  width: 150px;
+  height: 50px;
+  border-radius: 15px;
+}
+
+.save {
+  background-color: var(--color-blue);
+  color: white;
+  width: 150px;
+  height: 50px;
+  border-radius: 15px;
+}
+
 .pas {
   width: 200px;
   height: 40px;
-  border: 2px solid var(--color-blue);
+  border: 2px solid #2364A0;
   border-radius: 10px;
   padding: 5px;
   display: flex;
@@ -323,6 +498,35 @@ export default {
   justify-content: space-between;
   text-align: left;
   justify-items: left;
+}
+
+::v-deep(.p-message-text) {
+  color: black;
+  text-align: center;
+}
+
+::v-deep(.p-message-content) {
+  text-align: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.warn {
+  background-color: var(--color-accent-light-yellow);
+  width: 100px;
+  height: 50px;
+  border-radius: 15px;
+  border-color: transparent;
+}
+
+.success {
+  background-color: var(--color-blue);
+  width: 100px;
+  height: 50px;
+  border-radius: 15px;
+  border-color: transparent;
+  text-align: center;
+  justify-content: center;
 }
 
 </style>
