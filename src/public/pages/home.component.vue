@@ -1,7 +1,12 @@
 <script>
-import toolbarComponent from "../components/toolbar.component.vue";
-import footerComponent from "../components/footer-content.component.vue";
-import bookCarousel from "../../books/components/books-carousel.component.vue";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import Button from 'primevue/button'
+
+import toolbarComponent from "../components/toolbar.component.vue"
+import footerComponent from "../components/footer-content.component.vue"
+import bookCarousel from "../../commerce/books/components/books-carousel.component.vue"
+import { getLoggedInUser } from "../shared-services/get-logged-user.js";
 
 export default {
   name: "home.component",
@@ -9,105 +14,170 @@ export default {
     toolbarComponent,
     footerComponent,
     bookCarousel,
-  }
-}
+    Button
+  },
+  setup() {
+    const router = useRouter();
 
+    const goToCommunity = async () => {
+      try {
+        const user = await getLoggedInUser();
+        if (user.subscription) {
+          router.push("/communities");
+        } else {
+          router.push("/subscription");
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+        router.push("/subscription");
+      }
+    };
+
+    const slides = ref([
+      {
+        tituloKey: 'carousel.community.title',
+        descripcionKey: 'carousel.community.description',
+        imagen: 'https://i.imgur.com/lKkTuRQ.jpg'
+      },
+      {
+        tituloKey: 'carousel.worlds.title',
+        descripcionKey: 'carousel.worlds.description',
+        imagen: 'https://i.imgur.com/yXEnAAL.jpg'
+      },
+      {
+        tituloKey: 'carousel.passion.title',
+        descripcionKey: 'carousel.passion.description',
+        imagen: 'https://i.imgur.com/CTvddky.jpg'
+      }
+    ]);
+
+    const genres = ref([
+      { id: 'literatura', label: 'literature', colorClass: 'go--orange' },
+      { id: 'noficcion', label: 'non-fiction', colorClass: 'go--yellow' },
+      { id: 'ficcion', label: 'fiction', colorClass: 'go--blue' },
+      { id: 'mangasycomics', label: 'mangas and comics', colorClass: 'go--orange' },
+      { id: 'juvenil', label: 'juvenile', colorClass: 'go--yellow' },
+      { id: 'infantil', label: 'children', colorClass: 'go--blue' },
+      { id: 'ebooks', label: 'ebooks and audiobooks', colorClass: 'go--orange' },
+    ]);
+
+    return { slides, genres, goToCommunity };
+  }
+};
 </script>
 
 <template>
-  <!-- Header -->
-  <toolbarComponent/>
+  <toolbarComponent />
 
   <div class="home-container">
-    <!-- aca debería de ir el carrusel con los banners, todavía no está desarrollado -->
-    <div class="mock-banner">
-      <p>acá va el banner !!</p>
-    </div>
+    <pv-carousel :value="slides" :numVisible="1" :numScroll="1" circular :autoplayInterval="5000">
+      <template #item="slotProps">
+        <div
+            class="carousel-slide"
+            :style="{ backgroundImage: `url(${slotProps.data.imagen})` }"
+        >
+          <div class="carousel-overlay">
+            <h1 class="carousel-title">
+              {{ $t(slotProps.data.tituloKey) }}
+            </h1>
+            <p class="carousel-description">
+              {{ $t(slotProps.data.descripcionKey) }}
+            </p>
 
-    <!-- Scroll Section -->
+            <pv-button
+                v-if="slotProps.data.tituloKey === 'carousel.community.title'"
+                :label="$t('carousel.button-1')"
+                class="carousel-button"
+                @click="goToCommunity"
+            />
+
+            <router-link
+                v-else-if="slotProps.data.tituloKey === 'carousel.worlds.title'"
+                to="/recommendations"
+            >
+              <pv-button :label="$t('carousel.button-2')" class="carousel-button" />
+            </router-link>
+
+          </div>
+        </div>
+      </template>
+    </pv-carousel>
+
     <section class="carousels__section">
-      <div class="carousels__section-container">
+      <div class="carousels__section-container" v-for="genre in genres" :key="genre.id">
         <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--orange">{{ $t('literature') }}</router-link>
+          <router-link to="" class="carousels__section-link" :class="genre.colorClass">
+            {{ $t(genre.label) }}
+          </router-link>
         </div>
         <div class="carousel__section-fullwidth">
-          <bookCarousel genre="literatura" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--yellow">{{ $t('non-fiction') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="noficcion" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--blue">{{ $t('fiction') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="ficcion" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--orange">{{ $t('mangas and comics') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="mangasycomics" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--yellow">{{ $t('juvenile') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="juvenil" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--blue">{{ $t('children') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="infantil" />
-        </div>
-      </div>
-      <div class="carousels__section-container">
-        <div class="carousels__section-title">
-          <router-link to="" class="carousels__section-link go--orange">{{ $t('ebooks and audiobooks') }}</router-link>
-        </div>
-        <div class="carousel__section-fullwidth">
-          <bookCarousel genre="ebooks" />
+          <bookCarousel :genre="genre.id" />
         </div>
       </div>
     </section>
 
     <!-- Footer -->
     <div class="footer__container-fullwidth">
-      <footerComponent/>
+      <footerComponent />
     </div>
   </div>
-
-
 </template>
 
 <style scoped>
-
 .home-container {
-  margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
-}
-/* Banner */
-.mock-banner { /* pasará a ser el div que contenga ese carrusel en su componente*/
-  width: 100vw;
-  height: 300px;
-  padding: 0;
-  margin: 0;
-  border: 1px solid red;
+  margin: 7.5rem calc(-1 * ((95vw - 100%) / 2));
 }
 
-/* Categories Carousels */
+.p-carousel {
+  width: 100%;
+}
+
+.carousel-slide {
+  width: 100%;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.carousel-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffcc00;
+  margin-bottom: 1rem;
+}
+
+.carousel-description {
+  font-size: 1.25rem;
+  color: #ffffff;
+  max-width: 800px;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+
+.carousel-button {
+  background-color: var(--color-background) !important;
+  color: #1a237e !important;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+}
+
 .carousels__section {
   padding: 1rem;
 }
@@ -135,9 +205,8 @@ export default {
 }
 
 .carousel__section-fullwidth,
-.footer__container-fullwidth  {
+.footer__container-fullwidth {
   width: 100vw;
   margin-left: calc(-1 * ((100vw - 100%) / 2));
 }
-
 </style>

@@ -1,7 +1,7 @@
 <script>
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
-import genreBooks from "../../books/components/genre-books.component.vue";
+import genreBooks from "../../commerce/books/components/genre-books.component.vue";
 
 export default {
   name: "book-literature.component",
@@ -45,12 +45,11 @@ export default {
         <h1 class="h1__title">{{ genreTitle }}</h1>
       </div>
 
-    </div>
+      <div class="cards__container">
+        <genreBooks :genre="genre" />
+      </div>
 
-    <div class="cards__container">
-      <genreBooks :genre="genre" />
     </div>
-
     <!-- Footer -->
     <div class="footer__container-fullwidth">
       <footerComponent />
@@ -65,7 +64,7 @@ export default {
 
 .literature__fullwidth {
   padding: 0 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 </style>
