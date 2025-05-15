@@ -1,25 +1,26 @@
 <script>
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
-import recommendedBooks from "../../commerce/books/components/recommended-books.component.vue";
+import BookSearch from "../../commerce/books/components/book-search.component.vue";
+import BookDetail from "../../commerce/books/components/book-detail.component.vue";
 
 export default {
-  name: "recomendation.component",
+  name: "search-component",
   components: {
+    BookDetail,
     toolbarComponent,
     footerComponent,
-    recommendedBooks
+    BookSearch,
   }
 };
 </script>
 
 <template>
   <toolbarComponent />
-  <div class="book-container">
-    <div class="book__fullwidth">
-      <div class="cards__container">
-        <recommendedBooks />
-      </div>
+
+  <div class="search-container">
+      <div class="booksearch__container">
+        <BookSearch />
     </div>
 
     <div class="footer__container-fullwidth">
@@ -27,25 +28,18 @@ export default {
     </div>
   </div>
 
+
+
 </template>
 
-<style scoped>
-.footer__container-fullwidth {
-  margin-top: 2rem;
-}
 
-.book-container {
+
+<style scoped>
+.search-container {
   margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
 }
 
-.book__fullwidth,
-.cards__container {
-  padding: 0 2rem;
+.booksearch__container {
   margin-bottom: 4rem;
 }
-
-.cards__container p {
-  margin: 0 0 3rem;
-}
-
 </style>

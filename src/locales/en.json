@@ -1,10 +1,11 @@
 {
   "toolbar": {
     "search": "Search",
-    "cart": "Kart",
     "notifications": "Notifications",
     "account": "Account"
   },
+
+  "cart-toolbar": "Cart",
   "shop": "Shop",
   "literature": "Literature",
   "non-fiction": "Non-Fiction",
@@ -21,6 +22,10 @@
     "title": "RECOMMENDATIONS FOR YOU",
     "subtitle": "Hi! Based on your preferences, here are some recommendations..."
   },
+
+  "Search": "Search for: ",
+  "NoSearch": "No results found in the search",
+  "RecoSearch": "The following recommendations might interest you",
 
   "carousel": {
     "community": {
@@ -46,6 +51,13 @@
     "en": "English"
   },
   "add-to-cart": "Add to cart",
+  "empty-cart": "Empty Cart",
+  "buy-cart": "Complete my purchase",
+
+  "cart": {
+    "modified": "Cart Modified",
+    "book-added": "This books has been added to your cart!"
+  },
 
   "genres": {
     "literatura": "Literature",
@@ -79,7 +91,7 @@
   "help": "Help",
   "frequent-questions": "Frequent Questions",
   "contact-us": "Contact Us",
-  "copyrights":"© 2025 Bookify - Livria. All rights reserved.",
+  "copyrights":"Â© 2025 Bookify - Livria. All rights reserved.",
 
 
   "profile": "Profile",
@@ -130,6 +142,32 @@
   "emailinput": "Email",
   "register": "Register",
   "emailerror": "Please enter a valid email address",
+
+  "createacc": "Don't have an account?",
+  "no-phrase": "No phrase yet",
+  "no-order": "No orders yet",
+  "password-error": "Password error",
+  "password-error-details": "Password must be the same (Confirm password)",
+  "login-success": "Login successful",
+  "login-success-details": "Welcome back!",
+  "login-fail": "Login error",
+  "login-fail-details": "Invalid credentials",
+  "displayinput": "Nickname",
+  "phraseinput": "Phrase",
+  "icon-input": "Avatar URL",
+  "register-fail": "Register error",
+  "register-fail-details": "Fields are empty or passwords didn't match",
+  "register-success": "Register success",
+  "register-success-details": "Welcome to Livria!",
+
+  "update-success": "Password updated successfully",
+  "update-success-details": "Password has been updated.",
+  "update-fill-fail": "Must fill all camps",
+  "update-fill-fail-details": "Error: fill all form camps",
+  "update-password-fail": "Wrong password",
+  "update-password-fail-details": "Error: Use current password to save changes",
+  "update-confirm-fail": "Confirmation error",
+  "update-confirm-fail-details": "Error: passwords must match",
 
   "or": "OR"
 }

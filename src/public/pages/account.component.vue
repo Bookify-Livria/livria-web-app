@@ -8,7 +8,7 @@ export default {
   components: {
     toolbarComponent,
     footerComponent,
-    Profile,
+    Profile
   }
 }
 
@@ -27,9 +27,9 @@ export default {
       </div>
 
       <!-- Profile -->
-        <div class="profile__container">
-          <Profile/>
-        </div>
+      <div class="profile__container">
+        <Profile/>
+      </div>
     </div>
 
     <!-- Footer -->

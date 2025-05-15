@@ -1,44 +1,45 @@
 <script>
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
-import recommendedBooks from "../../commerce/books/components/recommended-books.component.vue";
+import CommunityView from "../../communities/components/Community-View.component.vue";
 
 export default {
-  name: "recomendation.component",
+  name: "home.component",
   components: {
     toolbarComponent,
     footerComponent,
-    recommendedBooks
+    CommunityView,
   }
-};
+}
 </script>
 
 <template>
-  <toolbarComponent />
-  <div class="book-container">
-    <div class="book__fullwidth">
+  <!-- Header -->
+  <toolbarComponent/>
+
+  <div class="community-container">
+
+    <div class="community__fullwidth">
+      <!-- Communities Cards Section -->
       <div class="cards__container">
-        <recommendedBooks />
+        <CommunityView />
       </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer__container-fullwidth">
-      <footerComponent />
+      <footerComponent/>
     </div>
   </div>
-
 </template>
 
 <style scoped>
-.footer__container-fullwidth {
-  margin-top: 2rem;
-}
-
-.book-container {
+.community-container {
   margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
+  margin-top: 200px;
 }
 
-.book__fullwidth,
+.community__fullwidth,
 .cards__container {
   padding: 0 2rem;
   margin-bottom: 4rem;

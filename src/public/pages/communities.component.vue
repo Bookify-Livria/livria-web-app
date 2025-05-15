@@ -2,7 +2,7 @@
 import toolbarComponent from "../components/toolbar.component.vue";
 import footerComponent from "../components/footer-content.component.vue";
 import communityGrid from "../../communities/components/Community-Grid.component.vue";
-import bookCarousel from "../../books/components/books-carousel.component.vue";
+import bookCarousel from "../../commerce/books/components/books-carousel.component.vue";
 
 export default {
   name: "home.component",
@@ -44,6 +44,7 @@ export default {
 <style scoped>
 .community-container {
   margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
+  margin-top: 200px;
 }
 
 .community__fullwidth,

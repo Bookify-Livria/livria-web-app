@@ -7,7 +7,9 @@
       "email": "kingturkey@gmail.com",
       "icon": "https://img.freepik.com/premium-photo/turkey-is-depicted-wearing-luxurious-red-white-cape-adorned-with-jeweled-crown_1115583-48702.jpg",
       "password": "reypavobnd4",
-      "phrase": "¡¡Soy el rey pavo!!"
+      "phrase": "¡¡Soy el rey pavo!!",
+      "order": "123456",
+      "orderstatus": "delivered"
     },
     {
       "id": "2",
@@ -16,7 +18,19 @@
       "email": "salad@gmail.com",
       "icon": "https://fengfitfoods.com/cdn/shop/products/Dr-Fengs-Signature-Salad.jpg?v=1449160732",
       "password": "ensaladadoctorada1",
-      "phrase": "¡¡Soy el doctor ensalada!!"
+      "phrase": "¡¡Soy el doctor ensalada!!",
+      "order": "654321",
+      "orderstatus": "pending"
+    },
+    {
+      "id": "3",
+      "display": "Place",
+      "email": "e@gmail.com",
+      "icon": "",
+      "password": "palace",
+      "phrase": "",
+      "order": "",
+      "orderstatus": ""
     }
   ],
   "communities": [
@@ -145,6 +159,108 @@
       "description": "somos esos ",
       "type": "anime",
       "image": "https://i.imgur.com/K9hEj0v.jpg"
+    },
+    {
+      "id": "1747031493994",
+      "name": "Mustangs🐴",
+      "description": "Comunidad para amantes de la mejor marca de carros: Ford",
+      "type": "Carros",
+      "image": "https://es.ford.com/is/image/content/dam/na/ford/en_us/images/mustang/2025/dm/_S5A3247_V4_ST.tif?croppathe=21x9&wid=1440&fmt=webp"
+    },
+    {
+      "id": "1747032145792",
+      "name": "Hate a Livria",
+      "description": "Livria la peor app 🔥👎",
+      "type": "Love",
+      "image": "https://i.ibb.co/WNt3WDcc/image.jpg"
+    }
+  ],
+  "communityMembers": [
+    {
+      "id": "1",
+      "userId": "1",
+      "communityId": "4",
+      "joinedAt": "2024-01-15T10:30:00.000Z",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "userId": "3",
+      "communityId": "4",
+      "joinedAt": "2024-02-10T14:20:00.000Z",
+      "role": "member"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "communityId": "1",
+      "userId": "3",
+      "content": "Hace poco empecé los libros del riordanverse gracias a mi amiguibi ainhoa que me los recomendó y de verdad son los mejores!!",
+      "createdAt": "2024-05-10T12:30:00.000Z",
+      "image": "https://i.imgur.com/hZJwkBm.jpg",
+      "likes": [
+        "4",
+        "5",
+        "1"
+      ],
+      "comments": [
+        {
+          "id": "1",
+          "userId": "4",
+          "text": "Me alegra que te gusten! Son increíbles 😍",
+          "createdAt": "2024-05-10T12:40:00.000Z"
+        },
+        {
+          "id": "2",
+          "userId": "5",
+          "text": "Yo también los amo! ¿Por cuál empezaste?",
+          "createdAt": "2024-05-10T12:45:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "communityId": "1",
+      "userId": "1",
+      "content": "Alguien sabe si debo leer antes las pruebas de apolo o la trilogía de magnus chase???? Importa el orden?? Leo sus comentarioss",
+      "createdAt": "2024-05-07T09:10:00.000Z",
+      "image": null,
+      "likes": [
+        "5"
+      ],
+      "comments": [
+        {
+          "id": "1",
+          "userId": "5",
+          "text": "Puedes leerlos en paralelo, pero yo te recomendaría primero Las Pruebas de Apolo porque están más conectadas con los eventos de Héroes del Olimpo",
+          "createdAt": "2024-05-07T09:20:00.000Z"
+        },
+        {
+          "id": "2",
+          "userId": "3",
+          "text": "Yo leí primero Magnus Chase y me encantó, pero es cierto que no está tan conectada con la historia principal",
+          "createdAt": "2024-05-07T10:30:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "7e83",
+      "communityId": "1",
+      "userId": "1",
+      "content": "🥸",
+      "createdAt": "2025-05-12T05:57:06.203Z",
+      "likes": [],
+      "comments": []
+    },
+    {
+      "id": "b430",
+      "communityId": "1",
+      "userId": "1",
+      "content": "Fan de las pizzas con piña 🍍🍕",
+      "createdAt": "2025-05-12T05:57:33.094Z",
+      "likes": [],
+      "comments": []
     }
   ],
   "books": [
@@ -1149,20 +1265,6 @@
       "language": "es"
     }
   ],
-  "cart": [
-    {
-      "id": "1",
-      "book": {
-        "id": "2",
-        "title": "Orgullo y prejuicio",
-        "description": "Un clásico sobre el amor y las clases sociales en la Inglaterra del siglo XIX.",
-        "author": "Jane Austen",
-        "price": 35.5,
-        "cover": "https://i.imgur.com/book2.jpg",
-        "genre": "literatura",
-        "language": "es"
-      },
-      "quantity": 1
-    }
-  ]
+  "cart": [],
+  "userlogin": []
 }
