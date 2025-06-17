@@ -284,6 +284,7 @@
       "description": "La épica historia de la familia Buendía en Macondo.",
       "author": "Gabriel García Márquez",
       "price": 45.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/7N0UyUJ.jpg",
       "genre": "literatura",
       "language": "es"
@@ -294,6 +295,7 @@
       "description": "Una exploración de la música criolla y la identidad peruana.",
       "author": "Mario Vargas Llosa",
       "price": 89,
+      "stock": 10,
       "cover": "https://i.imgur.com/qYcdX5Y.jpg",
       "genre": "literatura",
       "language": "es"
@@ -304,6 +306,7 @@
       "description": "Una breve historia de la humanidad desde una perspectiva única.",
       "author": "Yuval Noah Harari",
       "price": 99,
+      "stock": 10,
       "cover": "https://i.imgur.com/OxxhFPg.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -314,6 +317,7 @@
       "description": "Las aventuras de Tanjiro en su lucha contra los demonios.",
       "author": "Koyoharu Gotouge",
       "price": 35,
+      "stock": 10,
       "cover": "https://i.imgur.com/aT2lqeB.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -324,6 +328,7 @@
       "description": "Una historia de amor y guerra en un mundo fantástico.",
       "author": "Rebecca Yarros",
       "price": 69.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/T8huXJC.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -334,6 +339,7 @@
       "description": "La historia de un cachorro que busca su lugar en el mundo.",
       "author": "Patricia del Río",
       "price": 49.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/qKk4mNJ.jpg",
       "genre": "infantil",
       "language": "es"
@@ -344,6 +350,7 @@
       "description": "La vida de Jacobo Hurwitz, educador y activista peruano.",
       "author": "Hugo Coya",
       "price": 79,
+      "stock": 10,
       "cover": "https://i.imgur.com/WzCyZ9R.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -354,6 +361,7 @@
       "description": "Una exploración de la identidad y el legado familiar.",
       "author": "Gabriela Wiener",
       "price": 59,
+      "stock": 10,
       "cover": "https://i.imgur.com/keZAwqv.jpg",
       "genre": "literatura",
       "language": "es"
@@ -364,6 +372,7 @@
       "description": "Una novela sobre los primeros años del terror en el Perú.",
       "author": "Karina Pacheco",
       "price": 65,
+      "stock": 10,
       "cover": "https://i.imgur.com/GzJkrNG.jpg",
       "genre": "literatura",
       "language": "es"
@@ -374,6 +383,7 @@
       "description": "Una mirada crítica acerca de la felicidad en estos tiempos.",
       "author": "Gabriel Rolón",
       "price": 99,
+      "stock": 10,
       "cover": "https://i.imgur.com/LmLDvBw.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -384,6 +394,7 @@
       "description": "Un thriller psicológico que te atrapará desde el principio.",
       "author": "John Katzenbach",
       "price": 55.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/iLJcYw6.jpg",
       "genre": "ficcion",
       "language": "es"
@@ -394,6 +405,7 @@
       "description": "Viajes en el tiempo y pandillas juveniles.",
       "author": "Ken Wakui",
       "price": 38,
+      "stock": 10,
       "cover": "https://i.imgur.com/XleP7rp.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -404,6 +416,7 @@
       "description": "El inicio de una aventura mágica.",
       "author": "J.K. Rowling",
       "price": 75,
+      "stock": 10,
       "cover": "https://i.imgur.com/LlRTuVo.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -414,6 +427,7 @@
       "description": "Una historia infantil sobre las emociones.",
       "author": "Anna Llenas",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/JLPN24W.jpg",
       "genre": "infantil",
       "language": "es"
@@ -424,6 +438,7 @@
       "description": "Stephen Hawking responde a los misterios del universo.",
       "author": "Stephen Hawking",
       "price": 89.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/pygnPZR.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -434,6 +449,7 @@
       "description": "Transforma tu vida con pequeños hábitos.",
       "author": "James Clear",
       "price": 92,
+      "stock": 10,
       "cover": "https://i.imgur.com/ySvnNSr.jpg",
       "genre": "ebooks",
       "language": "es"
@@ -444,6 +460,7 @@
       "description": "Lo que los ricos enseñan a sus hijos sobre el dinero.",
       "author": "Robert T. Kiyosaki",
       "price": 88.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/HxWuHl6.jpg",
       "genre": "noficcion",
       "language": "en"
@@ -454,6 +471,7 @@
       "description": "La decadencia y la esperanza en los años 20.",
       "author": "F. Scott Fitzgerald",
       "price": 59.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/4rfFsTt.jpg",
       "genre": "ficcion",
       "language": "en"
@@ -464,6 +482,7 @@
       "description": "Un misterio rural con toques poéticos.",
       "author": "Delia Owens",
       "price": 66.6,
+      "stock": 10,
       "cover": "https://i.imgur.com/8RYCAod.jpg",
       "genre": "ficcion",
       "language": "en"
@@ -474,6 +493,7 @@
       "description": "Un enfoque distinto para vivir una buena vida.",
       "author": "Mark Manson",
       "price": 85,
+      "stock": 10,
       "cover": "https://i.imgur.com/Cs3BWqf.jpg",
       "genre": "ebooks",
       "language": "en"
@@ -484,6 +504,7 @@
       "description": "Una historia filosófica disfrazada de cuento infantil.",
       "author": "Antoine de Saint-Exupéry",
       "price": 39.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/SW4tXtE.jpg",
       "genre": "infantil",
       "language": "es"
@@ -494,6 +515,7 @@
       "description": "Reflexiones de Viktor Frankl desde un campo de concentración.",
       "author": "Viktor E. Frankl",
       "price": 62,
+      "stock": 10,
       "cover": "https://i.imgur.com/266v2kG.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -504,6 +526,7 @@
       "description": "Una historia de amor y pérdida en el Japón de los 60.",
       "author": "Haruki Murakami",
       "price": 75.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/ib88EDi.jpg",
       "genre": "literatura",
       "language": "es"
@@ -514,6 +537,7 @@
       "description": "Una clase con una misión: matar a su maestro alienígena.",
       "author": "Yusei Matsui",
       "price": 35.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/bbLZh7s.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -524,6 +548,7 @@
       "description": "Una lucha por sobrevivir en un futuro distópico.",
       "author": "Suzanne Collins",
       "price": 78,
+      "stock": 10,
       "cover": "https://i.imgur.com/lziMVpt.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -534,6 +559,7 @@
       "description": "Una guía emocional para niños con miedo.",
       "author": "Luis Gutiérrez Rojas",
       "price": 44,
+      "stock": 10,
       "cover": "https://i.imgur.com/cPsgods.jpg",
       "genre": "infantil",
       "language": "es"
@@ -544,6 +570,7 @@
       "description": "Las memorias del expresidente Barack Obama.",
       "author": "Barack Obama",
       "price": 99.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/8a5tmBa.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -554,6 +581,7 @@
       "description": "Una historia de amor y secretos a lo largo de los años.",
       "author": "Isabel Allende",
       "price": 65,
+      "stock": 10,
       "cover": "https://i.imgur.com/xaqvcCs.jpg",
       "genre": "literatura",
       "language": "es"
@@ -564,6 +592,7 @@
       "description": "La historia oscura y brutal de Guts, el guerrero negro.",
       "author": "Kentaro Miura",
       "price": 48.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/iokXCCA.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -574,6 +603,7 @@
       "description": "Un tierno romance juvenil entre dos chicos.",
       "author": "Alice Oseman",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/8QiD1Y2.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -584,6 +614,7 @@
       "description": "Una guía espiritual para encontrar la paz interior.",
       "author": "Eckhart Tolle",
       "price": 82.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/ewZIeEX.jpg",
       "genre": "ebooks",
       "language": "es"
@@ -594,6 +625,7 @@
       "description": "Una memoria poderosa sobre la superación y la educación.",
       "author": "Tara Westover",
       "price": 74,
+      "stock": 10,
       "cover": "https://i.imgur.com/HmeAu1i.jpg",
       "genre": "noficcion",
       "language": "en"
@@ -604,6 +636,7 @@
       "description": "La clásica novela sobre la adolescencia y la alienación.",
       "author": "J.D. Salinger",
       "price": 56.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/1fhRsuD.jpg",
       "genre": "ficcion",
       "language": "en"
@@ -614,6 +647,7 @@
       "description": "Una historia de amor y decisiones difíciles.",
       "author": "Colleen Hoover",
       "price": 76,
+      "stock": 10,
       "cover": "https://i.imgur.com/CNzmVps.jpg",
       "genre": "ficcion",
       "language": "en"
@@ -624,6 +658,7 @@
       "description": "La legendaria saga de ciencia ficción en Arrakis.",
       "author": "Frank Herbert",
       "price": 90,
+      "stock": 10,
       "cover": "https://i.imgur.com/9mRfFoz.jpg",
       "genre": "ficcion",
       "language": "es"
@@ -634,6 +669,7 @@
       "description": "Un misterio literario ambientado en la Barcelona de posguerra.",
       "author": "Carlos Ruiz Zafón",
       "price": 78.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/MWdPjUU.jpg",
       "genre": "literatura",
       "language": "es"
@@ -644,6 +680,7 @@
       "description": "El comienzo del viaje de Naruto para ser Hokage.",
       "author": "Masashi Kishimoto",
       "price": 32,
+      "stock": 10,
       "cover": "https://i.imgur.com/ao5qPA8.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -654,6 +691,7 @@
       "description": "Una joven descubre un mundo oculto de demonios y nefilim.",
       "author": "Cassandra Clare",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/Xpg0K9N.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -664,6 +702,7 @@
       "description": "Una entrañable historia infantil sobre la amistad.",
       "author": "Steve Smallman",
       "price": 42,
+      "stock": 10,
       "cover": "https://i.imgur.com/O4HqZeK.jpg",
       "genre": "infantil",
       "language": "es"
@@ -674,6 +713,7 @@
       "description": "David Goggins y su brutal historia de superación personal.",
       "author": "David Goggins",
       "price": 86,
+      "stock": 10,
       "cover": "https://i.imgur.com/ZKsk3lz.jpg",
       "genre": "ebooks",
       "language": "en"
@@ -684,6 +724,7 @@
       "description": "Una novela experimental sobre el amor y el caos.",
       "author": "Julio Cortázar",
       "price": 84,
+      "stock": 10,
       "cover": "https://i.imgur.com/OELzMY1.jpg",
       "genre": "literatura",
       "language": "es"
@@ -694,6 +735,7 @@
       "description": "Una carrera contra el tiempo para descubrir un secreto antiguo.",
       "author": "Dan Brown",
       "price": 59.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/Ff2WTd9.jpg",
       "genre": "ficcion",
       "language": "es"
@@ -704,6 +746,7 @@
       "description": "Pequeños cambios que generan grandes resultados.",
       "author": "James Clear",
       "price": 92,
+      "stock": 10,
       "cover": "https://i.imgur.com/I6uTnBU.jpg",
       "genre": "noficcion",
       "language": "en"
@@ -714,6 +757,7 @@
       "description": "Un joven caza demonios que se convierte en uno.",
       "author": "Tatsuki Fujimoto",
       "price": 34.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/Mqy1taV.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -724,16 +768,18 @@
       "description": "Una adolescente enfrenta las consecuencias de sus cartas de amor secretas.",
       "author": "Jenny Han",
       "price": 66,
+      "stock": 10,
       "cover": "https://i.imgur.com/OwT6aqb.jpg",
       "genre": "juvenil",
       "language": "es"
     },
     {
       "id": "46",
-      "title": "¿Dónde está Spot?",
+      "title": "¿Dónde está Jhosep?",
       "description": "Un divertido libro interactivo para los más pequeños.",
       "author": "Eric Hill",
       "price": 38.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/klJb51R.jpg",
       "genre": "infantil",
       "language": "es"
@@ -744,6 +790,7 @@
       "description": "Las memorias inspiradoras de Michelle Obama.",
       "author": "Michelle Obama",
       "price": 85,
+      "stock": 10,
       "cover": "https://i.imgur.com/a6MOHKf.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -754,6 +801,7 @@
       "description": "Un asesinato anunciado y la indiferencia de un pueblo.",
       "author": "Gabriel García Márquez",
       "price": 49.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/PD3nLNU.jpg",
       "genre": "literatura",
       "language": "es"
@@ -764,6 +812,7 @@
       "description": "El inicio de la gran aventura pirata de Luffy.",
       "author": "Eiichiro Oda",
       "price": 35.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/N6IUatX.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -774,6 +823,7 @@
       "description": "Un grupo de adolescentes atrapados en un misterioso laberinto.",
       "author": "James Dashner",
       "price": 68,
+      "stock": 10,
       "cover": "https://i.imgur.com/SD7E8uE.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -784,6 +834,7 @@
       "description": "El inicio de la historia del joven mago más famoso.",
       "author": "J.K. Rowling",
       "price": 89,
+      "stock": 10,
       "cover": "https://i.imgur.com/255VnVx.jpg",
       "genre": "ficcion",
       "language": "es"
@@ -794,6 +845,7 @@
       "description": "Claves para mejorar tus relaciones y tu éxito.",
       "author": "Dale Carnegie",
       "price": 54,
+      "stock": 10,
       "cover": "https://i.imgur.com/fJU1ijK.jpg",
       "genre": "ebooks",
       "language": "es"
@@ -804,6 +856,7 @@
       "description": "La búsqueda espiritual de un joven pastor andaluz.",
       "author": "Paulo Coelho",
       "price": 69.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/WxQ0WbU.jpg",
       "genre": "ficcion",
       "language": "en"
@@ -814,6 +867,7 @@
       "description": "Un futuro distópico dominado por un estado totalitario.",
       "author": "George Orwell",
       "price": 63.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/wfhMIJ8.jpg",
       "genre": "ficcion",
       "language": "es"
@@ -824,6 +878,7 @@
       "description": "La lucha de mujeres por su libertad en la España de los años 20.",
       "author": "Alba Quintas",
       "price": 72,
+      "stock": 10,
       "cover": "https://i.imgur.com/hC7o8B1.jpg",
       "genre": "literatura",
       "language": "es"
@@ -834,6 +889,7 @@
       "description": "Las primeras aventuras de Ash y Pikachu.",
       "author": "Hidenori Kusaka",
       "price": 30,
+      "stock": 10,
       "cover": "https://i.imgur.com/nAqhgZ7.jpg",
       "genre": "mangasycomics",
       "language": "es"
@@ -844,6 +900,7 @@
       "description": "Una historia de amor intensa y conflictiva.",
       "author": "Anna Todd",
       "price": 75,
+      "stock": 10,
       "cover": "https://i.imgur.com/7cVfusm.jpg",
       "genre": "juvenil",
       "language": "es"
@@ -854,6 +911,7 @@
       "description": "Historias breves para reflexionar sobre la vida.",
       "author": "Eloy Moreno",
       "price": 50,
+      "stock": 10,
       "cover": "https://i.imgur.com/6Az3jGf.jpg",
       "genre": "infantil",
       "language": "es"
@@ -864,6 +922,7 @@
       "description": "La biografía oficial del fundador de Apple.",
       "author": "Walter Isaacson",
       "price": 98,
+      "stock": 10,
       "cover": "https://i.imgur.com/QjHYICU.jpg",
       "genre": "noficcion",
       "language": "es"
@@ -874,6 +933,7 @@
       "description": "Consejos para enfrentar el caos del mundo moderno.",
       "author": "Jordan B. Peterson",
       "price": 95,
+      "stock": 10,
       "cover": "https://i.imgur.com/5zxXAQ2.jpg",
       "genre": "ebooks",
       "language": "es"

@@ -8,6 +8,7 @@ export class BookAssembler {
             resource.description,
             resource.author,
             resource.price,
+            resource.stock,
             resource.cover,
             resource.genre,
             resource.language,

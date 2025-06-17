@@ -34,13 +34,13 @@ export async function notifyEvent(type) {
             title = "Notification";
             content = "An event just occurred.";
     }
-
+/*
     const newNotification = new Notification(
         String(1 + counter),
         now,
         title,
         content
-    );
+    );*/
 
     await service.addNotification(newNotification);
     counter = counter + 1;

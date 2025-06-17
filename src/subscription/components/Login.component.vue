@@ -7,6 +7,10 @@ import 'primeicons/primeicons.css';
 =======
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
 import {notifyEvent} from "../../public/shared-services/to-notify.js";
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+import { UserApiService } from "../service/user-api.service.js";
 >>>>>>> Stashed changes
 
 const value1 = '';
@@ -48,21 +52,34 @@ export default {
 
     async validateLogin(valueA, valueB) {
       try {
+<<<<<<< Updated upstream
         const response = await axios.get('http://localhost:3000/users');
         const users = response.data;
+=======
+        const response = new UserApiService();
+        const clients = await response.getUsers();
+>>>>>>> Stashed changes
 
-        const matchedUser = users.find(
-            user => user.user === valueA && user.password === valueB
+        const admin = await response.getAdminUser();
+
+        const matchedUser = clients.find(
+            user => user.username === valueA && user.password === valueB
         );
 
         if (matchedUser) {
           console.log("Login successful:", matchedUser.display);
           return matchedUser;
         } else {
-          console.warn("Login failed: invalid credentials.");
-          return null;
-        }
+          const matchedAdmin = admin.username === valueA && admin.password === valueB ? admin : null;
 
+          if (matchedAdmin) {
+            console.log("Login successful:", matchedAdmin.display);
+            return matchedAdmin;
+          } else {
+            console.warn("Login failed: invalid credentials.");
+            return null;
+          }
+        }
       } catch (error) {
         console.error("Error validating login:", error);
         return null;
@@ -74,6 +91,7 @@ export default {
     goToRegister() {
       this.$router.push('/register');
     },
+<<<<<<< Updated upstream
     async handleLogin(valueA, valueB) {
       const matchedUser = await this.validateLogin(valueA, valueB);
       if (matchedUser && valueA!=='' && valueB!=='') {
@@ -81,6 +99,20 @@ export default {
         this.showLogin();
         await notifyEvent("login");
         this.goToHome();
+=======
+    goToAdminAccess(){
+      this.$router.push('/access');
+    },
+    async handleLogin(valueA, valueB) { // Permite validar el inicio de sesión y registar la información del usuario loggeado
+      const matchedUser = await this.validateLogin(valueA, valueB);
+      if (matchedUser && valueA!=='' && valueB!=='') {
+        await this.createLogin(matchedUser.id, valueA, valueB);
+        if (matchedUser.adminAccess) {
+          this.goToAdminAccess();
+        } else {
+          this.goToHome();
+        }
+>>>>>>> Stashed changes
       } else {
         this.showFail();
       }
@@ -122,10 +154,15 @@ export default {
 <template>
   <div class="all">
     <div class="head">
+<<<<<<< Updated upstream
       <div class="same-line">
         <img src="https://i.imgur.com/dZ7eqsw.jpg" alt="Logo" width="60px" height="60px">
         <h1 class="name">Livria</h1>
       </div>
+=======
+        <img src="../../assets/images/logo/logo.png" alt="Logo" height="45px">
+        <language-switcher />
+>>>>>>> Stashed changes
     </div>
     <div class="content">
       <pv-card>
@@ -193,6 +230,7 @@ export default {
 
 ::v-deep(.p-card-title) {
   text-align: center;
+<<<<<<< Updated upstream
 }
 
 .same-line {
@@ -201,8 +239,20 @@ export default {
   align-items: center;
 }
 
+=======
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-blue);
+  margin: 0;
+}
+
+>>>>>>> Stashed changes
 .head {
   justify-items: center;
+<<<<<<< Updated upstream
   justify-content: center;
   gap: 2rem;
   color: black;
@@ -211,6 +261,11 @@ export default {
 
 .name{
   margin-left: 15px;
+=======
+  justify-content: space-around;
+  width: 100%;
+  padding: 2rem 8rem;
+>>>>>>> Stashed changes
 }
 
 .form-group {
@@ -224,7 +279,7 @@ export default {
 
 .form-label {
   min-width: 90px;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .label-class {
@@ -242,6 +297,10 @@ export default {
   justify-items: right;
   text-align: right;
   width: 100%;
+<<<<<<< Updated upstream
+=======
+  margin-top: 1rem;
+>>>>>>> Stashed changes
 }
 
 .form-input {
@@ -274,7 +333,7 @@ export default {
 ::v-deep(.p-card-body) {
   justify-content: center;
   justify-items: center;
-  width: 70%;
+  width: 75%;
 }
 
 ::v-deep(.p-card-content) {
@@ -294,16 +353,21 @@ export default {
 
 ::v-deep(.p-password-input) {
   width: 100%;
-  padding: 0.5rem;
   font-size: 1rem;
 }
 
 .division {
+<<<<<<< Updated upstream
   margin-top: 20px;
   margin-bottom: 20px;
   color: #000000;
   font-size: 2rem;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, .45);
+=======
+  margin: 20px 0;
+  color: var(--color-text);
+  font-size: 1.2rem;
+>>>>>>> Stashed changes
 
   display: flex;
   justify-content: center;
@@ -313,7 +377,7 @@ export default {
   &::after {
     content: '';
     display: block;
-    height: 0.09em;
+    height: 0.1em;
     min-width: 30vw;
   }
 
@@ -338,9 +402,10 @@ export default {
   background-color: transparent;
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
-  width: 200px;
-  height: 60px;
+  width: 175px;
+  height: 50px;
   border-radius: 15px;
+<<<<<<< Updated upstream
   font-size: 15px;
   text-align: center;
   justify-content: center;
@@ -370,9 +435,11 @@ export default {
   height: 60px;
   border-radius: 15px;
   font-size: 20px;
+=======
+  font-size: 18px;
+>>>>>>> Stashed changes
   text-align: center;
   justify-content: center;
-  margin-top: 0.5rem;
 }
 
 
