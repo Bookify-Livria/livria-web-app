@@ -1,22 +1,5 @@
 {
   "users": [
-    {
-      "id": "1",
-      "display": "Alice",
-      "user": "jabberwock",
-      "email": "alice.jabberwock.1951@gmail.com",
-      "icon": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhuVjgb8MySnWy78K7s5vVjTyM8z3PxqXe2iRNtV8MTLGvqcDuptmtaMg4sMBzfmaT41sSqbjdgo8JpyPmexNpTp9KuUeu5K2F5Qhaoc8OMHFkxy-Cr-stKrJva0ro7pYapzeoo5OGKiwjv/s752/jabberwocky-illustration-by-john-tenniel-500x752.jpg",
-      "password": "madhatter",
-      "phrase": "We're all mad here. I'm mad. You're mad.",
-      "order": [
-        {
-          "id": "1",
-          "code": "7LZ1KL",
-          "orderstatus": "delivered"
-        }
-      ],
-      "subscription": true
-    }
   ],
   "communities": [
     {
@@ -83,7 +66,7 @@
           "id": "4",
           "username": "agathafangirl",
           "content": "No hay nada como una novela de Agatha Christie para una noche de lluvia ☔📚",
-          "img": "https://i.imgur.com/4Q1R6Na.jpg"
+          "img": "https://i.imgur.com/Gu3Bgdi.jpg"
         },
         {
           "id": "5",
@@ -99,13 +82,13 @@
       "description": "Comunidad de libros para peques y cuentos de hadas.",
       "type": "infantil",
       "image": "https://i.imgur.com/lxrbFYU.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/sFvMdAS.jpg",
       "posts": [
         {
           "id": "1",
           "username": "cuentacuentos",
           "content": "Hoy leímos 'El gigante egoísta' en clase y los niños quedaron fascinados 💫",
-          "img": "https://i.imgur.com/pUF8vL0.jpg"
+          "img": "https://i.imgur.com/lvzO3rb.jpg"
         },
         {
           "id": "2",
@@ -117,7 +100,7 @@
           "id": "3",
           "username": "lecturamagica",
           "content": "Los libros de la colección 'Mi primer cuento de hadas' son ideales para la hora de dormir 💤",
-          "img": "https://i.imgur.com/N1WTVZ8.jpg"
+          "img": "https://i.imgur.com/gVQHC3w.jpg"
         },
         {
           "id": "4",
@@ -133,7 +116,7 @@
       "description": "Amamos a Jane Austen y el drama de época.",
       "type": "literatura",
       "image": "https://i.imgur.com/YvapK03.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/D0GffC5.jpg",
       "posts": [
         {
           "id": "1",
@@ -145,7 +128,7 @@
           "id": "2",
           "username": "teaandpride",
           "content": "Hoy volvimos a leer 'Persuasión' en el club. Anne Elliot merece más reconocimiento 💔",
-          "img": "https://i.imgur.com/8rMFvWd.jpg"
+          "img": "https://i.imgur.com/5Io74gM.jpg"
         },
         {
           "id": "3",
@@ -157,7 +140,7 @@
           "id": "4",
           "username": "drama_regency",
           "content": "Las adaptaciones modernas de 'Emma' tienen su encanto, pero nada como el libro 📚✨",
-          "img": "https://i.imgur.com/WiFpxYT.jpg"
+          "img": ""
         },
         {
           "id": "5",
@@ -173,7 +156,7 @@
       "description": "Para debatir sobre thrillers, asesinatos y buenos giros.",
       "type": "ficcion",
       "image": "https://i.imgur.com/l6kYM0x.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/igcBVQm.jpg",
       "posts": [
         {
           "id": "1",
@@ -185,7 +168,7 @@
           "id": "2",
           "username": "misteriolatte",
           "content": "Nada como leer sobre un asesinato mientras tomas café caliente ☕🔪",
-          "img": "https://i.imgur.com/K1S8sQg.jpg"
+          "img": "https://i.imgur.com/21k6skV.jpg"
         },
         {
           "id": "3",
@@ -197,7 +180,7 @@
           "id": "4",
           "username": "giroslocos",
           "content": "Acabo de terminar 'El paciente' de Juan Gómez-Jurado. TREMENDO.",
-          "img": "https://i.imgur.com/4wGBWgM.jpg"
+          "img": "https://i.imgur.com/VFb1Yk2.jpg"
         },
         {
           "id": "5",
@@ -225,7 +208,7 @@
       "description": "Comunidad de no ficción: historia, ciencia, biografías.",
       "type": "noficcion",
       "image": "https://i.imgur.com/eAmm5QL.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/w9lPJAb.jpg",
       "posts": [
         {
           "id": "1",
@@ -243,7 +226,7 @@
           "id": "3",
           "username": "lecturacientifica",
           "content": "Nada como un buen libro de divulgación científica para cerrar el día. ¿Conocen a Carlo Rovelli?",
-          "img": "https://i.imgur.com/QZc8wXM.jpg"
+          "img": "https://i.imgur.com/cxcNPIh.jpg"
         },
         {
           "id": "4",
@@ -255,7 +238,7 @@
           "id": "5",
           "username": "histofact",
           "content": "Releyendo 'Guns, Germs, and Steel'. Si te interesa la evolución de las sociedades, es un must.",
-          "img": "https://i.imgur.com/Wn0Z9VK.jpg"
+          "img": "https://i.imgur.com/NxFlrhX.jpg"
         },
         {
           "id": "6",
@@ -271,7 +254,7 @@
       "description": "Amamos los finales felices y las historias intensas.",
       "type": "juvenil",
       "image": "https://i.imgur.com/SrpeUww.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/TUGlIbC.jpg",
       "posts": [
         {
           "id": "1",
@@ -283,19 +266,19 @@
           "id": "2",
           "username": "finalfeliz",
           "content": "Los clichés del romance me dan vida: enemigos a amantes, reencuentros, cartas... ¡Dámelos todos!",
-          "img": "https://i.imgur.com/rZhQzt5.jpg"
+          "img": "https://i.imgur.com/eKUdspX.jpg"
         },
         {
           "id": "3",
-          "username": "lectoralatina",
-          "content": "Si aún no han leído 'A través de mi ventana', ¿qué están esperando? ¡Me lo devoré en una tarde!",
+          "username": "teamnoah",
+          "content": "No supero 'El cuaderno de Noah'. ¿Cómo algo tan cursi puede doler tanto? 💔",
           "img": ""
         },
         {
           "id": "4",
-          "username": "teamnoah",
-          "content": "No supero 'El cuaderno de Noah'. ¿Cómo algo tan cursi puede doler tanto? 💔",
-          "img": "https://i.imgur.com/6M3vTJc.jpg"
+          "username": "lectoralatina",
+          "content": "Si aún no han leído 'A través de mi ventana', ¿qué están esperando? ¡Me lo devoré en una tarde!",
+          "img": "https://i.imgur.com/xPisOT0.jpg"
         },
         {
           "id": "5",
@@ -313,7 +296,7 @@
           "id": "7",
           "username": "corazonliterario",
           "content": "Me enamoré de un personaje ficticio otra vez. 😭 ¿Cómo superan ustedes eso?",
-          "img": "https://i.imgur.com/O1n4kAA.jpg"
+          "img": "https://i.imgur.com/iY1ZFsJ.jpg"
         }
       ]
     },
@@ -323,19 +306,19 @@
       "description": "Para fans del manga de todos los géneros.",
       "type": "mangasycomics",
       "image": "https://i.imgur.com/BR3tJpT.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/JLxsNT0.jpg",
       "posts": [
         {
           "id": "1",
           "username": "mangamaniac",
           "content": "Acabo de terminar Chainsaw Man y NECESITO que alguien hable conmigo del final. 😭",
-          "img": "https://i.imgur.com/8yWkQ1V.jpg"
+          "img": "https://i.imgur.com/N5zfofA.jpg"
         },
         {
           "id": "2",
           "username": "otaku_infernal",
-          "content": "No hay nada como leer One Piece a las 2 am con ramen al lado. #TeamZoro",
-          "img": ""
+          "content": "No hay nada como leer One Piece a las 2 am con ramen al lado. #TeamZoro",
+          "img": "https://i.imgur.com/az85oZH.jpg"
         },
         {
           "id": "3",
@@ -347,13 +330,13 @@
           "id": "4",
           "username": "senpaiwatcher",
           "content": "Recién descubrí 'Blue Lock' y me atrapó desde el primer capítulo. ¡Fútbol y drama, excelente combinación!",
-          "img": "https://i.imgur.com/97Bvj06.jpg"
+          "img": ""
         },
         {
           "id": "5",
           "username": "mangasempai",
           "content": "¿Alguien más colecciona tomos físicos? Mi repisa ya no da más 🫠",
-          "img": "https://i.imgur.com/TZg1Wuw.jpg"
+          "img": "https://i.imgur.com/RrrKRnb.jpg"
         },
         {
           "id": "6",
@@ -371,7 +354,7 @@
           "id": "8",
           "username": "multiverso_real",
           "content": "Hoy terminé 'Berserk'... no sé cómo seguir con mi vida.",
-          "img": "https://i.imgur.com/DRtqkTZ.jpg"
+          "img": "https://i.imgur.com/axkPYYj.jpg"
         }
       ]
     },
@@ -381,7 +364,7 @@
       "description": "Discutimos libros donde el mundo se va a la ruina.",
       "type": "juvenil",
       "image": "https://i.imgur.com/OWckAP1.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/RrhBnD3.jpg",
       "posts": [
         {
           "id": "1",
@@ -398,8 +381,8 @@
         {
           "id": "3",
           "username": "bookpandemonium",
-          "content": "*El corredor del laberinto* fue mi entrada al género 😭 ¿Y la de ustedes?",
-          "img": "https://i.imgur.com/dwK0XCI.jpeg"
+          "content": "El corredor del laberinto fue mi entrada al género 😭 ¿Y la de ustedes?",
+          "img": "https://i.imgur.com/wtXOATZ.jpeg"
         },
         {
           "id": "4",
@@ -421,7 +404,7 @@
       "description": "Libros que nos hacen pensar, llorar o enojarnos.",
       "type": "ficcion",
       "image": "https://i.imgur.com/qMAjiiT.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/aNWSJeH.jpg",
       "posts": [
         {
           "id": "1",
@@ -431,15 +414,15 @@
         },
         {
           "id": "2",
-          "username": "lectoresfuriosos",
-          "content": "¡No supero ese final injusto! Necesito hablar con alguien que haya leído este libro YA.",
-          "img": "https://i.imgur.com/8N1nWjP.jpg"
-        },
-        {
-          "id": "3",
           "username": "paginasquemarcan",
           "content": "Ese momento cuando el personaje muere y todo tu corazón se rompe en pedacitos...",
           "img": ""
+        },
+        {
+          "id": "3",
+          "username": "lectoresfuriosos",
+          "content": "¡No supero ese final injusto! Necesito hablar con alguien que haya leído este libro YA.",
+          "img": "https://i.imgur.com/kzCOaDp.jpg"
         },
         {
           "id": "4",
@@ -451,7 +434,7 @@
           "id": "5",
           "username": "cafeconlagrimas",
           "content": "Libros que me destrozaron este año: ‘Mil soles espléndidos’, ‘Yo antes de ti’, ‘Una vida pequeña’. Recomendadísimos si quieren sufrir.",
-          "img": "https://i.imgur.com/kWvEbpS.jpg"
+          "img": "https://i.imgur.com/kTFho4y.jpg"
         }
       ]
     },
@@ -461,7 +444,7 @@
       "description": "Padres, profes y peques hablando de libros infantiles.",
       "type": "infantil",
       "image": "https://i.imgur.com/Nmd7Frm.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/elrFYNk.jpg",
       "posts": [
         {
           "id": "1",
@@ -473,19 +456,19 @@
           "id": "2",
           "username": "profeluz",
           "content": "En el aula usamos 'Cuentos para educar niños felices' cada semana. ¡Funciona genial!",
-          "img": "https://i.imgur.com/3AVayfB.jpg"
+          "img": ""
         },
         {
           "id": "3",
           "username": "cuentacuentos24",
           "content": "Les recomiendo 'La ovejita que vino a cenar' para la hora del cuento. Es tierno y divertido.",
-          "img": ""
+          "img": "https://i.imgur.com/LLeysEp.jpg"
         },
         {
           "id": "4",
           "username": "soylectorpeque",
           "content": "¡Leí mi primer libro solito! Era '¿A qué sabe la luna?' y me encantó.",
-          "img": "https://i.imgur.com/DQxKtZd.jpg"
+          "img": "https://i.imgur.com/zVCXi07.jpg"
         }
       ]
     },
@@ -495,7 +478,7 @@
       "description": "Comunidad para hablar de clásicos de la literatura.",
       "type": "literatura",
       "image": "https://i.imgur.com/qT4IHDf.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/KNNdyPA.jpg",
       "posts": [
         {
           "id": "1",
@@ -506,8 +489,8 @@
         {
           "id": "2",
           "username": "charlesdickensfan",
-          "content": "Releí *Grandes Esperanzas* y cada vez encuentro algo nuevo. Dickens es un genio.",
-          "img": "https://i.imgur.com/N74X3ZB.jpg"
+          "content": "Releí Grandes Esperanzas y cada vez encuentro algo nuevo. Dickens es un genio.",
+          "img": "https://i.imgur.com/SC7cFOj.jpg"
         },
         {
           "id": "3",
@@ -519,7 +502,7 @@
           "id": "4",
           "username": "clásicosconleche",
           "content": "*Crimen y castigo* me dejó pensando en la moral humana durante semanas. Intenso.",
-          "img": "https://i.imgur.com/zSSxVtv.jpg"
+          "img": "https://i.imgur.com/N0FPwlI.jpg"
         },
         {
           "id": "5",
@@ -535,13 +518,13 @@
       "description": "Donde hablamos de robots, futuro oscuro y chips cerebrales.",
       "type": "ficcion",
       "image": "https://i.imgur.com/sqd9ijG.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/HKAjRJ2.jpg",
       "posts": [
         {
           "id": "1",
           "username": "neonmatrix",
           "content": "Acabo de terminar *Neuromante* de Gibson. Me explotó la mente. ¡Cyberpunk puro!",
-          "img": "https://i.imgur.com/v6MoFjM.jpg"
+          "img": "https://i.imgur.com/RpTKc45.jpg"
         },
         {
           "id": "2",
@@ -559,7 +542,7 @@
           "id": "4",
           "username": "dystowriter",
           "content": "*Akira* y *Ghost in the Shell* son la definición visual de cyberpunk. Brutales.",
-          "img": "https://i.imgur.com/1Z7bHNb.jpg"
+          "img": "https://i.imgur.com/4hwjYCr.jpg"
         },
         {
           "id": "5",
@@ -575,7 +558,7 @@
       "description": "Amantes de los audiolibros y escuchar historias.",
       "type": "ebooks",
       "image": "https://i.imgur.com/kDb7VjU.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/sX1l1P7.jpg",
       "posts": [
         {
           "id": "1",
@@ -587,7 +570,7 @@
           "id": "2",
           "username": "auralista",
           "content": "Me encantan los audiolibros de misterio. Escuchar *La chica del tren* fue adrenalina pura 🔊",
-          "img": "https://i.imgur.com/pMFzDox.jpg"
+          "img": "https://i.imgur.com/6viAXvejpg"
         },
         {
           "id": "3",
@@ -603,19 +586,19 @@
       "description": "Para fans de libros de curiosidades, ciencia y más.",
       "type": "noficcion",
       "image": "https://i.imgur.com/dAwpEaU.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/xaV4SQh.jpg",
       "posts": [
         {
           "id": "1",
           "username": "sabíasque",
           "content": "📘 *El libro de los hechos asombrosos* me dejó en shock. ¿Sabías que las hormigas no duermen?",
-          "img": ""
+          "img": "https://i.imgur.com/rCrAyGP.jpg"
         },
         {
           "id": "2",
           "username": "mentecuriosa",
           "content": "*Cosmos* de Carl Sagan me hizo ver el universo con nuevos ojos 🌌",
-          "img": "https://i.imgur.com/lfXtp4V.jpg"
+          "img": "https://i.imgur.com/YhEfQFp.jpg"
         },
         {
           "id": "3",
@@ -633,7 +616,7 @@
           "id": "5",
           "username": "curiozine",
           "content": "Estoy obsesionado con los libros tipo *Sabías que...*. Perfectos para romper el hielo 👀",
-          "img": "https://i.imgur.com/gGVwKJr.jpg"
+          "img": ""
         }
       ]
     },
@@ -643,13 +626,13 @@
       "description": "Comunidad otaku: shonen, shojo, seinen y más.",
       "type": "mangasycomics",
       "image": "https://i.imgur.com/tOQkbaZ.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/u90o2wi.jpg",
       "posts": [
         {
           "id": "1",
           "username": "otakusenpai",
           "content": "Acabo de terminar *Chainsaw Man* y solo puedo decir: necesito terapia 😵‍💫",
-          "img": "https://i.imgur.com/Q8YUzxq.jpg"
+          "img": "https://i.imgur.com/9jffECK.jpg"
         },
         {
           "id": "2",
@@ -661,7 +644,7 @@
           "id": "3",
           "username": "gokusensei",
           "content": "No hay nada como un buen shonen clásico. *Naruto*, *Bleach*, *One Piece* = leyendas 🔥",
-          "img": "https://i.imgur.com/olZhkU8.jpg"
+          "img": "https://i.imgur.com/lu2bnpb.jpg"
         },
         {
           "id": "4",
@@ -679,7 +662,7 @@
           "id": "6",
           "username": "otakucoffee",
           "content": "*Tokyo Revengers* es el guilty pleasure que no sabía que necesitaba 😳",
-          "img": "https://i.imgur.com/XgKClxg.jpg"
+          "img": "https://i.imgur.com/8oYGQrr.jpg"
         }
       ]
     },
@@ -689,7 +672,7 @@
       "description": "Espacio para hablar de poesía en español.",
       "type": "literatura",
       "image": "https://i.imgur.com/bAjqQvz.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/nlMxqxw.jpg",
       "posts": [
         {
           "id": "1",
@@ -701,7 +684,7 @@
           "id": "2",
           "username": "poetadeagua",
           "content": "Releyendo a Alejandra Pizarnik. Qué fuerza tan frágil tienen sus palabras.",
-          "img": "https://i.imgur.com/VpY9xNo.jpg"
+          "img": "https://i.imgur.com/r9aZXFo.jpg"
         },
         {
           "id": "3",
@@ -719,7 +702,7 @@
           "id": "5",
           "username": "corazonrimado",
           "content": "¿Cuál es su poema favorito en español? El mío es *Altazor*, de Huidobro. 🎈",
-          "img": "https://i.imgur.com/xnBskcT.jpg"
+          "img": "https://i.imgur.com/00d7hA5.jpg"
         }
       ]
     },
@@ -729,7 +712,7 @@
       "description": "Gente que ama leer desde su tablet o Kindle.",
       "type": "ebooks",
       "image": "https://i.imgur.com/nQ5dY6e.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/Jnw5cjB.jpg",
       "posts": [
         {
           "id": "1",
@@ -741,7 +724,7 @@
           "id": "2",
           "username": "kindlequeen",
           "content": "Acabo de terminar *Dune* en mi tablet. ¡Qué experiencia tan épica!",
-          "img": "https://i.imgur.com/7Ea3v9r.jpg"
+          "img": "https://i.imgur.com/0GecsId.jpg"
         },
         {
           "id": "3",
@@ -753,7 +736,7 @@
           "id": "4",
           "username": "pdfhunter",
           "content": "Encontré una versión preciosa en PDF de *Orgullo y prejuicio*. ¡Con ilustraciones! 😍",
-          "img": "https://i.imgur.com/2zWm3Zz.jpg"
+          "img": "https://i.imgur.com/th1QO33.jpg"
         },
         {
           "id": "5",
@@ -769,13 +752,13 @@
       "description": "Discutimos sobre libros biográficos e históricos.",
       "type": "noficcion",
       "image": "https://i.imgur.com/ioWU2Rc.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/CFBNgtE.jpg",
       "posts": [
         {
           "id": "1",
           "username": "histofriki",
           "content": "Recién terminé la biografía de Leonardo da Vinci de Walter Isaacson. Fascinante cómo conectaba arte y ciencia.",
-          "img": "https://i.imgur.com/YFgS7Mw.jpg"
+          "img": "https://i.imgur.com/LY3Xokg.jpg"
         },
         {
           "id": "2",
@@ -787,13 +770,13 @@
           "id": "3",
           "username": "cronistaurbana",
           "content": "¿Recomiendan alguna biografía potente escrita por mujeres? Quiero voces distintas.",
-          "img": ""
+          "img": "https://i.imgur.com/GDxTIlH.jpg"
         },
         {
           "id": "4",
           "username": "memoriaylibros",
           "content": "Leyendo sobre el ascenso del Imperio Otomano… no sabía que me iba a gustar tanto 🕌📖",
-          "img": "https://i.imgur.com/gfrtbS6.jpg"
+          "img": ""
         },
         {
           "id": "5",
@@ -809,13 +792,13 @@
       "description": "Elfos, magia, dragones y épicas batallas.",
       "type": "ficcion",
       "image": "https://i.imgur.com/D6LuXwz.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/Wls0N2e.jpg",
       "posts": [
         {
           "id": "1",
           "username": "dragonsoul",
           "content": "¡Estoy releyendo Eragon y aún me emociona como la primera vez!",
-          "img": "https://i.imgur.com/zKeo5vC.jpg"
+          "img": "https://i.imgur.com/KQImJyq.jpg"
         },
         {
           "id": "2",
@@ -827,7 +810,7 @@
           "id": "3",
           "username": "elfoenelbosque",
           "content": "Tolkien me enseñó que cada piedra en el camino tiene historia. Viva la Tierra Media ✨",
-          "img": "https://i.imgur.com/8A1fY8p.jpg"
+          "img": "https://i.imgur.com/ppdrlEA.jpg"
         }
       ]
     },
@@ -837,19 +820,19 @@
       "description": "Donde se habla de los libros virales en TikTok.",
       "type": "juvenil",
       "image": "https://i.imgur.com/D7pIFSw.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/76qbyyg.jpg",
       "posts": [
         {
           "id": "1",
           "username": "flordelibros",
           "content": "*Heartstopper* me destruyó emocionalmente 😭 Gracias BookTok por tanto.",
-          "img": "https://i.imgur.com/oFiPxqz.jpg"
+          "img": "https://i.imgur.com/YHfRUFm.jpg"
         },
         {
           "id": "2",
           "username": "tiktokera_lectora",
           "content": "Estoy en mi era de *It Ends With Us* y nadie me detiene 💔",
-          "img": ""
+          "img": "https://i.imgur.com/sYNXHqm.jpg"
         },
         {
           "id": "3",
@@ -871,13 +854,13 @@
       "description": "Para quienes disfrutan leer con dibujos.",
       "type": "mangasycomics",
       "image": "https://i.imgur.com/gxJk81g.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/MYTcDDY.jpg",
       "posts": [
         {
           "id": "1",
           "username": "viñetasdeviaje",
           "content": "Leí *Persepolis* en una tarde y no he dejado de pensar en cada viñeta desde entonces.",
-          "img": "https://i.imgur.com/2TFRNKN.jpg"
+          "img": "https://i.imgur.com/xnfBPcI.jpg"
         },
         {
           "id": "2",
@@ -889,7 +872,7 @@
           "id": "3",
           "username": "historietax",
           "content": "Me encanta cuando las novelas gráficas juegan con el tiempo y los recuerdos. *Fun Home* lo hace de forma brillante.",
-          "img": "https://i.imgur.com/MHGH9nE.jpg"
+          "img": "https://i.imgur.com/JJRpApn.jpg"
         },
         {
           "id": "4",
@@ -905,13 +888,13 @@
       "description": "Niños contando y comentando sus historias favoritas.",
       "type": "infantil",
       "image": "https://i.imgur.com/8YOK9Qj.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/hZuD4Fd.jpg",
       "posts": [
         {
           "id": "1",
           "username": "cuentitodani",
           "content": "¡Me encanta *El monstruo de colores*! Aprendí a decir cómo me siento 💛💙❤️",
-          "img": "https://i.imgur.com/W0LRIoP.jpg"
+          "img": ""
         },
         {
           "id": "2",
@@ -923,7 +906,7 @@
           "id": "3",
           "username": "profecristina",
           "content": "Mis alumnos amaron *¿A qué sabe la luna?* – hicimos una luna gigante de cartulina 🍽🌕",
-          "img": "https://i.imgur.com/LdX8Bkn.jpg"
+          "img": ""
         }
       ]
     },
@@ -933,25 +916,25 @@
       "description": "Nos gusta lo raro, lo alternativo, lo diferente.",
       "type": "ficcion",
       "image": "https://i.imgur.com/ggT3KIh.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/cMBW1HK.jpg",
       "posts": [
         {
           "id": "1",
           "username": "sintapujos",
           "content": "House of Leaves me voló la cabeza. Literalmente tuve que girar el libro para seguir leyendo 🤯📖",
-          "img": "https://i.imgur.com/jvMYClg.jpg"
+          "img": ""
         },
         {
           "id": "2",
           "username": "lecturaexperimental",
           "content": "Acabo de terminar *Pájaro de celda* y todavía no sé si me encantó o me perturbó. O ambas.",
-          "img": ""
+          "img": "https://i.imgur.com/R9eLITx.jpg"
         },
         {
           "id": "3",
           "username": "rebellectora",
           "content": "*El club de la lucha* no es solo una película, el libro es aún más crudo. Y sí, rompo la primera regla 👊📕",
-          "img": "https://i.imgur.com/jkxXkpT.jpg"
+          "img": "https://i.imgur.com/AxvQzyB.jpg"
         },
         {
           "id": "4",
@@ -973,7 +956,7 @@
       "description": "Comunidad de novelas intensas, conflictos y pasión.",
       "type": "juvenil",
       "image": "https://i.imgur.com/UVUJQde.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/sq3VbEN.jpg",
       "posts": []
     },
     {
@@ -982,7 +965,7 @@
       "description": "Leemos libros de autoayuda y desarrollo personal.",
       "type": "noficcion",
       "image": "https://i.imgur.com/NtbUCnB.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/RKrDpkQ.jpg",
       "posts": [
         {
           "id": "1",
@@ -994,7 +977,7 @@
           "id": "2",
           "username": "menteenbalance",
           "content": "*El poder del ahora* me está enseñando a respirar antes de reaccionar. Gracias, Tolle. 🧘‍♂️",
-          "img": "https://i.imgur.com/dcrKxEi.jpg"
+          "img": ""
         },
         {
           "id": "3",
@@ -1006,7 +989,7 @@
           "id": "4",
           "username": "reflexionando",
           "content": "*Cómo hacer que te pasen cosas buenas* es ese libro que subrayas cada tres líneas. 😍",
-          "img": "https://i.imgur.com/mOC5v7p.jpg"
+          "img": ""
         }
       ]
     },
@@ -1016,13 +999,13 @@
       "description": "Nos encanta leer digital y compartir recomendaciones.",
       "type": "ebooks",
       "image": "https://i.imgur.com/qw5B3gB.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/Jf79PnY.jpg",
       "posts": [
         {
           "id": "1",
           "username": "ebookaddict",
           "content": "¿Alguien más ha probado *Kindle Unlimited*? He encontrado joyas ocultas. 📚✨",
-          "img": "https://i.imgur.com/4jtd6cx.jpg"
+          "img": "https://i.imgur.com/kf9m6Pf.jpg"
         },
         {
           "id": "2",
@@ -1034,7 +1017,7 @@
           "id": "3",
           "username": "lectoraelectronica",
           "content": "*El hombre en el castillo* de Philip K. Dick es aún mejor en ebook. ¡Altamente recomendado para fans del género distópico! 🔥📖",
-          "img": "https://i.imgur.com/ksW0HlB.jpg"
+          "img": "https://i.imgur.com/CJ6ehe3.jpg"
         },
         {
           "id": "4",
@@ -1050,13 +1033,13 @@
       "description": "Comics y mangas románticos para llorar y suspirar.",
       "type": "mangasycomics",
       "image": "https://i.imgur.com/HRPqrCC.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/snKLgJ6.jpg",
       "posts": [
         {
           "id": "1",
           "username": "sakurahugs",
           "content": "Releí *Ao Haru Ride* y sigo llorando como la primera vez. ¡Qué hermoso manga! 😭💕",
-          "img": "https://i.imgur.com/SBcnldX.jpg"
+          "img": "https://i.imgur.com/Qasj5UU.jpg"
         },
         {
           "id": "2",
@@ -1068,7 +1051,7 @@
           "id": "3",
           "username": "corazondemango",
           "content": "¿Soy yo o *Kimi ni Todoke* tiene el romance más puro de todos los tiempos? 🥺💖",
-          "img": "https://i.imgur.com/y0BtvVq.jpg"
+          "img": "https://i.imgur.com/vlr8yeX.jpg"
         },
         {
           "id": "4",
@@ -1080,7 +1063,7 @@
           "id": "5",
           "username": "blsoul",
           "content": "*Given* es mi top 1 en mangas románticos con música. ¡Qué vibra más hermosa! 🎸🖤",
-          "img": "https://i.imgur.com/6cTLbZK.jpg"
+          "img": "https://i.imgur.com/tZtKUiw.jpg"
         }
       ]
     },
@@ -1090,19 +1073,19 @@
       "description": "Libros de miedo para leer a media noche.",
       "type": "ficcion",
       "image": "https://i.imgur.com/JVtnAFt.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/NjoFfUt.jpg",
       "posts": [
         {
           "id": "1",
           "username": "miedito",
           "content": "Ayer leí *El Resplandor* de King y no dormí nada. Es un clásico por algo 😱📚",
-          "img": "https://i.imgur.com/WVikfO1.jpg"
+          "img": "https://i.imgur.com/KhBlugc.jpg"
         },
         {
           "id": "2",
           "username": "nocheeterna",
           "content": "*Coraline* me sigue dando escalofríos cada vez que la releo. ¿A alguien más le pasa? 🕷️🖤",
-          "img": ""
+          "img": "https://i.imgur.com/3GHVFV7.jpg"
         },
         {
           "id": "3",
@@ -1114,7 +1097,13 @@
           "id": "4",
           "username": "cuentososcuros",
           "content": "*Cementerio de animales* me dejó helado. ¡Qué forma de narrar el dolor y el miedo! 🐱⚰️",
-          "img": "https://i.imgur.com/swrnDW7.jpg"
+          "img": "https://i.imgur.com/040PPqK.jpg"
+        },
+        {
+          "id": "5",
+          "username": "jabberwock",
+          "content": "toca maratón de Insidious creo :P",
+          "img": "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2022/04/insidious-2666313.jpg?tf=3840x"
         }
       ]
     },
@@ -1124,13 +1113,13 @@
       "description": "Compartimos nuestro crush de libro favorito cada semana.",
       "type": "juvenil",
       "image": "https://i.imgur.com/z58pbLV.jpg",
-      "banner": "https://i.imgur.com/a/nRU2mW3.jpg",
+      "banner": "https://i.imgur.com/TQFn9Hd.jpg",
       "posts": [
         {
           "id": "1",
           "username": "cupidodelibros",
           "content": "Nadie supera a Mr. Darcy. Punto final. #PrideAndPrejudice 💌👑",
-          "img": "https://i.imgur.com/N5Qe4lK.jpg"
+          "img": "https://i.imgur.com/wnhHkiq.jpg"
         },
         {
           "id": "2",
@@ -1142,7 +1131,7 @@
           "id": "3",
           "username": "bookishhearts",
           "content": "*Kaz Brekker* no es real, pero mi trauma sí. #SixOfCrows 😭🖤",
-          "img": "https://i.imgur.com/FYr0vDK.jpg"
+          "img": ""
         },
         {
           "id": "4",
@@ -1154,7 +1143,7 @@
           "id": "5",
           "username": "romantixx",
           "content": "No es normal lo mucho que amo a Rhysand. #VelarisVibes 💫🌌",
-          "img": "https://i.imgur.com/xUAr33F.jpg"
+          "img": ""
         }
       ]
     }
@@ -1166,6 +1155,7 @@
       "description": "La épica historia de la familia Buendía en Macondo.",
       "author": "Gabriel García Márquez",
       "price": 45.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/7N0UyUJ.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1183,6 +1173,7 @@
       "description": "Una exploración de la música criolla y la identidad peruana.",
       "author": "Mario Vargas Llosa",
       "price": 89,
+      "stock": 10,
       "cover": "https://i.imgur.com/qYcdX5Y.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1220,6 +1211,7 @@
       "description": "Una breve historia de la humanidad desde una perspectiva única.",
       "author": "Yuval Noah Harari",
       "price": 99,
+      "stock": 10,
       "cover": "https://i.imgur.com/OxxhFPg.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1252,6 +1244,7 @@
       "description": "Las aventuras de Tanjiro en su lucha contra los demonios.",
       "author": "Koyoharu Gotouge",
       "price": 35,
+      "stock": 10,
       "cover": "https://i.imgur.com/aT2lqeB.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -1279,6 +1272,7 @@
       "description": "Una historia de amor y guerra en un mundo fantástico.",
       "author": "Rebecca Yarros",
       "price": 69.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/T8huXJC.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -1306,6 +1300,7 @@
       "description": "La historia de un cachorro que busca su lugar en el mundo.",
       "author": "Patricia del Río",
       "price": 49.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/qKk4mNJ.jpg",
       "genre": "infantil",
       "language": "es",
@@ -1333,6 +1328,7 @@
       "description": "La vida de Jacobo Hurwitz, educador y activista peruano.",
       "author": "Hugo Coya",
       "price": 79,
+      "stock": 10,
       "cover": "https://i.imgur.com/WzCyZ9R.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1370,6 +1366,7 @@
       "description": "Una exploración de la identidad y el legado familiar.",
       "author": "Gabriela Wiener",
       "price": 59,
+      "stock": 10,
       "cover": "https://i.imgur.com/keZAwqv.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1407,6 +1404,7 @@
       "description": "Una novela sobre los primeros años del terror en el Perú.",
       "author": "Karina Pacheco",
       "price": 65,
+      "stock": 10,
       "cover": "https://i.imgur.com/GzJkrNG.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1439,6 +1437,7 @@
       "description": "Una mirada crítica acerca de la felicidad en estos tiempos.",
       "author": "Gabriel Rolón",
       "price": 99,
+      "stock": 10,
       "cover": "https://i.imgur.com/LmLDvBw.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1476,6 +1475,7 @@
       "description": "Un thriller psicológico que te atrapará desde el principio.",
       "author": "John Katzenbach",
       "price": 55.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/iLJcYw6.jpg",
       "genre": "ficcion",
       "language": "es",
@@ -1493,6 +1493,7 @@
       "description": "Viajes en el tiempo y pandillas juveniles.",
       "author": "Ken Wakui",
       "price": 38,
+      "stock": 10,
       "cover": "https://i.imgur.com/XleP7rp.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -1520,6 +1521,7 @@
       "description": "El inicio de una aventura mágica.",
       "author": "J.K. Rowling",
       "price": 75,
+      "stock": 10,
       "cover": "https://i.imgur.com/LlRTuVo.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -1547,6 +1549,7 @@
       "description": "Una historia infantil sobre las emociones.",
       "author": "Anna Llenas",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/JLPN24W.jpg",
       "genre": "infantil",
       "language": "es",
@@ -1579,6 +1582,7 @@
       "description": "Stephen Hawking responde a los misterios del universo.",
       "author": "Stephen Hawking",
       "price": 89.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/pygnPZR.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1596,6 +1600,7 @@
       "description": "Transforma tu vida con pequeños hábitos.",
       "author": "James Clear",
       "price": 92,
+      "stock": 10,
       "cover": "https://i.imgur.com/ySvnNSr.jpg",
       "genre": "ebooks",
       "language": "es",
@@ -1623,6 +1628,7 @@
       "description": "Lo que los ricos enseñan a sus hijos sobre el dinero.",
       "author": "Robert T. Kiyosaki",
       "price": 88.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/HxWuHl6.jpg",
       "genre": "noficcion",
       "language": "en",
@@ -1660,6 +1666,7 @@
       "description": "La decadencia y la esperanza en los años 20.",
       "author": "F. Scott Fitzgerald",
       "price": 59.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/4rfFsTt.jpg",
       "genre": "ficcion",
       "language": "en",
@@ -1692,6 +1699,7 @@
       "description": "Un misterio rural con toques poéticos.",
       "author": "Delia Owens",
       "price": 66.6,
+      "stock": 10,
       "cover": "https://i.imgur.com/8RYCAod.jpg",
       "genre": "ficcion",
       "language": "en",
@@ -1719,6 +1727,7 @@
       "description": "Un enfoque distinto para vivir una buena vida.",
       "author": "Mark Manson",
       "price": 85,
+      "stock": 10,
       "cover": "https://i.imgur.com/Cs3BWqf.jpg",
       "genre": "ebooks",
       "language": "en",
@@ -1746,6 +1755,7 @@
       "description": "Una historia filosófica disfrazada de cuento infantil.",
       "author": "Antoine de Saint-Exupéry",
       "price": 39.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/SW4tXtE.jpg",
       "genre": "infantil",
       "language": "es",
@@ -1773,6 +1783,7 @@
       "description": "Reflexiones de Viktor Frankl desde un campo de concentración.",
       "author": "Viktor E. Frankl",
       "price": 62,
+      "stock": 10,
       "cover": "https://i.imgur.com/266v2kG.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1805,6 +1816,7 @@
       "description": "Una historia de amor y pérdida en el Japón de los 60.",
       "author": "Haruki Murakami",
       "price": 75.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/ib88EDi.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1827,6 +1839,7 @@
       "description": "Una clase con una misión: matar a su maestro alienígena.",
       "author": "Yusei Matsui",
       "price": 35.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/bbLZh7s.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -1854,6 +1867,7 @@
       "description": "Una lucha por sobrevivir en un futuro distópico.",
       "author": "Suzanne Collins",
       "price": 78,
+      "stock": 10,
       "cover": "https://i.imgur.com/lziMVpt.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -1871,6 +1885,7 @@
       "description": "Una guía emocional para niños con miedo.",
       "author": "Luis Gutiérrez Rojas",
       "price": 44,
+      "stock": 10,
       "cover": "https://i.imgur.com/cPsgods.jpg",
       "genre": "infantil",
       "language": "es",
@@ -1898,6 +1913,7 @@
       "description": "Las memorias del expresidente Barack Obama.",
       "author": "Barack Obama",
       "price": 99.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/8a5tmBa.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -1925,6 +1941,7 @@
       "description": "Una historia de amor y secretos a lo largo de los años.",
       "author": "Isabel Allende",
       "price": 65,
+      "stock": 10,
       "cover": "https://i.imgur.com/xaqvcCs.jpg",
       "genre": "literatura",
       "language": "es",
@@ -1952,6 +1969,7 @@
       "description": "La historia oscura y brutal de Guts, el guerrero negro.",
       "author": "Kentaro Miura",
       "price": 48.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/iokXCCA.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -1984,6 +2002,7 @@
       "description": "Un tierno romance juvenil entre dos chicos.",
       "author": "Alice Oseman",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/8QiD1Y2.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -2016,6 +2035,7 @@
       "description": "Una guía espiritual para encontrar la paz interior.",
       "author": "Eckhart Tolle",
       "price": 82.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/ewZIeEX.jpg",
       "genre": "ebooks",
       "language": "es",
@@ -2053,6 +2073,7 @@
       "description": "Una memoria poderosa sobre la superación y la educación.",
       "author": "Tara Westover",
       "price": 74,
+      "stock": 10,
       "cover": "https://i.imgur.com/HmeAu1i.jpg",
       "genre": "noficcion",
       "language": "en",
@@ -2075,6 +2096,7 @@
       "description": "La clásica novela sobre la adolescencia y la alienación.",
       "author": "J.D. Salinger",
       "price": 56.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/1fhRsuD.jpg",
       "genre": "ficcion",
       "language": "en",
@@ -2092,6 +2114,7 @@
       "description": "Una historia de amor y decisiones difíciles.",
       "author": "Colleen Hoover",
       "price": 76,
+      "stock": 10,
       "cover": "https://i.imgur.com/CNzmVps.jpg",
       "genre": "ficcion",
       "language": "en",
@@ -2109,6 +2132,7 @@
       "description": "La legendaria saga de ciencia ficción en Arrakis.",
       "author": "Frank Herbert",
       "price": 90,
+      "stock": 10,
       "cover": "https://i.imgur.com/9mRfFoz.jpg",
       "genre": "ficcion",
       "language": "es",
@@ -2141,6 +2165,7 @@
       "description": "Un misterio literario ambientado en la Barcelona de posguerra.",
       "author": "Carlos Ruiz Zafón",
       "price": 78.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/MWdPjUU.jpg",
       "genre": "literatura",
       "language": "es",
@@ -2178,6 +2203,7 @@
       "description": "El comienzo del viaje de Naruto para ser Hokage.",
       "author": "Masashi Kishimoto",
       "price": 32,
+      "stock": 10,
       "cover": "https://i.imgur.com/ao5qPA8.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -2200,6 +2226,7 @@
       "description": "Una joven descubre un mundo oculto de demonios y nefilim.",
       "author": "Cassandra Clare",
       "price": 69,
+      "stock": 10,
       "cover": "https://i.imgur.com/Xpg0K9N.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -2232,6 +2259,7 @@
       "description": "Una entrañable historia infantil sobre la amistad.",
       "author": "Steve Smallman",
       "price": 42,
+      "stock": 10,
       "cover": "https://i.imgur.com/O4HqZeK.jpg",
       "genre": "infantil",
       "language": "es",
@@ -2259,6 +2287,7 @@
       "description": "David Goggins y su brutal historia de superación personal.",
       "author": "David Goggins",
       "price": 86,
+      "stock": 10,
       "cover": "https://i.imgur.com/ZKsk3lz.jpg",
       "genre": "ebooks",
       "language": "en",
@@ -2276,6 +2305,7 @@
       "description": "Una novela experimental sobre el amor y el caos.",
       "author": "Julio Cortázar",
       "price": 84,
+      "stock": 10,
       "cover": "https://i.imgur.com/OELzMY1.jpg",
       "genre": "literatura",
       "language": "es",
@@ -2308,6 +2338,7 @@
       "description": "Una carrera contra el tiempo para descubrir un secreto antiguo.",
       "author": "Dan Brown",
       "price": 59.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/Ff2WTd9.jpg",
       "genre": "ficcion",
       "language": "es",
@@ -2345,6 +2376,7 @@
       "description": "Pequeños cambios que generan grandes resultados.",
       "author": "James Clear",
       "price": 92,
+      "stock": 10,
       "cover": "https://i.imgur.com/I6uTnBU.jpg",
       "genre": "noficcion",
       "language": "en",
@@ -2372,6 +2404,7 @@
       "description": "Un joven caza demonios que se convierte en uno.",
       "author": "Tatsuki Fujimoto",
       "price": 34.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/Mqy1taV.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -2399,6 +2432,7 @@
       "description": "Una adolescente enfrenta las consecuencias de sus cartas de amor secretas.",
       "author": "Jenny Han",
       "price": 66,
+      "stock": 10,
       "cover": "https://i.imgur.com/OwT6aqb.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -2412,10 +2446,11 @@
     },
     {
       "id": "46",
-      "title": "¿Dónde está Spot?",
+      "title": "¿Dónde está Jhosep?",
       "description": "Un divertido libro interactivo para los más pequeños.",
       "author": "Eric Hill",
       "price": 38.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/klJb51R.jpg",
       "genre": "infantil",
       "language": "es",
@@ -2448,6 +2483,7 @@
       "description": "Las memorias inspiradoras de Michelle Obama.",
       "author": "Michelle Obama",
       "price": 85,
+      "stock": 10,
       "cover": "https://i.imgur.com/a6MOHKf.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -2485,6 +2521,7 @@
       "description": "Un asesinato anunciado y la indiferencia de un pueblo.",
       "author": "Gabriel García Márquez",
       "price": 49.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/PD3nLNU.jpg",
       "genre": "literatura",
       "language": "es",
@@ -2527,6 +2564,7 @@
       "description": "El inicio de la gran aventura pirata de Luffy.",
       "author": "Eiichiro Oda",
       "price": 35.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/N6IUatX.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -2549,6 +2587,7 @@
       "description": "Un grupo de adolescentes atrapados en un misterioso laberinto.",
       "author": "James Dashner",
       "price": 68,
+      "stock": 10,
       "cover": "https://i.imgur.com/SD7E8uE.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -2581,6 +2620,7 @@
       "description": "El inicio de la historia del joven mago más famoso.",
       "author": "J.K. Rowling",
       "price": 89,
+      "stock": 10,
       "cover": "https://i.imgur.com/255VnVx.jpg",
       "genre": "ficcion",
       "language": "es",
@@ -2603,6 +2643,7 @@
       "description": "Claves para mejorar tus relaciones y tu éxito.",
       "author": "Dale Carnegie",
       "price": 54,
+      "stock": 10,
       "cover": "https://i.imgur.com/fJU1ijK.jpg",
       "genre": "ebooks",
       "language": "es",
@@ -2635,6 +2676,7 @@
       "description": "La búsqueda espiritual de un joven pastor andaluz.",
       "author": "Paulo Coelho",
       "price": 69.5,
+      "stock": 10,
       "cover": "https://i.imgur.com/WxQ0WbU.jpg",
       "genre": "ficcion",
       "language": "en",
@@ -2667,6 +2709,7 @@
       "description": "Un futuro distópico dominado por un estado totalitario.",
       "author": "George Orwell",
       "price": 63.9,
+      "stock": 10,
       "cover": "https://i.imgur.com/wfhMIJ8.jpg",
       "genre": "ficcion",
       "language": "es",
@@ -2684,6 +2727,7 @@
       "description": "La lucha de mujeres por su libertad en la España de los años 20.",
       "author": "Alba Quintas",
       "price": 72,
+      "stock": 10,
       "cover": "https://i.imgur.com/hC7o8B1.jpg",
       "genre": "literatura",
       "language": "es",
@@ -2706,6 +2750,7 @@
       "description": "Las primeras aventuras de Ash y Pikachu.",
       "author": "Hidenori Kusaka",
       "price": 30,
+      "stock": 10,
       "cover": "https://i.imgur.com/nAqhgZ7.jpg",
       "genre": "mangasycomics",
       "language": "es",
@@ -2733,6 +2778,7 @@
       "description": "Una historia de amor intensa y conflictiva.",
       "author": "Anna Todd",
       "price": 75,
+      "stock": 10,
       "cover": "https://i.imgur.com/7cVfusm.jpg",
       "genre": "juvenil",
       "language": "es",
@@ -2770,6 +2816,7 @@
       "description": "Historias breves para reflexionar sobre la vida.",
       "author": "Eloy Moreno",
       "price": 50,
+      "stock": 10,
       "cover": "https://i.imgur.com/6Az3jGf.jpg",
       "genre": "infantil",
       "language": "es",
@@ -2787,6 +2834,7 @@
       "description": "La biografía oficial del fundador de Apple.",
       "author": "Walter Isaacson",
       "price": 98,
+      "stock": 10,
       "cover": "https://i.imgur.com/QjHYICU.jpg",
       "genre": "noficcion",
       "language": "es",
@@ -2814,6 +2862,7 @@
       "description": "Consejos para enfrentar el caos del mundo moderno.",
       "author": "Jordan B. Peterson",
       "price": 95,
+      "stock": 10,
       "cover": "https://i.imgur.com/5zxXAQ2.jpg",
       "genre": "ebooks",
       "language": "es",
@@ -2833,31 +2882,7 @@
   ],
   "cart": [],
   "order": [],
-  "userlogin": [
-    {
-      "id": "1",
-      "username": "jabberwock",
-      "password": "madhatter"
-    }
-  ],
+  "userlogin": [],
   "notificaciones": [
-    {
-      "id": "1",
-      "date": "2025-05-14T13:21:43.689Z",
-      "title": "Plan Activated",
-      "content": "You just subscribed to a community plan. Enjoy the perks!"
-    },
-    {
-      "id": "1",
-      "date": "2025-05-14T13:24:33.588Z",
-      "title": "Welcome back!",
-      "content": "Nice to see you again. Let’s continue exploring."
-    },
-    {
-      "id": "1",
-      "date": "2025-05-14T13:39:03.555Z",
-      "title": "Welcome back!",
-      "content": "Nice to see you again. Let’s continue exploring."
-    }
   ]
 }

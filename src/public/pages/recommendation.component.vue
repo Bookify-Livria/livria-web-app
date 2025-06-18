@@ -44,7 +44,7 @@ export default {
 }
 
 .book-container {
-  margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
+  margin: 10rem calc(-1 * ((100vw - 100%) / 2)) 0;
 }
 
 .book__fullwidth {
