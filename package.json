@@ -11,6 +11,8 @@
   "dependencies": {
     "@primevue/themes": "^4.3.4",
     "axios": "^1.9.0",
+    "firebase": "^11.9.1",
+    "json-server": "^0.17.0",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.4",

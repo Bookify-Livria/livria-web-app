@@ -13,6 +13,11 @@ import Purchase from "../public/pages/purchase.component.vue";
 import SubscriptionComponent from "../public/pages/subscription.component.vue";
 import CommunityView from '../public/pages/view-communities.component.vue';
 import Shop from '../public/pages/shop.component.vue';
+import Dashboard from '../public/pages/dashboard.component.vue';
+import BooksManagement from '../public/pages/books-management.component.vue'
+import OrdersManagement from '../public/pages/orders-management.component.vue'
+import Settings from '../public/pages/settings.component.vue'
+import AdminPinPage from "../public/pages/admin-pin-page.component.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -23,8 +28,13 @@ const router = createRouter({
         {path: '/communities', component: Communities},
         {path: '/login', component: Login},
         {path: '/register', component: Register},
+        {path: '/access', component: AdminPinPage},
         {path: "/purchase", component: Purchase},
         {path: "/shop", component: Shop},
+        {path: "/dashboard", component: Dashboard},
+        {path: "/books-management", component: BooksManagement},
+        {path: "/orders-management", component: OrdersManagement},
+        {path: "/settings", component: Settings},
         {
             path: '/bookl',
             name: 'LiteratureBooks',
@@ -91,7 +101,7 @@ const router = createRouter({
             path: '/communities/:name',
             name: 'CommunityView',
             component: CommunityView
-        }
+        },
     ]
 })
 

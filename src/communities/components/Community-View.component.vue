@@ -380,7 +380,7 @@ body {
 }
 
 .fantasy-theme {
-  font-family: var(--font-primary)
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .loading, .error {
