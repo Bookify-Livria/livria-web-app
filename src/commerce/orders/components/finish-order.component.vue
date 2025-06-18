@@ -46,6 +46,17 @@ export default {
       showConfirmation: false,
     }
   },
+  computed: {
+    nameError() {
+      return this.recipient.name && !/^[A-Za-zÀ-ÿ\s]+$/.test(this.recipient.name);
+    },
+    lastnameError() {
+      return this.recipient.lastname && !/^[A-Za-zÀ-ÿ\s]+$/.test(this.recipient.lastname);
+    },
+    phoneError() {
+      return this.recipient.phone && !/^9\d{8}$/.test(this.recipient.phone);
+    },
+  },
   methods: {
     async loadCart() { // Obtiene la información almacenada dentro de carrito de compras
       try {
@@ -134,7 +145,11 @@ export default {
       });
     },
     validateStep2() { // Verifica que todos los campos del formulario del paso 2 hayan sido llenados
-      return this.recipient.name && this.recipient.lastname && this.recipient.phone;
+      if (this.nameError || this.lastnameError || this.phoneError) {
+        return false;
+      } else {
+        return this.recipient.name && this.recipient.lastname && this.recipient.phone;
+      }
     },
     validateStep3() { // Verifica que, de tratarse la orden de un delivery (entrega a domicilio), se registrem correctamente los campos "address", "district" y "reference"
       if (!this.delivery) return true;
@@ -317,11 +332,23 @@ export default {
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ $t("purchase.name")}}</label>
-                  <input v-model="recipient.name" type="text"  required />
+                  <input v-model="recipient.name"
+                         type="text"
+                         required
+                         :class="{ 'is-invalid': nameError }"
+                         pattern="[A-Za-zÀ-ÿ\s]+"
+                  />
+                  <div v-if="nameError" class="error-msg">{{$t('purchase.just-letters')}}</div>
                 </div>
                 <div class="form-group">
                   <label>{{ $t("purchase.last-name")}}</label>
-                  <input v-model="recipient.lastname" type="text" required />
+                  <input v-model="recipient.lastname"
+                         type="text"
+                         required
+                         :class="{ 'is-invalid': lastnameError }"
+                         pattern="[A-Za-zÀ-ÿ\s]+"
+                  />
+                  <div v-if="lastnameError" class="error-msg">{{$t('purchase.just-letters')}}</div>
                 </div>
               </div>
               <div class="form-row">
@@ -331,7 +358,13 @@ export default {
                 </div>
                 <div class="form-group">
                   <label>{{ $t("purchase.phone")}}</label>
-                  <input v-model="recipient.phone" type="tel" required />
+                  <input v-model="recipient.phone"
+                         type="tel"
+                         required
+                         :class="{ 'is-invalid': phoneError }"
+                         pattern="^9\d{8}$"
+                  />
+                  <div v-if="phoneError" class="error-msg">{{$t('purchase.valid-number')}}</div>
                 </div>
               </div>
               <pv-toast position="top-right" style="margin-top: 10rem" />
@@ -588,6 +621,15 @@ export default {
 .form-group input:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-secondary);
+}
+
+.is-invalid {
+  box-shadow: 0 0 0 2px #9f000c;
+}
+.error-msg {
+  color: #9f000c;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 .nav-buttons {

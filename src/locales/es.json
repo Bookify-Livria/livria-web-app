@@ -165,6 +165,13 @@
   "security-pin": "Pin de Seguridad",
   "go-back": "Atrás",
 
+  "errors": {
+    "nickname": "Solo letras (máx. 20 caracteres).",
+    "username": "Solo letras o números (máx. 20 caracteres).",
+    "url": "Debe ser un enlace válido.",
+    "email": "Correo electrónico no válido."
+  },
+
   "createacc": "¿No tienes una cuenta?",
   "subscription": "Suscripción",
   "yes-subs": "Plan Communidad",
@@ -228,7 +235,9 @@
     "reference": "Referencia",
     "izipay": "Todos nuestros pagos se realizan a través de Izipay. Al aceptar los términos y condiciones, será redirigido a la página de Izipay donde podrá realizar su pago. Recibirá una confirmación de pago en su correo electrónico.",
     "terms": "He leído y autorizo el tratamiento de mis datos de acuerdo con la Política de Privacidad y los Términos y Condiciones.",
-    "privacy": "Autorizo el tratamiento de mis datos con fines de promoción comercial según la Política de Privacidad."
+    "privacy": "Autorizo el tratamiento de mis datos con fines de promoción comercial según la Política de Privacidad.",
+    "just-letters": "Ingrese solo letras",
+    "valid-number": "Ingrese un número peruano válido"
   },
 
   "noti": {

@@ -81,7 +81,7 @@ export default {
 
       <template #center>
         <div class="search-bar">
-          <pv-icon-field>
+          <pv-icon-field style="width: 600px;">
             <pv-input-icon><searchIcon class="nav-icon" /></pv-input-icon>
             <input
                 v-model="value1"

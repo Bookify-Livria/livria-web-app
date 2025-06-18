@@ -25,6 +25,20 @@ export default {
       info: []
     }
   },
+  computed: {
+    nicknameError() {
+      return this.value1 && !/^[A-Za-zÀ-ÿ\s]{1,20}$/.test(this.value1);
+    },
+    usernameError() {
+      return this.value2 && !/^[A-Za-z0-9]{1,20}$/.test(this.value2);
+    },
+    urlError() {
+      return this.value4 && !/^https?:\/\/[^\s]+$/.test(this.value4);
+    },
+    emailError() {
+      return this.value5 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value5);
+    },
+  },
   methods: {
     InvocaAPI() { // Permite obtener la información de los usuarios registrados en la Fake API
       const service = new UserApiService()
@@ -64,7 +78,9 @@ export default {
       }
     },
     async createUserWithAutoId() { // Permite registrar un nuevo usuario con una id auto asignada en base a la cantidad de usuario registrados
-      if (
+      if (this.nicknameError || this.usernameError || this.urlError || this.emailError) {
+        this.showFail();
+      } else if (
           this.value6 === this.value7 &&
           this.value1 &&
           this.value2 &&
@@ -128,7 +144,15 @@ export default {
               </div>
 
               <div class="input-class">
-                <pv-input-text v-model="value1" class="form-input" aria-label="Username input"/>
+                <pv-input-text
+                    v-model="value1"
+                    class="form-input"
+                    aria-label="Nickname input"
+                    :class="{ 'is-invalid': nicknameError }"
+                />
+                <div v-if="nicknameError" class="error-msg">
+                  {{ $t('errors.nickname') }}
+                </div>
               </div>
             </div>
 
@@ -138,7 +162,15 @@ export default {
               </div>
 
               <div class="input-class">
-                <pv-input-text v-model="value2" class="form-input" aria-label="Display name input"/>
+                <pv-input-text
+                    v-model="value2"
+                    class="form-input"
+                    aria-label="Username input"
+                    :class="{ 'is-invalid': usernameError }"
+                />
+                <div v-if="usernameError" class="error-msg">
+                  {{ $t('errors.username') }}
+                </div>
               </div>
             </div>
           </div>
@@ -159,7 +191,15 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value4" class="form-input" aria-label="Icon URL input"/>
+              <pv-input-text
+                  v-model="value4"
+                  class="form-input"
+                  aria-label="Avatar URL input"
+                  :class="{ 'is-invalid': urlError }"
+              />
+              <div v-if="urlError" class="error-msg">
+                {{ $t('errors.url') }}
+              </div>
             </div>
           </div>
 
@@ -169,7 +209,16 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text inputmode="email" v-model="value5" class="form-input" aria-label="Email input"/>
+              <pv-input-text
+                  inputmode="email"
+                  v-model="value5"
+                  class="form-input"
+                  aria-label="Email input"
+                  :class="{ 'is-invalid': emailError }"
+              />
+              <div v-if="emailError" class="error-msg">
+                {{ $t('errors.email') }}
+              </div>
             </div>
           </div>
 
@@ -343,6 +392,16 @@ export default {
   gap: 2rem;
   width: 100%;
   margin-top: 1rem;
+}
+
+.is-invalid {
+  border-color: #9f000c;
+  box-shadow: 0 0 0 2px #9f000c;
+}
+.error-msg {
+  color: #9f000c;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 </style>

@@ -165,6 +165,13 @@
   "security-pin": "Security Pin",
   "go-back": "Go Back",
 
+  "errors": {
+    "nickname": "Letters only (max. 20 characters).",
+    "username": "Letters or numbers only (max. 20 characters).",
+    "url": "Must be a valid link.",
+    "email": "Invalid email."
+  },
+
   "createacc": "Don't have an account?",
   "subscription": "Subscription",
   "yes-subs": "Community Plan",
@@ -228,7 +235,9 @@
     "reference": "Reference",
     "izipay": "All our payments are made through Izipay. Upon accepting the terms and conditions, you will be redirected to the Izipay page where you can make your payment. A payment confirmation will be sent to your email.",
     "terms": "I have read and authorize the processing of my data according to the Privacy Policy and Terms and Conditions.",
-    "privacy": "I authorize the processing of my data for commercial promotion purposes according to the Privacy Policy."
+    "privacy": "I authorize the processing of my data for commercial promotion purposes according to the Privacy Policy.",
+    "just-letters": "Enter only letters",
+    "valid-number": "Enter a valid peruvian number"
   },
 
   "noti": {
