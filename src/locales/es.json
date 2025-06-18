@@ -26,7 +26,11 @@
     "reminder": "¡Ojalá te gusten! Recuerda que puedes marcar tu interés en cada libro con los íconos del marcador y del signo negativo, respectivamente."
   },
 
-  "address": "Dirección",
+  "store" : {
+    "title": "Nuestra Tienda",
+    "subtitle" : "Ven a visitarnos en nuestra tienda!",
+    "address": "Dirección"
+  },
   "empty-list": "Vaciar Lista de Notificaciones",
 
   "Search": "Resultados de: ",
@@ -193,6 +197,7 @@
   "or": "O",
 
   "purchase": {
+    "finish": "Finaliza tu compra",
     "step-summary": "Resumen",
     "step-id": "Identificación",
     "step-delivery": "Entrega",

@@ -43,15 +43,15 @@ export default {
 <style scoped>
 .book-item-container {
   background-color: var(--color-light);
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   height: 100%;
-  min-height: 27rem;
-  width: 21rem;
+  min-height: 23rem;
+  width: 16rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -61,8 +61,8 @@ export default {
 }
 
 .book-cover {
-  width: 160px;
-  height: 250px;
+  width: 135px;
+  height: 210px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -71,7 +71,7 @@ export default {
 }
 
 .book-title {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.25rem;
@@ -80,12 +80,14 @@ export default {
 
 .book-subtitle {
   display: flex;
+  font-size: 0.8rem;
   justify-content: center;
   width: 100%;
   padding: 0 1rem;
 }
 
 .book-price {
+  font-size: 0.9rem;
   font-weight: 600;
   margin-top: 1rem;
 }

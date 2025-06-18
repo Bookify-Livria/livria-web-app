@@ -276,7 +276,7 @@ export default {
                 <div>
                   <pv-message
                       v-if="order.orderstatus === 'pending'"
-                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
                       aria-label="pending"
                   >
                     {{ $t('pending') }}
@@ -371,6 +371,7 @@ export default {
   height: 100%;
   border-radius: 10px;
   color: var(--color-text);
+  font-size: 0.8rem;
   text-align: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -378,7 +379,7 @@ export default {
 ::v-deep(.p-card-title) {
   color: var(--color-accent-orange);
   font-weight: normal;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 ::v-deep(.p-message-text) {
@@ -455,8 +456,10 @@ export default {
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
   width: 100px;
-  height: 40px;
-  border-radius: 15px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-top: 0.5rem;
 }
 
 ::v-deep(.p-selectbutton) {
@@ -465,26 +468,27 @@ export default {
 
 ::v-deep(.p-togglebutton) {
   background-color: transparent;
-  color: #2364A0;
-  border-color: #2364A0;
-  width: 80px;
-  height: 40px;
+  color: var(--color-blue);
+  border-color: var(--color-blue);
+  width: 75px;
+  height: 25px;
   font-weight: normal;
+  font-size: 0.8rem;
 }
 
 ::v-deep(.p-togglebutton.p-togglebutton-checked) {
-  color: white;
-  background-color: var(--color-accent-orange);
-  width: 80px;
-  height: 40px;
+  color: var(--color-blue);
+  background-color: var(--color-secondary);
+  width: 75px;
+  height: 25px;
 }
 
 ::v-deep(.p-togglebutton-checked .p-togglebutton-content) {
-  background: var(--color-accent-orange);
+  background: var(--color-secondary);
 }
 
 ::v-deep(.p-togglebutton:hover) {
-  background: var(--color-accent-orange);
+  background: var(--color-secondary);
 }
 
 ::v-deep(.p-password-input) {
@@ -515,33 +519,33 @@ export default {
 .delete {
   background-color: var(--color-accent-orange);
   color: white;
-  width: 170px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .logout {
   background-color: var(--color-accent-light-yellow);
   color: var(--color-text);
-  width: 150px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .save {
   background-color: var(--color-blue);
   color: white;
-  width: 150px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .pas {
   width: 200px;
-  height: 40px;
+  height: 30px;
   border: 2px solid #2364A0;
   border-radius: 10px;
-  padding: 5px;
+  padding: 0.5rem;
   display: flex;
   align-content: center;
   justify-content: space-between;

@@ -142,8 +142,7 @@ export default {
 
 .filter-panel {
   flex: 1;
-  min-width: 350px;
-  max-width: 370px;
+  max-width: 280px;
   position: sticky;
   top: 2rem;
   height: fit-content;

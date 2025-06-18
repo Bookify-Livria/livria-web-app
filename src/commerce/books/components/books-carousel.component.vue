@@ -56,7 +56,7 @@ export default {
 <style scoped>
 .book-carousel-container {
   width: 100%;
-  padding: 0 2rem 2rem;
+  padding: 0 2rem;
   margin: 0;
 }
 

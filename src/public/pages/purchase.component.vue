@@ -22,7 +22,7 @@ export default {
     <div class="purchase__fullwidth">
       <!-- Title -->
       <div class="title__container">
-        <h1 class="h1__title">{{$t('finish-purchase')}}</h1>
+        <h1 class="h1__title">{{$t('purchase.finish')}}</h1>
       </div>
 
       <!-- Cart Summary and Stepper -->
@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .purchase-container {
-  margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
+  margin: 10rem calc(-1 * ((100vw - 100%) / 2)) 0;
 }
 
 .purchase__fullwidth {

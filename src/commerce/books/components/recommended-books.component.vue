@@ -45,7 +45,6 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 2rem;
-  height: 400px;
 }
 
 .custom-card-wrapper {

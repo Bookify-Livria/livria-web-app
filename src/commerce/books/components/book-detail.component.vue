@@ -132,7 +132,7 @@ export default {
 
     <div class="book-detail__right-section">
       <div class="book-detail__details-container">
-        <h3 class="h3__title">{{ book.author }}</h3>
+        <h3 class="h2__title">{{ book.author }}</h3>
         <p class="language">{{ $t('languages.' + book.language) }}</p>
         <p class="price">S/ {{ book.price.toFixed(2) }}</p>
       </div>
@@ -144,7 +144,7 @@ export default {
           <option>3</option>
         </select>
         <div class="book-detail__add-cart">
-          <pv-toast position="top-right" style="margin-top: 8.5rem" />
+          <pv-toast position="top-right" style="margin-top: 10rem" />
           <button @click="addToCart(book, quantity); showConfirmation()" aria-label="Add to cart">{{ $t('add-to-cart') }}</button>
         </div>
         <span aria-label="Mark as 'interesting'"><bookmarkIcon /></span>
@@ -152,8 +152,10 @@ export default {
       </div>
 
       <div class="book-detail__opinion">
-        <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
-        <h3 class="h3__title go--orange">{{$t('comments')}}</h3>
+        <div class="book-detail__opinion-titles">
+          <span>⭐⭐⭐⭐⭐</span>
+          <h2 class="h2__title go--orange">{{$t('comments')}}</h2>
+        </div>
         <div class="book-detail__opinion-post">
           <form @submit.prevent="makeReview">
             <textarea v-model="newReview.content" :placeholder="$t('comm.thoughts')" aria-label="Add comment section"></textarea>
@@ -202,8 +204,8 @@ export default {
 }
 
 .book-detail__image-container {
-  width: 400px;
-  height: 600px;
+  width: 300px;
+  height: 450px;
 }
 
 .book-detail__image-cover {
@@ -263,9 +265,18 @@ export default {
 }
 
 .book-detail__opinion {
-  margin-top: 21rem;
+  margin-top: 14rem;
   border-top: 1px solid #ccc;
   padding-top: 1rem;
+}
+
+.book-detail__opinion-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .book-detail__opinion-post {
@@ -307,6 +318,10 @@ export default {
   padding: 1rem;
   background: #f9f9f9;
   border-radius: 6px;
+}
+
+.comment {
+  font-size: 0.8rem;
 }
 
 </style>

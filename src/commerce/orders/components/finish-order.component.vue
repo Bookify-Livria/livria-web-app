@@ -290,7 +290,7 @@ export default {
           <!-- Step 1: Summary-->
           <pv-step-panel v-slot="{ activateCallback }" value="1" aria-label="Step 1">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{$t("purchase.summary")}}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{$t("purchase.summary")}}</h3>
               <div class="summary-row">
                 <span>Subtotal</span>
                 <span class="summary-amount">S/ {{ getSubtotal().toFixed(2) }}</span>
@@ -313,7 +313,7 @@ export default {
           <!-- Step 2: Information -->
           <pv-step-panel v-slot="{ activateCallback }" value="2" aria-label="Step 2">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.info-recipient") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.info-recipient") }}</h3>
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ $t("purchase.name")}}</label>
@@ -327,14 +327,14 @@ export default {
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ $t("purchase.email")}}</label>
-                  <label>{{ userEmail }}</label>
+                  <label style="font-weight: 400; margin-top: 0.5rem">{{ userEmail }}</label>
                 </div>
                 <div class="form-group">
                   <label>{{ $t("purchase.phone")}}</label>
                   <input v-model="recipient.phone" type="tel" required />
                 </div>
               </div>
-              <pv-toast position="top-right" style="margin-top: 8.5rem" />
+              <pv-toast position="top-right" style="margin-top: 10rem" />
               <div class="nav-buttons">
                 <button type="button" @click="activateCallback('1')">{{ $t("purchase.back") }}</button>
                 <button type="button" @click="goToStep3(activateCallback)">
@@ -347,7 +347,7 @@ export default {
           <!-- Step 3: Delivery -->
           <pv-step-panel v-slot="{ activateCallback }" value="3" aria-label="Step 3">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.delivery") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.delivery") }}</h3>
               <div class="delivery-toggle nav-buttons">
                 <button type="button" :class="{ active: !delivery }" @click="delivery = false">
                   {{ $t("purchase.pickup-store") }}
@@ -377,7 +377,7 @@ export default {
                 <p>{{ $t("purchase.see-more")}}<router-link to="/shop">{{$t("purchase.here")}}</router-link></p>
               </div>
               <div class="nav-buttons">
-                <pv-toast position="top-right" style="margin-top: 8.5rem" />
+                <pv-toast position="top-right" style="margin-top: 10rem" />
                 <button @click="activateCallback('2')">{{ $t("purchase.back") }}</button>
                 <button type="button" @click="goToStep4(activateCallback)">
                   {{ $t("purchase.next") }}
@@ -389,7 +389,7 @@ export default {
           <!-- Step 4: Payment -->
           <pv-step-panel v-slot="{ activateCallback }" value="4" aria-label="Step 4">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.payment") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.payment") }}</h3>
               <p>{{ $t("purchase.izipay")}}</p>
               <div class="izipay-box">
                 <img
@@ -409,7 +409,7 @@ export default {
                 </label>
               </div>
               <div class="nav-buttons">
-                <pv-toast position="top-right" style="margin-top: 8.5rem" />
+                <pv-toast position="top-right" style="margin-top: 10rem" />
                 <button type="button" @click="activateCallback('3')">{{$t("purchase.back")}}</button>
                 <button type="button" @click="handleSubmit(activateCallback)" aria-label="Confirm payment and finish purchase">
                   {{ $t("purchase.pay") }}
