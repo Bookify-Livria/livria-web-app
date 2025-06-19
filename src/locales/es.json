@@ -57,6 +57,10 @@
   "loading-book": "Cargando Libro...",
   "synopsis": "Sinópsis",
   "comments": "Comentarios",
+  "reviews": "Reseñas",
+  "make-review": "Deja una reseña para este libro",
+  "previous-reviews": "Mira las reseñas de otros usuarios",
+  "review-empty-content": "No pudimos publicar tu reseña porque está vacía.",
   "languages": {
     "es": "Español",
     "en": "Inglés"

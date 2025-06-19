@@ -57,6 +57,10 @@
   "loading-book": "Loading Book...",
   "synopsis": "Synopsis",
   "comments": "Comments",
+  "reviews": "Reviews",
+  "make-review": "Leave a review for this book",
+  "previous-reviews": "Check out other users' reviews",
+  "review-empty-content": "We can't post your review because it has no content.",
   "languages": {
     "es": "Spanish",
     "en": "English"

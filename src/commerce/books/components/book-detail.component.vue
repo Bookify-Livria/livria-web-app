@@ -1,18 +1,17 @@
 <script>
 import { BookApiService } from '../services/book-api.service.js'
 import { CartApiService} from "../../shared-services/cart-api.service.js";
-
+import { UserApiService } from "../../../subscription/service/user-api.service.js";
 import bookmarkIcon from "../../../assets/images/icons/Bookmark.svg";
 import minusIcon from "../../../assets/images/icons/Minus.svg";
-import {CommunityApiService} from "../../../communities/service/community-api.service.js";
-import {getLoggedInUser} from "../../../public/shared-services/get-logged-user.js";
-import {Book} from "../model/book.entity.js";
+import starIcon from "../../../assets/images/icons/Star.svg";
 
 export default {
   name: 'BookDetail',
   components: {
     bookmarkIcon,
-    minusIcon
+    minusIcon,
+    starIcon
   },
   props: {
     title: {
@@ -25,8 +24,10 @@ export default {
       book: null,
       quantity: 1,
       newReview: {
-        content: ''
-      }
+        content: '',
+        stars: 0
+      },
+      hoverRating: 0,
     }
   },
   methods: {
@@ -77,34 +78,49 @@ export default {
         console.error("Error adding item:", error)
       }
     },
+    setRating(value) {
+      this.newReview.stars = value;
+    },
     async makeReview() { // Permite al usuario registrar una reseña del libro en pantalla
       try {
         const service = new BookApiService();
-        const currentUser = await getLoggedInUser();
+        const response = new UserApiService();
+        const loggedUsers = await response.getLoggedInUser();
+
+        const currentUser = loggedUsers.length > 0 ? loggedUsers[0] : null;
 
         if (!this.newReview.content.trim()) {
-          return;
+          this.$toast.add({
+            severity: 'warn',
+            summary: this.$t('notice'),
+            detail: this.$t('review-empty-content'),
+            life: 3000
+          });
+          return; // Stop the function if content is empty
         }
 
         const newId = this.book.reviews?.length
             ? String(Math.max(...this.book.reviews.map(p => parseInt(p.id))) + 1)
             : "1";
 
-        const newReview = {
+        const newPostReview = {
           id: newId,
-          username: currentUser.user,
+          username: currentUser.username,
           content: this.newReview.content,
+          stars: this.newReview.stars.toString()
         };
 
         const updatedReviews = {
           ...this.book,
-          reviews: [...(this.book.reviews || []), newReview]
+          reviews: [...(this.book.reviews || []), newPostReview]
         };
 
         await service.updateBook(updatedReviews);
 
-        this.book.reviews.push(newReview);
+        this.book.reviews.push(newPostReview);
         this.newReview.content = '';
+        this.newReview.stars = 0;
+        this.hoverRating = 0;
 
       } catch (error) {
         console.error('Error posting!!!', error);
@@ -113,6 +129,7 @@ export default {
   },
   mounted() {
     this.loadBook() // Carga la información del libro al iniciar el componente
+    console.log()
   }
 }
 </script>
@@ -153,22 +170,41 @@ export default {
 
       <div class="book-detail__opinion">
         <div class="book-detail__opinion-titles">
-          <span>⭐⭐⭐⭐⭐</span>
-          <h2 class="h2__title go--orange">{{$t('comments')}}</h2>
+          <h2 class="h2__title go--orange">{{$t('reviews')}}</h2>
+          <h3 class="h3__title">{{ $t('make-review') }}</h3>
         </div>
         <div class="book-detail__opinion-post">
+          <span class="rating-stars">
+            <starIcon
+                v-for="(star, index) in 5"
+                :key="index"
+                :class="[
+                 'star',
+                 { filled: index < newReview.stars },
+                 { hovered: index < hoverRating }
+               ]"
+                @mouseover="hoverRating = index + 1"
+                @mouseleave="hoverRating = 0"
+                @click="setRating(index + 1)" />
+          </span>
           <form @submit.prevent="makeReview">
             <textarea v-model="newReview.content" :placeholder="$t('comm.thoughts')" aria-label="Add comment section"></textarea>
             <button type="submit" class="" aria-label="Publish comment">{{ $t("comm.post")}}</button>
           </form>
         </div>
+        <h3 class="h3__title">{{ $t('previous-reviews') }}</h3>
         <div
             v-for="review in book.reviews.slice().reverse()"
             :key="review.id"
             class="comments"
         >
           <div class="comment">
-            <strong>@{{ review.username }}</strong> — {{ review.content }}
+            <div class="comment__user">
+              <strong>@{{ review.username }}</strong>
+            </div>
+            <div class="comment__review">
+              {{ review.stars }} <starIcon class="comment__review-star"/> {{ review.content }}
+            </div>
           </div>
         </div>
       </div>
@@ -265,7 +301,7 @@ export default {
 }
 
 .book-detail__opinion {
-  margin-top: 14rem;
+  margin-top: 17rem;
   border-top: 1px solid #ccc;
   padding-top: 1rem;
 }
@@ -274,13 +310,15 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
 }
 
 .book-detail__opinion-post {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .book-detail__opinion-post form {
@@ -314,14 +352,64 @@ export default {
 }
 
 .comments {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   padding: 1rem;
   background: #f9f9f9;
-  border-radius: 6px;
+  border: 1px solid #eee;
+  border-radius: 8px;
 }
 
 .comment {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.comment__user {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.comment__review {
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2rem;
+  padding: 0.25rem;
+}
+
+.comment__review-star {
+  transform: scale(0.65);
+  vertical-align: middle;
+  margin-left: -0.5rem;
+  margin-top: -0.1rem;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.star {
+  width: 24px;
+  height: 24px;
+  color: var(--color-accent-yellow);
+  stroke: currentColor;
+  fill: none;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.star.filled {
+  fill: var(--color-accent-yellow);
 }
 
 </style>

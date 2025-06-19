@@ -45,7 +45,7 @@ export default {
       try {
         const response = new UserApiService();
         const user = await response.createLoggedInUser(newUser);
-        console.log("Login session created:", user.data);
+        console.log("Login session created for:", user.username);
       } catch (error) {
         console.error("Error creating login session:", error);
       }
