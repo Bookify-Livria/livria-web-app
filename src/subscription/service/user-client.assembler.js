@@ -13,7 +13,7 @@ export class UserClientAssembler {
             (resource.order || []).map(o => ({
                 id: o.id,
                 code: o.code,
-                orderstatus: o.orderstatus
+                status: o.status
             })),
             resource.subscription
         );
@@ -35,7 +35,7 @@ export class UserClientAssembler {
             order: (user.order || []).map(o => ({
                 id: o.id,
                 code: o.code,
-                orderstatus: o.orderstatus
+                status: o.status
             })),
             subscription: user.subscription
         };

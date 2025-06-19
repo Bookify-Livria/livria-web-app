@@ -95,18 +95,21 @@ export default {
                 : 1
         );
         this.code = generateOrderCode();
+        const statusOptions = ["pending", "delivered"];
+        const randomStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
         const newOrder = {
           id: newId,
           code: this.code,
           items: this.cartItems,
+          fullName: `${this.recipient.name} ${this.recipient.lastname}`,
           email: this.userEmail,
           phone,
-          fullName: `${this.recipient.name} ${this.recipient.lastname}`,
           delivery,
           shipping: this.delivery === true || this.delivery === 'true' ? { ...this.shipping } : null,
           total: this.getTotal(),
-          date: new Date().toISOString()
+          date: new Date().toISOString(),
+          status: randomStatus,
         };
         await service.createOrder(newOrder);
 
@@ -205,13 +208,13 @@ export default {
 
         const updatedOrders = (this.user.order || []).map(order => ({
           ...order,
-          orderstatus: "delivered"
+          status: "delivered"
         }));
 
         const newOrder = {
           id: newId,
           code: this.code,
-          orderstatus: "pending"
+          status: "pending"
         };
 
         try {

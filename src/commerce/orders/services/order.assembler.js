@@ -17,13 +17,14 @@ export class OrderAssembler {
             resource.id,
             resource.code,
             items,
+            resource.fullName,
             resource.email,
             resource.phone,
-            resource.fullName,
             resource.delivery,
             shipping,
             resource.total,
-            resource.date
+            resource.date,
+            resource.status,
         );
     }
 
@@ -39,8 +40,6 @@ export class OrderAssembler {
             fullName: order.fullName,
             email: order.email,
             phone: order.phone,
-            date: order.date,
-            total: order.total,
             delivery: order.delivery,
             shipping: order.delivery
                 ? {
@@ -48,7 +47,10 @@ export class OrderAssembler {
                     district: order.shipping.district,
                     reference: order.shipping.reference
                 }
-                : null
+                : null,
+            total: order.total,
+            date: order.date,
+            status: order.status,
         };
     }
 
