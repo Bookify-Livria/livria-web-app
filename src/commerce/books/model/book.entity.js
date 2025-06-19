@@ -1,4 +1,3 @@
-import { Review } from "./review.entity.js";
 
 export class Book {
     constructor(id, title, description, author, price, stock, cover, genre, language, reviews = []) {

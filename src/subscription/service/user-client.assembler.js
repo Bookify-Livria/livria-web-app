@@ -37,8 +37,7 @@ export class UserClientAssembler {
                 code: o.code,
                 orderstatus: o.orderstatus
             })),
-            subscription: user.subscription,
-            role: 'client'
+            subscription: user.subscription
         };
     }
 }

@@ -24,7 +24,7 @@ export class UserApiService {
         const adapted = UserClientAssembler.toResource(rawResource);
         return axios.post('https://livria-6efh.onrender.com/clientUsers', adapted)
             .catch(error => {
-                console.error('Error creating order:', error);
+                console.error('Error creating user:', error);
                 throw error;
             });
     }
