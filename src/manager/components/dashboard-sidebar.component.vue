@@ -19,7 +19,6 @@ export default {
       activeItem: 'dashboard',
       admin: null,
       activeBottomAction: null,
-      // Sidebar navigation items
       navItems: [
         {
           id: 'dashboard',
@@ -43,7 +42,6 @@ export default {
     };
   },
   computed: {
-    // Computed classes for the sidebar based on collapsed state
     sidebarClasses() {
       return {
         'sidebar-collapsed': this.collapsed
@@ -51,42 +49,39 @@ export default {
     }
   },
   methods: {
-    // Set active item based on current route
     updateActiveItem() {
       const currentPath = this.$router.currentRoute.value.path;
       const matchingItem = this.navItems.find(item => currentPath.includes(item.route));
       if (matchingItem) {
         this.activeItem = matchingItem.id;
-        this.activeBottomAction = null; // Clear bottom action active state
+        this.activeBottomAction = null;
       } else if (currentPath.includes('/settings')) {
         this.activeBottomAction = 'settings';
-        this.activeItem = null; // Clear main nav active state
-      } else if (currentPath.includes('/login')) { // For logout, if you want it active on the login page after clicking
+        this.activeItem = null;
+      } else if (currentPath.includes('/login')) {
         this.activeBottomAction = 'logout';
-        this.activeItem = null; // Clear main nav active state
+        this.activeItem = null;
       } else {
         this.activeItem = null;
         this.activeBottomAction = null;
       }
     },
-    // Load user information
-    async fetchUserInfo() {
+    async fetchUserInfo() { // Carga la información del administrador
       try {
         const userApiService = new UserApiService();
-        this.admin = await userApiService.getAdminUser(); // Update reactive data
+        this.admin = await userApiService.getAdminUser();
 
       } catch (error) {
         console.error("Error getting user info:", error);
       }
     },
-    // Navigate to the selected route
-    navigateTo(item) {
+    navigateTo(item) { // Permite la navegación
       if (['settings', 'logout'].includes(item.id)) {
         this.activeBottomAction = item.id;
-        this.activeItem = null; // Ensure main nav item is not active
+        this.activeItem = null;
       } else {
         this.activeItem = item.id;
-        this.activeBottomAction = null; // Ensure bottom action is not active
+        this.activeBottomAction = null;
       }
 
       this.$router.push(item.route);
@@ -97,7 +92,6 @@ export default {
     }
   },
   mounted() {
-    // This lifecycle hook is called after the component is mounted
     this.fetchUserInfo();
     this.updateActiveItem();
   }

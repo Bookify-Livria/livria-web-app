@@ -86,7 +86,6 @@ export default {
           quantity: parseInt(quantity)
         };
         await service.addToCart(cartItem);
-        this.showConfirmation();
       } catch (error) {
         console.error("Error adding item:", error)
       }

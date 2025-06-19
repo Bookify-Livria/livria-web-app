@@ -58,6 +58,7 @@ export class UserApiService {
     }
     updateAdminUser(user) {
         return axios.put(`https://livria-6efh.onrender.com/adminUser/${user.id}`, user)
+            .then(response => response.data)
             .catch(error => {
                 console.error('Error updating users:', error);
                 throw error;

@@ -1,7 +1,6 @@
 <script>
 import dashboardSidebar from "../../manager/components/dashboard-sidebar.component.vue";
-// import { getLoggedInUser } from "../shared-services/get-logged-user.js"; // No longer needed
-import { UserApiService } from "@/subscription/service/user-api.service.js"; // Import your UserApiService
+import { UserApiService } from "@/subscription/service/user-api.service.js";
 
 export default {
   name: "dashboard.component",
@@ -10,14 +9,12 @@ export default {
   },
   data() {
     return {
-      // Reactive data properties
       admin: null,
       loading: true,
       sidebarCollapsed: false,
     };
   },
   computed: {
-    // Computed property for main content class, if needed
     mainContentClasses() {
       return {
         'sidebar-expanded': !this.sidebarCollapsed
@@ -25,28 +22,23 @@ export default {
     }
   },
   methods: {
-    // Method to fetch user information using UserApiService
-    async fetchUserInfo() {
+    async fetchUserInfo() { // Carga la información del administrador
       try {
         this.loading = true;
-        // Call the getLoggedInUser method from your UserApiService
         const userApiService = new UserApiService();
-        this.admin = await userApiService.getAdminUser(); // Update reactive data
+        this.admin = await userApiService.getAdminUser();
 
       } catch (error) {
         console.error("Error getting user info:", error);
-        // Optionally handle error, e.g., show an error message
       } finally {
         this.loading = false;
       }
     },
-    // Method to toggle the sidebar's collapsed state
-    toggleSidebar() {
+    toggleSidebar() { // Para ocultar el menú vertical
       this.sidebarCollapsed = !this.sidebarCollapsed;
     }
   },
   mounted() {
-    // Call fetchUserInfo when the component is mounted to the DOM
     this.fetchUserInfo();
   }
 };
@@ -122,6 +114,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 70px;
+  margin-top: 3rem;
   transition: margin-left 0.3s ease;
   width: 100%;
 }

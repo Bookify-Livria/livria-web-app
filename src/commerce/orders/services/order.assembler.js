@@ -36,12 +36,12 @@ export class OrderAssembler {
             id: order.id,
             code: order.code,
             items: order.items.map(CartAssembler.toResource),
+            fullName: order.fullName,
             email: order.email,
             phone: order.phone,
-            fullName: order.fullName,
-            delivery: order.delivery,
-            total: order.total,
             date: order.date,
+            total: order.total,
+            delivery: order.delivery,
             shipping: order.delivery
                 ? {
                     address: order.shipping.address,

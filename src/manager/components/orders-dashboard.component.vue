@@ -320,7 +320,7 @@ export default {
 
       <!-- Filter and Search Options -->
       <div class="filter-section">
-        <h2 class="section-title">{{ $t('dashboard-orders.order-list') }}</h2>
+        <h2 class="h2__title" style="margin-bottom: 2rem">{{ $t('dashboard-orders.order-list') }}</h2>
 
         <div class="search-bar">
           <input
@@ -566,6 +566,11 @@ export default {
 .dashboard-header {
   text-align: center;
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dashboard-title {
@@ -576,8 +581,9 @@ export default {
 }
 
 .dashboard-subtitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.8;
 }
 
@@ -603,29 +609,29 @@ export default {
 }
 
 .stat-card {
-  background-color: white;
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card h3 {
   font-size: 0.9rem;
   color: var(--color-text);
   opacity: 0.8;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
   color: var(--color-accent-orange);
+  text-align: center;
 }
 
 .filter-section {
@@ -667,6 +673,89 @@ export default {
 .filter-group label {
   display: block;
   margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.orders-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 2rem;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  color: var(--color-text);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.orders-table thead {
+  background-color: #f8f9fa;
+}
+
+.orders-table th {
+  font-weight: 600;
+  color: #222;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.orders-table tbody tr:hover {
+  background-color: #f2f8fc;
+}
+
+.customer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-name {
+  font-weight: 500;
+  color: #222;
+}
+
+.customer-email {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.order-total {
+  font-weight: bold;
+  color: #007b8a;
+}
+
+.items-count {
+  text-align: center;
+}
+
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-block;
+  text-transform: capitalize;
 }
 
 </style>

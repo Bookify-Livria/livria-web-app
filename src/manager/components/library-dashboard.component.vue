@@ -245,14 +245,14 @@ export default {
         </div>
         <div class="stat-card">
           <h3>{{ $t('dashboard.most-reviewed') }}</h3>
-          <p class="stat-value">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
+          <p class="stat-value long">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.mostReviewedBook">
             {{ stats.mostReviewedBook.reviews?.length || 0 }} {{ $t('dashboard.reviews')  }}
           </p>
         </div>
         <div class="stat-card">
           <h3>{{ $t('dashboard.best-selling')  }}</h3>
-          <p class="stat-value">{{ stats.bestSellingBook?.title || 'N/A' }}</p>
+          <p class="stat-value long">{{ stats.bestSellingBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.bestSellingBook">
             {{ stats.bestSellingBook.sales || 0 }} {{ $t('dashboard.copies') }}
           </p>
@@ -261,7 +261,7 @@ export default {
 
       <!-- Filter and Search Options -->
       <div class="filter-section">
-        <h2 class="section-title">{{ $t('dashboard.book-collection') }}</h2>
+        <h2 class="h2__title" style="margin-bottom: 2rem">{{ $t('dashboard.book-collection') }}</h2>
 
         <div class="search-bar">
           <input
@@ -423,6 +423,11 @@ export default {
 .dashboard-header {
   text-align: center;
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dashboard-title {
@@ -433,8 +438,9 @@ export default {
 }
 
 .dashboard-subtitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.8;
 }
 
@@ -460,36 +466,41 @@ export default {
 }
 
 .stat-card {
-  background-color: white;
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card h3 {
   font-size: 0.9rem;
   color: var(--color-text);
   opacity: 0.8;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
   color: var(--color-accent-orange);
+  text-align: center;
+}
+
+.long {
+  font-size: 1.2rem;
 }
 
 .stat-detail {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.7;
-  margin-top: 0.5rem;
+  margin: 0;
 }
 
 .filter-section {
@@ -542,6 +553,7 @@ export default {
   border: 1px solid #ddd;
   background-color: white;
   font-size: 0.9rem;
+  color: var(--color-text);
 }
 
 .books-grid {
@@ -551,75 +563,76 @@ export default {
 }
 
 .book-card {
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-color: var(--color-light);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .book-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.book-cover {
-  height: 260px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 10px;
 }
 
 .book-cover img {
-  width: auto;
-  height: 100%;
+  width: 135px;
+  height: 210px;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.book-cover:hover img {
-  transform: scale(1.05);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin: 2rem auto 0;
+  display: block;
 }
 
 .book-info {
-  padding: 1.5rem;
-  padding-top: .1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .book-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.05rem;
+  margin-top: 0;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .book-author {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--color-text);
-  margin-bottom: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  text-align: center;
 }
 
 .book-price {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--color-accent-orange);
-  margin-bottom: 0.75rem;
+  color: var(--color-blue);
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .book-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
   opacity: 0.7;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .book-reviews {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
   opacity: 0.7;
   margin-bottom: 1rem;
@@ -628,6 +641,7 @@ export default {
 .book-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: auto;
 }
 
 .btn-edit, .btn-view {
