@@ -330,9 +330,6 @@ export default {
               <button class="btn-edit" @click="editBook(book)">
                 {{ $t('dashboard.edit') }}
               </button>
-              <button class="btn-view" @click="navigateToBook(book)">
-                {{ $t('dashboard.view') }}
-              </button>
             </div>
           </div>
         </div>

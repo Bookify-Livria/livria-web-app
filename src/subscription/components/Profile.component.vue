@@ -283,7 +283,7 @@ export default {
                   </pv-message>
                   <pv-message
                       v-else-if="order.status === 'delivered'"
-                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
                       aria-label="delivered"
                   >
                     {{ $t('delivered') }}

@@ -32,6 +32,7 @@ export default {
         lastname: "",
         phone: ""
       },
+      currentUser : null,
       userEmail: "",
       delivery: false,
       shipping: {
@@ -40,6 +41,7 @@ export default {
         region: "",
         reference: ""
       },
+      status: 'pending',
       acceptedTerms: false,
       acceptedPrivacy: false,
 
@@ -96,20 +98,22 @@ export default {
         );
         this.code = generateOrderCode();
         const statusOptions = ["pending", "delivered"];
-        const randomStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+        this.status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
         const newOrder = {
           id: newId,
           code: this.code,
           items: this.cartItems,
-          fullName: `${this.recipient.name} ${this.recipient.lastname}`,
-          email: this.userEmail,
+          userId: this.currentUser.id,
+          userName: this.currentUser.display,
+          email: this.currentUser.email,
+          recipientName: `${this.recipient.name} ${this.recipient.lastname}`,
           phone,
           delivery,
           shipping: this.delivery === true || this.delivery === 'true' ? { ...this.shipping } : null,
           total: this.getTotal(),
           date: new Date().toISOString(),
-          status: randomStatus,
+          status: this.status,
         };
         await service.createOrder(newOrder);
 
@@ -125,7 +129,9 @@ export default {
       try {
         const user = await getLoggedInUser();
         if (user) {
+          this.currentUser = user;
           this.userEmail = user.email;
+          console.log(this.currentUser.id, this.currentUser.display)
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -206,21 +212,16 @@ export default {
                 : 1
         );
 
-        const updatedOrders = (this.user.order || []).map(order => ({
-          ...order,
-          status: "delivered"
-        }));
-
         const newOrder = {
           id: newId,
           code: this.code,
-          status: "pending"
+          status: this.status
         };
 
         try {
           await service.updateUser({
             ...this.user,
-            order: [...updatedOrders, newOrder]
+            order: [...this.user.order, newOrder]
           });
           this.showConfirmation = true;
 

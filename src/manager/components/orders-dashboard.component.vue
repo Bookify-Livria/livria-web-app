@@ -1,84 +1,125 @@
 <script>
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { OrderApiService } from '../../commerce/orders/services/order-api.service.js'
+import { OrderApiService } from '../../commerce/orders/services/order-api.service.js';
 
 export default {
   name: "OrdersDashboard",
-  setup() {
-    const router = useRouter();
-    const orders = ref([]);
-    const stats = ref({
-      totalOrders: 0,
-      totalRevenue: 0,
-      pendingOrders: 0,
-      completedOrders: 0,
-      averageOrderValue: 0,
-      mostPopularBook: null
-    });
-    const loading = ref(true);
-    const selectedStatus = ref('all');
-    const dateRange = ref('all');
-    const sortOption = ref('date_desc');
-    const searchQuery = ref('');
-    const showOrderModal = ref(false);
-    const currentOrder = ref(null);
-    const formErrors = ref({});
+  data() {
+    return {
+      orders: [],
+      stats: {
+        totalOrders: 0,
+        totalRevenue: 0,
+        pendingOrders: 0,
+        completedOrders: 0,
+        averageOrderValue: 0,
+        mostPopularBook: null
+      },
+      loading: true,
+      selectedStatus: 'all',
+      dateRange: 'all',
+      sortOption: 'date_desc',
+      searchQuery: '',
+      showOrderModal: false,
+      currentOrder: null,
+      formErrors: {}, // This was in setup but not used in the provided template/methods. Keeping for completeness.
 
-    // Status options
-    const statusOptions = ref([
-      { value: 'pending', label: 'Pendiente' },
-      { value: 'processing', label: 'Procesando' },
-      { value: 'shipped', label: 'Enviado' },
-      { value: 'delivered', label: 'Entregado' },
-      { value: 'canceled', label: 'Cancelado' }
-    ]);
+      statusOptions: [
+        { value: 'pending', label: 'Pendiente' },
+        { value: 'delivered', label: 'Delivered' },
+      ],
 
-    // Date range options
-    const dateRangeOptions = ref([
-      { value: 'today', label: 'Hoy' },
-      { value: 'week', label: 'Esta Semana' },
-      { value: 'month', label: 'Este Mes' },
-      { value: 'year', label: 'Este Año' },
-      { value: 'all', label: 'Todo el Tiempo' }
-    ]);
+      // Date range options
+      dateRangeOptions: [
+        { value: 'today', label: 'Hoy' },
+        { value: 'week', label: 'Esta Semana' },
+        { value: 'month', label: 'Este Mes' },
+        { value: 'year', label: 'Este Año' },
+        { value: 'all', label: 'Todo el Tiempo' }
+      ]
+    };
+  },
+  computed: {
+    filteredOrders() {
+      let filtered = [...this.orders];
 
-    const loadOrders = async () => {
+      // Filter by status
+      if (this.selectedStatus !== 'all') {
+        filtered = filtered.filter(order => order.status === this.selectedStatus);
+      }
+      // Filter by date range
+      if (this.dateRange !== 'all') {
+        filtered = filtered.filter(order => this.isWithinDateRange(order.date, this.dateRange));
+      }
+      // Filter by search query
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase();
+        filtered = filtered.filter(order =>
+            order.code.toLowerCase().includes(query) ||
+            order.recipientName.toLowerCase().includes(query) ||
+            order.email.toLowerCase().includes(query)
+        );
+      }
+      // Sort orders
+      filtered.sort((a, b) => {
+        switch (this.sortOption) {
+          case 'date_asc':
+            return new Date(a.date) - new Date(b.date);
+          case 'date_desc':
+            return new Date(b.date) - new Date(a.date);
+          case 'total_asc':
+            return a.total - b.total;
+          case 'total_desc':
+            return b.total - a.total;
+          default:
+            return 0;
+        }
+      });
+
+      return filtered;
+    }
+  },
+  methods: {
+    async loadOrders() {
       try {
-        loading.value = true;
+        this.loading = true;
         const service = new OrderApiService();
         const data = await service.getOrders();
-        orders.value = data;
+        this.orders = data;
+        this.calculateStats(data);
 
-        // Calculate statistics
-        calculateStats(data);
-
-        loading.value = false;
+        this.loading = false;
       } catch (error) {
         console.error('Error loading orders:', error);
-        loading.value = false;
+        this.loading = false;
       }
-    };
-
-    const calculateStats = (orders) => {
-      if (!orders.length) return;
-
-      stats.value.totalOrders = orders.length;
+    },
+    calculateStats(orders) {
+      if (!orders.length) {
+        this.stats = {
+          totalOrders: 0,
+          totalRevenue: 0,
+          pendingOrders: 0,
+          completedOrders: 0,
+          averageOrderValue: 0,
+          mostPopularBook: null
+        };
+        return;
+      }
+      this.stats.totalOrders = orders.length;
 
       // Calculate total revenue
-      stats.value.totalRevenue = orders.reduce((sum, order) => {
+      this.stats.totalRevenue = orders.reduce((sum, order) => {
         return sum + (order.total || 0);
       }, 0);
 
       // Count pending and completed orders
-      stats.value.pendingOrders = orders.filter(order =>
-          ['pending', 'processing'].includes(order.status)).length;
-
-      stats.value.completedOrders = orders.filter(order =>
+      this.stats.pendingOrders = orders.filter(order =>
+          ['pending'].includes(order.status)).length;
+      this.stats.completedOrders = orders.filter(order =>
           order.status === 'delivered').length;
 
       // Calculate average order value
-      stats.value.averageOrderValue = stats.value.totalRevenue / orders.length;
+      this.stats.averageOrderValue = this.stats.totalRevenue / orders.length;
 
       // Find most popular book (the book that appears in most orders)
       const bookOccurrences = {};
@@ -93,22 +134,18 @@ export default {
           bookOccurrences[item.bookId].count += item.quantity || 1;
         });
       });
-
-      // Find book with highest count
       let mostPopular = { count: 0, title: 'N/A' };
       Object.values(bookOccurrences).forEach(book => {
         if (book.count > mostPopular.count) {
           mostPopular = book;
         }
       });
-
-      stats.value.mostPopularBook = mostPopular.title;
-    };
-
-    const isWithinDateRange = (date, range) => {
+      this.stats.mostPopularBook = mostPopular.title;
+    },
+    isWithinDateRange(dateString, range) {
       if (range === 'all') return true;
 
-      const orderDate = new Date(date);
+      const orderDate = new Date(dateString);
       const today = new Date();
 
       // Reset hours for accurate day comparison
@@ -120,12 +157,8 @@ export default {
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
       const startOfWeekTimestamp = startOfWeek.getTime();
-
-      // Calculate start of month
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       const startOfMonthTimestamp = startOfMonth.getTime();
-
-      // Calculate start of year
       const startOfYear = new Date(today.getFullYear(), 0, 1);
       const startOfYearTimestamp = startOfYear.getTime();
 
@@ -143,137 +176,61 @@ export default {
         default:
           return true;
       }
-    };
-
-    const filteredOrders = computed(() => {
-      let filtered = [...orders.value];
-
-      // Filter by status
-      if (selectedStatus.value !== 'all') {
-        filtered = filtered.filter(order => order.status === selectedStatus.value);
-      }
-
-      // Filter by date range
-      if (dateRange.value !== 'all') {
-        filtered = filtered.filter(order => isWithinDateRange(order.orderDate, dateRange.value));
-      }
-
-      // Filter by search query
-      if (searchQuery.value.trim()) {
-        const query = searchQuery.value.toLowerCase();
-        filtered = filtered.filter(order =>
-            order.orderNumber.toLowerCase().includes(query) ||
-            order.customerName.toLowerCase().includes(query) ||
-            order.customerEmail.toLowerCase().includes(query)
-        );
-      }
-
-      // Sort orders
-      filtered.sort((a, b) => {
-        switch (sortOption.value) {
-          case 'date_asc':
-            return new Date(a.orderDate) - new Date(b.orderDate);
-          case 'date_desc':
-            return new Date(b.orderDate) - new Date(a.orderDate);
-          case 'total_asc':
-            return a.total - b.total;
-          case 'total_desc':
-            return b.total - a.total;
-          default:
-            return 0;
-        }
-      });
-
-      return filtered;
-    });
-
-    const viewOrderDetails = (order) => {
-      currentOrder.value = { ...order };
-      showOrderModal.value = true;
-    };
-
-    const getStatusColor = (status) => {
-      switch (status) {
-        case 'pending':
-          return 'status-pending';
-        case 'processing':
-          return 'status-processing';
-        case 'shipped':
-          return 'status-shipped';
-        case 'delivered':
-          return 'status-delivered';
-        case 'canceled':
-          return 'status-canceled';
-        default:
-          return '';
-      }
-    };
-
-    const getStatusLabel = (status) => {
-      const statusOption = statusOptions.value.find(option => option.value === status);
-      return statusOption ? statusOption.label : status;
-    };
-
-    const updateOrderStatus = async (newStatus) => {
-      if (!currentOrder.value) return;
-
+    },
+    viewOrderDetails(order) {
+      this.currentOrder = { ...order };
+      this.showOrderModal = true;
+    },
+    async updateOrderStatus(newStatus) {
+      if (!this.currentOrder) return;
       try {
         const service = new OrderApiService();
-        await service.updateOrderStatus(currentOrder.value.id, newStatus);
+        await service.updateOrderStatus(this.currentOrder.id, newStatus);
 
         // Update order in local array
-        const index = orders.value.findIndex(order => order.id === currentOrder.value.id);
+        const index = this.orders.findIndex(order => order.id === this.currentOrder.id);
         if (index !== -1) {
-          orders.value[index].status = newStatus;
-          currentOrder.value.status = newStatus;
+          this.orders[index] = {
+            ...this.orders[index],
+            status: newStatus
+          };
+          this.currentOrder.status = newStatus; // Also update the currentOrder in the modal
         }
 
-        // Recalculate stats
-        calculateStats(orders.value);
+        this.calculateStats(this.orders);
       } catch (error) {
         console.error('Error updating order status:', error);
       }
-    };
-
-    const closeModal = () => {
-      showOrderModal.value = false;
-      currentOrder.value = null;
-    };
-
-    const formatDate = (dateString) => {
+    },
+    closeModal() {
+      this.showOrderModal = false;
+      this.currentOrder = null;
+    },
+    getSubtotal() { // Calcula el subtotal en base al total de la orden
+      if (!this.currentOrder.total) return 0;
+      const shipping = this.currentOrder.delivery ? this.getShippingCost() : 0;
+      const igv = this.getIGV();
+      return this.currentOrder.total - igv - shipping;
+    },
+    getIGV() { // Calcula el IGV en base al total de la orden
+      return this.currentOrder.total ? this.currentOrder.total * 0.18 / 1.18 : 0;
+    },
+    getShippingCost() { // Calcula el precio de envío
+      return this.currentOrder.total ? this.currentOrder.total * 0.21 / 1.21 : 0;
+    },
+    formatDate(dateString) {
+      if (!dateString) return '';
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
-    const formatCurrency = (amount) => {
-      return `S/ ${amount.toFixed(2)}`;
-    };
-
-    onMounted(() => {
-      loadOrders();
-    });
-
-    return {
-      orders,
-      stats,
-      loading,
-      selectedStatus,
-      statusOptions,
-      dateRange,
-      dateRangeOptions,
-      sortOption,
-      searchQuery,
-      filteredOrders,
-      showOrderModal,
-      currentOrder,
-      viewOrderDetails,
-      getStatusColor,
-      getStatusLabel,
-      updateOrderStatus,
-      closeModal,
-      formatDate,
-      formatCurrency
-    };
+    },
+    formatCurrency(amount) {
+      const num = Number(amount);
+      if (isNaN(num)) return 'S/ 0.00';
+      return `S/ ${num.toFixed(2)}`;
+    }
+  },
+  mounted() {
+    this.loadOrders();
   }
 };
 </script>
@@ -290,7 +247,6 @@ export default {
     </div>
 
     <div v-else class="dashboard-content">
-      <!-- Stats Cards -->
       <div class="stats-container">
         <div class="stat-card">
           <h3>{{ $t('dashboard-orders.total-orders') }}</h3>
@@ -314,11 +270,10 @@ export default {
         </div>
         <div class="stat-card">
           <h3>{{ $t('dashboard-orders.most-popular-book') }}</h3>
-          <p class="stat-value">{{ stats.mostPopularBook }}</p>
+          <p class="stat-value">{{ stats.mostPopularBook || 'N/A' }}</p>
         </div>
       </div>
 
-      <!-- Filter and Search Options -->
       <div class="filter-section">
         <h2 class="h2__title" style="margin-bottom: 2rem">{{ $t('dashboard-orders.order-list') }}</h2>
 
@@ -363,13 +318,13 @@ export default {
         </div>
       </div>
 
-      <!-- Orders Table -->
       <div class="orders-table-container">
         <table class="orders-table">
           <thead>
           <tr>
             <th>{{ $t('dashboard-orders.order-number') }}</th>
             <th>{{ $t('dashboard-orders.customer') }}</th>
+            <th>{{ $t('dashboard-orders.recipient') }}</th>
             <th>{{ $t('dashboard-orders.date') }}</th>
             <th>{{ $t('dashboard-orders.total') }}</th>
             <th>{{ $t('dashboard-orders.status_t') }}</th>
@@ -379,19 +334,22 @@ export default {
           </thead>
           <tbody>
           <tr v-for="order in filteredOrders" :key="order.id">
-            <td><strong># {{ order.orderNumber }}</strong></td>
+            <td><strong># {{ order.code }}</strong></td>
             <td>
               <div class="customer-info">
-                <div class="customer-name">{{ order.customerName }}</div>
-                <div class="customer-email">{{ order.customerEmail }}</div>
+                <div class="customer-name">{{ order.userName }}</div>
+                <div class="customer-email">{{ order.email }}</div>
               </div>
             </td>
-            <td>{{ formatDate(order.orderDate) }}</td>
+            <td>
+              <div class="customer-info">
+                <div class="customer-name">{{ order.recipientName }}</div>
+              </div>
+            </td>
+            <td>{{ formatDate(order.date) }}</td>
             <td class="order-total">{{ formatCurrency(order.total) }}</td>
             <td>
-                <span class="status-badge" :class="getStatusColor(order.status)">
-                  {{ getStatusLabel(order.status) }}
-                </span>
+              <div class="customer-name"  style="text-transform: capitalize">{{ order.status }}</div>
             </td>
             <td class="items-count">{{ order.items?.length || 0 }}</td>
             <td>
@@ -409,35 +367,29 @@ export default {
       </div>
     </div>
 
-    <!-- Order Details Modal -->
+    <!-- View Details -->
     <div v-if="showOrderModal" class="modal-backdrop">
       <div class="modal-content order-details-modal">
         <div class="modal-header">
-          <h2>{{ $t('dashboard-orders.order-details') }} #{{ currentOrder.orderNumber }}</h2>
+          <h2>{{ $t('dashboard-orders.order-details') }} #{{ currentOrder.code }}</h2>
           <button class="close-btn" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body" v-if="currentOrder">
           <div class="order-details-grid">
             <div class="order-info-section">
-              <h3>{{ $t('dashboard-orders.info') || 'Información del Pedido' }}</h3>
+              <h3>{{ $t('dashboard-orders.info') }}</h3>
               <div class="order-info-grid">
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.order-number') || 'N° Pedido' }}:</span>
-                  <span class="info-value"># {{ currentOrder.orderNumber }}</span>
+                  <span class="info-label">{{ $t('dashboard-orders.order-number') }}:</span>
+                  <span class="info-value"># {{ currentOrder.code }}</span>
                 </div>
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.date') || 'Fecha' }}:</span>
-                  <span class="info-value">{{ formatDate(currentOrder.orderDate) }}</span>
+                  <span class="info-label">{{ $t('dashboard-orders.date') }}:</span>
+                  <span class="info-value">{{ formatDate(currentOrder.date) }}</span>
                 </div>
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.status_t') || 'Estado' }}:</span>
-                  <span class="info-value status-badge" :class="getStatusColor(currentOrder.status)">
-                    {{ getStatusLabel(currentOrder.status) }}
-                  </span>
-                </div>
-                <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.payment-method') }}:</span>
-                  <span class="info-value">{{ currentOrder.paymentMethod || $t('dashboard-orders.none') }}</span> <!--N/A-->
+                  <span class="info-label">{{ $t('dashboard-orders.status_t') }}:</span>
+                  <span class="info-value" style="text-transform: capitalize">{{ currentOrder.status }}</span>
                 </div>
               </div>
             </div>
@@ -447,33 +399,37 @@ export default {
               <div class="customer-info-grid">
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.customer-name') }}:</span>
-                  <span class="info-value">{{ currentOrder.customerName }}</span>
+                  <span class="info-value">{{ currentOrder.userName }}</span>
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.customer-email') }}:</span>
-                  <span class="info-value">{{ currentOrder.customerEmail }}</span>
+                  <span class="info-value">{{ currentOrder.email }}</span>
                 </div>
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.customer-phone') }}:</span>
-                  <span class="info-value">{{ currentOrder.customerPhone || $t('dashboard-orders.none') }}</span>
+                  <span class="info-label">{{ $t('dashboard-orders.recipient-name') }}:</span>
+                  <span class="info-value">{{ currentOrder.recipientName || $t('dashboard-orders.none') }}</span>
+                </div>
+                <div class="info-group">
+                  <span class="info-label">{{ $t('dashboard-orders.recipient-phone') }}:</span>
+                  <span class="info-value">{{ currentOrder.phone || $t('dashboard-orders.none') }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="shipping-info-section">
+            <div class="shipping-info-section" v-if="currentOrder.shipping">
               <h3>{{ $t('dashboard-orders.shipping-info') }}</h3>
               <div class="shipping-info-grid">
                 <div class="info-group full-width">
                   <span class="info-label">{{ $t('dashboard-orders.shipping-address') }}:</span>
-                  <span class="info-value">{{ currentOrder.shippingAddress || $t('dashboard-orders.none') }}</span>
+                  <span class="info-value">{{ currentOrder.shipping.address || $t('dashboard-orders.none') }}</span>
                 </div>
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.shipping-city') }}:</span>
-                  <span class="info-value">{{ currentOrder.shippingCity || $t('dashboard-orders.none') }}</span>
+                  <span class="info-label">{{ $t('dashboard-orders.shipping-district') }}:</span>
+                  <span class="info-value">{{ currentOrder.shipping.district || $t('dashboard-orders.none') }}</span>
                 </div>
                 <div class="info-group">
-                  <span class="info-label">{{ $t('dashboard-orders.shipping-postal') }}:</span>
-                  <span class="info-value">{{ currentOrder.shippingPostal || $t('dashboard-orders.none') }}</span>
+                  <span class="info-label">{{ $t('dashboard-orders.shipping-reference') }}:</span>
+                  <span class="info-value">{{ currentOrder.shipping.reference || $t('dashboard-orders.none') }}</span>
                 </div>
               </div>
             </div>
@@ -493,13 +449,13 @@ export default {
                 <tr v-for="(item, index) in currentOrder.items" :key="index">
                   <td>
                     <div class="order-item-info">
-                      <strong>{{ item.title }}</strong>
-                      <small v-if="item.author">{{ item.author }}</small>
+                      <strong>{{ item.book.title }}</strong>
+                      <small>{{ item.book.author }}</small>
                     </div>
                   </td>
                   <td>{{ item.quantity }}</td>
-                  <td>{{ formatCurrency(item.unitPrice) }}</td>
-                  <td>{{ formatCurrency(item.quantity * item.unitPrice) }}</td>
+                  <td>{{ formatCurrency(item.book.price) }}</td>
+                  <td>{{ formatCurrency(item.quantity * item.book.price) }}</td>
                 </tr>
                 </tbody>
               </table>
@@ -509,15 +465,15 @@ export default {
               <div class="order-totals">
                 <div class="total-row">
                   <span>{{ $t('dashboard-orders.subtotal') }}:</span>
-                  <span>{{ formatCurrency(currentOrder.subtotal || currentOrder.total) }}</span>
+                  <span>{{ formatCurrency(getSubtotal()) }}</span>
                 </div>
-                <div class="total-row" v-if="currentOrder.tax">
+                <div class="total-row">
                   <span>{{ $t('dashboard-orders.tax') }}:</span>
-                  <span>{{ formatCurrency(currentOrder.tax) }}</span>
+                  <span>{{ formatCurrency(getIGV()) }}</span>
                 </div>
-                <div class="total-row" v-if="currentOrder.shippingCost">
+                <div class="total-row" v-if="currentOrder.shipping">
                   <span>{{ $t('dashboard-orders.shipping-cost') }}:</span>
-                  <span>{{ formatCurrency(currentOrder.shippingCost) }}</span>
+                  <span>{{ formatCurrency(getShippingCost()) }}</span>
                 </div>
                 <div class="total-row grand-total">
                   <span>{{ $t('dashboard-orders.total') }}:</span>
@@ -527,21 +483,22 @@ export default {
             </div>
           </div>
 
-          <div class="order-notes" v-if="currentOrder.notes">
-            <h3>{{ $t('dashboard-orders.notes') }}</h3>
-            <p>{{ currentOrder.notes }}</p>
-          </div>
-
           <div class="update-status-section">
             <h3>{{ $t('dashboard-orders.update-status') }}</h3>
-            <div class="status-buttons">
+            <div class="status-options">
+              <!-- aca codigo para hacer que se cambie el status sabiendo que hay dos opciones (pending o delivered)-->
               <button
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :class="['status-button', getStatusColor(option.value), { active: currentOrder.status === option.value }]"
-                  @click="updateOrderStatus(option.value)"
+                  :class="['status-button', { active: currentOrder.status === 'pending' }]"
+                  @click="updateOrderStatus('pending')"
               >
-                {{ $t(`dashboard-orders.status.${option.value}`) || option.label }}
+                {{ $t('pending') }}
+              </button>
+
+              <button
+                  :class="['status-button', { active: currentOrder.status === 'delivered' }]"
+                  @click="updateOrderStatus('delivered')"
+              >
+                {{ $t('delivered') }}
               </button>
             </div>
           </div>
@@ -603,7 +560,7 @@ export default {
 
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted for better responsiveness */
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
@@ -614,6 +571,7 @@ export default {
   padding: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center; /* Center content */
 }
 
 .stat-card:hover {
@@ -624,7 +582,7 @@ export default {
   font-size: 0.9rem;
   color: var(--color-text);
   opacity: 0.8;
-  margin: 0;
+  margin: 0 0 0.5rem 0; /* Added margin-bottom for spacing */
 }
 
 .stat-value {
@@ -638,6 +596,10 @@ export default {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 1.5rem;
+  background-color: #ffffff; /* Added background for clarity */
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .section-title {
@@ -657,17 +619,19 @@ export default {
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .filter-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
+  justify-content: space-between;
 }
 
 .filter-group {
   flex: 1;
-  min-width: 200px;
+  min-width: 180px;
 }
 
 .filter-group label {
@@ -675,6 +639,7 @@ export default {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   color: var(--color-text);
+  font-weight: 500;
 }
 
 .filter-select {
@@ -685,6 +650,11 @@ export default {
   background-color: white;
   font-size: 0.9rem;
   color: var(--color-text);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 18px;
 }
 
 .orders-table-container {
@@ -696,7 +666,7 @@ export default {
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--color-text);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   border-radius: 8px;
@@ -728,6 +698,7 @@ export default {
 .customer-info {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .customer-name {
@@ -736,26 +707,364 @@ export default {
 }
 
 .customer-email {
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* Slightly smaller */
   color: #777;
 }
 
 .order-total {
   font-weight: bold;
   color: #007b8a;
+  text-align: center; /* Keep total centered if desired */
 }
 
 .items-count {
   text-align: center;
 }
 
-.status-badge {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 12px;
-  display: inline-block;
-  text-transform: capitalize;
+.btn-view {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.85rem;
 }
 
+.btn-view:hover {
+  background-color: #0056b3;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+  font-size: 1.1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+.close-btn:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  flex-grow: 1;
+  padding-bottom: 1.5rem;
+}
+
+.order-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.order-info-section,
+.customer-info-section,
+.shipping-info-section,
+.order-items-section,
+.order-summary-section,
+.update-status-section {
+  background-color: #fcfcfc;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  margin: 0 0 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.order-info-grid,
+.customer-info-grid,
+.shipping-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.shipping-info-grid .info-group.full-width {
+  grid-column: 1 / -1; /* Spans full width */
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.2rem;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.order-items-table th,
+.order-items-table td {
+  border: 1px solid #eaeaea;
+  padding: 0.8rem;
+  text-align: center;
+}
+
+.order-items-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: var(--color-accent-orange);
+  font-size: 0.9rem;
+}
+
+.order-item-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.order-item-info strong {
+  display: block;
+  font-size: 1rem;
+}
+.order-item-info small {
+  color: #777;
+  font-size: 0.8em;
+}
+
+.order-summary-section {
+  grid-column: 1 / -1; /* Spans full width in the grid layout */
+  display: flex;
+  justify-content: flex-end; /* Align totals to the right */
+}
+
+.order-totals {
+  width: 100%;
+  max-width: 300px; /* Max width for totals column */
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.total-row:last-of-type {
+  border-bottom: none;
+}
+
+.total-row span {
+  font-size: 1rem;
+  color: #333;
+}
+
+.total-row.grand-total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  border-top: 2px solid var(--color-primary);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.update-status-section {
+  margin-top: 2rem;
+  grid-column: 1 / -1; /* Spans full width */
+}
+
+.status-button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border: 1px solid #ccc;
+  background-color: var(--color-light);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.status-button:hover,
+.status-button.active {
+  background-color: var(--color-accent-light-yellow);
+  color: var(--color-primary);
+  border: none;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.btn-print, .btn-close {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-print {
+  background-color: #607d8b; /* Blue Grey */
+  color: white;
+  border: none;
+}
+
+.btn-print:hover {
+  background-color: #455a64;
+}
+
+.btn-print i {
+  margin-right: 0.5rem;
+}
+
+.btn-close {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+}
+
+.btn-close:hover {
+  background-color: #bdbdbd;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .stats-container {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .stats-container {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+  .orders-table th, .orders-table td {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  .stats-container {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  .filter-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .filter-group {
+    min-width: 100%;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 1rem;
+  }
+  .order-details-grid {
+    grid-template-columns: 1fr; /* Stack sections on small screens */
+  }
+  .order-summary-section {
+    justify-content: center; /* Center summary */
+  }
+  .status-buttons {
+    flex-direction: column;
+    align-items: stretch; /* Stretch buttons */
+  }
+  .status-button {
+    min-width: unset; /* Remove min-width for stacking */
+  }
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+  .stat-card {
+    padding: 1rem;
+  }
+  .stat-value {
+    font-size: 1.2rem;
+  }
+  .search-input, .filter-select, .btn-view {
+    font-size: 0.9rem;
+  }
+  .orders-table th, .orders-table td {
+    font-size: 0.85rem;
+  }
+  .customer-info {
+    font-size: 0.8rem;
+  }
+}
 </style>
