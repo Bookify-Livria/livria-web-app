@@ -117,6 +117,7 @@
   "recent-orders": "Mis Últimos Pedidos",
   "delivered": "Entregado",
   "pending": "Pendiente",
+  "in-progress": "En Progreso",
   "settings": "Configuración",
   "account": "Cuenta",
   "setting": {
@@ -289,10 +290,11 @@
     "View": "Ver",
     "no-books-found": "No se encontraron libros con los filtros seleccionados",
     "book": {
-      "edit-book": "Editar Libro",
+      "view-book": "Ver Libro",
       "title": "Título del Libro",
       "author": "Autor del Libro",
-      "price": "Precio del Libro",
+      "buyprice": "Precio de Compra",
+      "sellprice": "Precio de Venta",
       "stock": "Stock del Libro",
       "genre": "Género del Libro",
       "language": "Idioma del Libro",
@@ -309,6 +311,7 @@
     "dashboard": "Inicio",
     "books": "Libros",
     "orders": "Pedidos",
+    "inventory": "Inventario",
     "settings": "Ajustes",
     "logout": "Cerrar sesión"
   },
@@ -327,6 +330,7 @@
     "quick-actions": "Acciones Rápidas",
     "manage-books": "Gestionar Libros",
     "manage-orders": "Gestionar Pedidos",
+    "manage-inventory": "Gestionar Inventario",
     "settings": "Ajustes",
     "system-info": "Información del Sistema",
     "version": "Versión",

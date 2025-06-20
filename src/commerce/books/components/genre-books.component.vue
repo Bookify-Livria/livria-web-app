@@ -36,9 +36,9 @@ export default {
         case 'titleDesc':
           return filtered.sort((a, b) => b.title.localeCompare(a.title))
         case 'priceAsc':
-          return filtered.sort((a, b) => a.price - b.price)
+          return filtered.sort((a, b) => a.salePrice - b.salePrice)
         case 'priceDesc':
-          return filtered.sort((a, b) => b.price - a.price)
+          return filtered.sort((a, b) => b.salePrice - a.salePrice)
         default:
           return filtered
       }

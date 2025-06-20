@@ -25,7 +25,8 @@ export default {
 
       statusOptions: [
         { value: 'pending', label: 'Pendiente' },
-        { value: 'delivered', label: 'Delivered' },
+        { value: 'in-progress', label: 'En Progreso' },
+        { value: 'delivered', label: 'Entregado' },
       ],
 
       // Date range options
@@ -292,7 +293,7 @@ export default {
             <select id="status-filter" v-model="selectedStatus" class="filter-select">
               <option value="all">{{ $t('dashboard-orders.all-status') }}</option>
               <option v-for="option in statusOptions" :key="option.value" :value="option.value">
-                {{ $t(`dashboard-orders.status.${option.value}`) || option.label }}
+                {{ $t(`${option.value}`) || option.label }}
               </option>
             </select>
           </div>
@@ -338,7 +339,6 @@ export default {
             <td>
               <div class="customer-info">
                 <div class="customer-name">{{ order.userName }}</div>
-                <div class="customer-email">{{ order.email }}</div>
               </div>
             </td>
             <td>
@@ -454,8 +454,8 @@ export default {
                     </div>
                   </td>
                   <td>{{ item.quantity }}</td>
-                  <td>{{ formatCurrency(item.book.price) }}</td>
-                  <td>{{ formatCurrency(item.quantity * item.book.price) }}</td>
+                  <td>{{ formatCurrency(item.book.salePrice) }}</td>
+                  <td>{{ formatCurrency(item.quantity * item.book.salePrice) }}</td>
                 </tr>
                 </tbody>
               </table>
@@ -493,7 +493,12 @@ export default {
               >
                 {{ $t('pending') }}
               </button>
-
+              <button
+                  :class="['status-button', { active: currentOrder.status === 'in progress' }]"
+                  @click="updateOrderStatus('in progress')"
+              >
+                {{ $t('in-progress') }}
+              </button>
               <button
                   :class="['status-button', { active: currentOrder.status === 'delivered' }]"
                   @click="updateOrderStatus('delivered')"
@@ -713,7 +718,7 @@ export default {
 
 .order-total {
   font-weight: bold;
-  color: #007b8a;
+  color: var(--color-blue);
   text-align: center; /* Keep total centered if desired */
 }
 

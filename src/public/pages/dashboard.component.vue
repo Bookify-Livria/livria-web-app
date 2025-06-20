@@ -84,6 +84,10 @@ export default {
                 <i class="pi pi-shopping-cart"></i>
                 <span>{{ $t('dashboard-home.manage-orders') }}</span>
               </div>
+              <div class="action-card" @click="$router.push('/inventory-management')">
+                <i class="pi pi-clipboard"></i>
+                <span>{{ $t('dashboard-home.manage-inventory') }}</span>
+              </div>
               <div class="action-card" @click="$router.push('/settings')">
                 <i class="pi pi-cog"></i>
                 <span>{{ $t('dashboard-home.settings') }}</span>
@@ -213,7 +217,7 @@ export default {
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 }
 

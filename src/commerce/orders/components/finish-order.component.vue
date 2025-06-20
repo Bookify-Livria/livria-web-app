@@ -69,13 +69,13 @@ export default {
       }
     },
     getSubtotal() { // Calcula el subtotal en base a los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => (total + item.book.price * item.quantity * 0.82), 0)
+      return this.cartItems.reduce((total, item) => (total + item.book.salePrice * item.quantity * 0.82), 0)
     },
     getIGV() { // Calcula el IGV en base al precio de los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => (total + item.book.price * item.quantity * 0.18), 0)
+      return this.cartItems.reduce((total, item) => (total + item.book.salePrice * item.quantity * 0.18), 0)
     },
     getTotal() { // Calcula el precio total en base a los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => total + item.book.price * item.quantity, 0)
+      return this.cartItems.reduce((total, item) => total + item.book.salePrice * item.quantity, 0)
     },
     async removeItem(Id) { // Elimina un producto de la lista de compras en base a su id
       try {
@@ -97,7 +97,7 @@ export default {
                 : 1
         );
         this.code = generateOrderCode();
-        const statusOptions = ["pending", "delivered"];
+        const statusOptions = ["pending", "in progress", "delivered"];
         this.status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
         const newOrder = {
@@ -258,7 +258,7 @@ export default {
           <div class="shopping-cart__item-info">
             <strong>{{ item.book.title }}</strong><br />
             <span>{{ item.book.author }}</span><br />
-            <span>S/ {{ item.book.price.toFixed(2) }}</span>
+            <span>S/ {{ item.book.salePrice.toFixed(2) }}</span>
           </div>
           <div class="shopping-cart__actions">
             <select v-model="item.quantity">

@@ -117,6 +117,7 @@
   "recent-orders": "My Recent Orders",
   "delivered": "Delivered",
   "pending": "Pending",
+  "in-progress": "In Progress",
   "settings": "Settings",
   "account": "Account",
   "setting": {
@@ -290,10 +291,11 @@
     "view": "View",
     "no-books-found": "No books were found with the selected filters",
     "book": {
-      "edit-book": "Edit Book",
+      "view-book": "View Book",
       "title": "Book Title",
       "author": "Book Author",
-      "price": "Book Price",
+      "buyprice": "Purchase Price",
+      "sellprice": "Sale Price",
       "stock": "Book Stock",
       "genre": "Book Genre",
       "language": "Book Language",
@@ -310,6 +312,7 @@
     "dashboard": "Home",
     "books": "Books",
     "orders": "Orders",
+    "inventory": "Inventory",
     "settings": "Settings",
     "logout": "Log out"
   },
@@ -328,6 +331,7 @@
     "quick-actions": "Quick Actions",
     "manage-books": "Manage Books",
     "manage-orders": "Manage Orders",
+    "manage-inventory": "Manage Inventory",
     "settings": "Settings",
     "system-info": "System Information",
     "version": "Version",

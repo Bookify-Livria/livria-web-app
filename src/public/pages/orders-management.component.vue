@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import ordersDashboard from "../../manager/components/orders-dashboard.component.vue"
 import dashboardSidebar from "../../manager/components/dashboard-sidebar.component.vue"
-import { getLoggedInUser } from "../shared-services/get-logged-user.js"
 
 export default {
   name: "OrdersManagement",
@@ -11,30 +10,14 @@ export default {
     dashboardSidebar
   },
   setup() {
-    const userInfo = ref(null);
     const loading = ref(true);
     const sidebarCollapsed = ref(false);
-
-    const fetchUserInfo = async () => {
-      try {
-        loading.value = true;
-        const user = await getLoggedInUser();
-        userInfo.value = user;
-      } catch (error) {
-        console.error("Error getting user info:", error);
-      } finally {
-        loading.value = false;
-      }
-    };
 
     const toggleSidebar = () => {
       sidebarCollapsed.value = !sidebarCollapsed.value;
     };
 
-    fetchUserInfo();
-
     return {
-      userInfo,
       loading,
       sidebarCollapsed,
       toggleSidebar

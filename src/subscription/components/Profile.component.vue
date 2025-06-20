@@ -276,10 +276,17 @@ export default {
                 <div>
                   <pv-message
                       v-if="order.status === 'pending'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
                       aria-label="pending"
                   >
                     {{ $t('pending') }}
+                  </pv-message>
+                  <pv-message
+                      v-if="order.status === 'in progress'"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      aria-label="pending"
+                  >
+                    {{ $t('in-progress') }}
                   </pv-message>
                   <pv-message
                       v-else-if="order.status === 'delivered'"

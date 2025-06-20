@@ -37,6 +37,12 @@ export default {
           label: 'Orders',
           icon: 'pi pi-shopping-cart',
           route: '/orders-management'
+        },
+        {
+          id: 'inventory',
+          label: 'Inventory',
+          icon: 'pi pi-clipboard',
+          route: '/inventory-management'
         }
       ]
     };

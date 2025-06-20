@@ -30,7 +30,7 @@ export default {
         <div class="book-subtitle">{{ book.author }}</div>
       </template>
       <template #footer>
-        <div class="book-subtitle book-price">S/ {{ book.price.toFixed(2) }}</div>
+        <div class="book-subtitle book-price">S/ {{ book.salePrice.toFixed(2) }}</div>
       </template>
     </pv-card>
   </div>

@@ -278,7 +278,7 @@ export default {
       <div class="book-detail__details-container">
         <h3 class="h2__title">{{ book.author }}</h3>
         <p class="language">{{ $t('languages.' + book.language) }}</p>
-        <p class="price">S/ {{ book.price.toFixed(2) }}</p>
+        <p class="price">S/ {{ book.salePrice.toFixed(2) }}</p>
       </div>
 
       <div class="book-detail__actions">

@@ -59,8 +59,8 @@ export default {
       stats.value.totalBooks = books.length;
       stats.value.totalGenres = [...new Set(books.map(book => book.genre))].length;
 
-      // Calculate average price
-      const totalPrice = books.reduce((sum, book) => sum + book.price, 0);
+      // Calculate average salePrice
+      const totalPrice = books.reduce((sum, book) => sum + book.salePrice, 0);
       stats.value.averagePrice = totalPrice / books.length;
 
       // Find most reviewed book
@@ -109,9 +109,9 @@ export default {
           case 'title':
             return a.title.localeCompare(b.title);
           case 'price_asc':
-            return a.price - b.price;
+            return a.salePrice - b.salePrice;
           case 'price_desc':
-            return b.price - a.price;
+            return b.salePrice - a.salePrice;
           case 'reviews':
             return (b.reviews?.length || 0) - (a.reviews?.length || 0);
           default:
@@ -328,7 +328,7 @@ export default {
             </div>
             <div class="book-actions">
               <button class="btn-edit" @click="editBook(book)">
-                {{ $t('dashboard.edit') }}
+                {{ $t('dashboard.view') }}
               </button>
             </div>
           </div>
@@ -340,71 +340,58 @@ export default {
       </div>
     </div>
 
-    <!-- Edit Book Modal -->
+    <!-- View Book Modal -->
     <div v-if="showEditModal" class="modal-backdrop">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>{{ $t('dashboard.book.edit-book') }}</h2>
+          <h2>{{ $t('dashboard.book.view-book') }}</h2>
           <button class="close-btn" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body" v-if="currentBook">
-          <div class="form-group">
-            <label for="book-title">{{ $t('dashboard.book.title') }}:</label>
-            <input type="text" id="book-title" v-model="currentBook.title" class="form-control" />
-            <span class="error-message" v-if="formErrors.title">{{ formErrors.title }}</span>
-          </div>
-
-          <div class="form-group">
-            <label for="book-author">{{ $t('dashboard.book.author') }}:</label>
-            <input type="text" id="book-author" v-model="currentBook.author" class="form-control" />
-            <span class="error-message" v-if="formErrors.author">{{ formErrors.author }}</span>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="book-price">{{ $t('dashboard.book.price') }}:</label>
-              <input type="number" id="book-price" v-model.number="currentBook.price" class="form-control" step="0.01" />
-              <span class="error-message" v-if="formErrors.price">{{ formErrors.price }}</span>
+          <div class="modal-body__upper-half">
+            <div class="modal-body__left">
+              <img :src="currentBook.cover" alt="Book Cover"/>
             </div>
-
-            <div class="form-group">
-              <label for="book-stock">{{ $t('dashboard.book.stock') }}:</label>
-              <input type="number" id="book-stock" v-model.number="currentBook.stock" class="form-control" />
-              <span class="error-message" v-if="formErrors.stock">{{ formErrors.stock }}</span>
+            <div class="modal-body__right">
+              <div class="modal-body__right-titles">
+                <div class="modal-body__right-form-group">
+                  <div class="h1__title" style="text-align: left">{{ currentBook.title }}</div>
+                </div>
+                <div class="modal-body__right-form-group">
+                  <div class="h2__title">{{ currentBook.author }}</div>
+                </div>
+                <div class="modal-body__right-form-group">
+                  <div><strong>{{ $t(`genres.${currentBook.genre}`) || currentBook.genre }}</strong></div>
+                  <div>{{ getLanguageName(currentBook.language) }}</div>
+                </div>
+              </div>
+              <div class="modal-body__right-form-group">
+                <div class="modal-body__right-column">
+                  <label class="info-label">{{ $t('dashboard.book.buyprice') }}:</label>
+                  <div class="price-value">S/ {{ currentBook.price?.toFixed(2) }}</div>
+                </div>
+                <div class="modal-body__right-column">
+                  <label class="info-label">{{ $t('dashboard.book.sellprice') }}:</label>
+                  <div class="price-value">S/ {{ currentBook.price?.toFixed(2) }}</div>
+                </div>
+              </div>
+              <div class="modal-body__right-form-group" style="margin-top: auto;">
+                <label class="info-label">{{ $t('dashboard.book.stock') }}:</label>
+                <div class="info-value">{{ currentBook.stock }}</div>
+              </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="book-genre">{{ $t('dashboard.book.genre') }}:</label>
-            <select id="book-genre" v-model="currentBook.genre" class="form-control">
-              <option v-for="genre in genres" :key="genre" :value="genre">
-                {{ $t(`genres.${genre}`) || genre }}
-              </option>
-            </select>
+          <div class="modal-body__lower-half">
+            <label class="info-label">{{ $t('synopsis') }}:</label>
+            <div class="info-value">{{ currentBook.description }}</div>
           </div>
 
           <div class="form-group">
-            <label for="book-language">{{ $t('dashboard.book.language') }}:</label>
-            <select id="book-language" v-model="currentBook.language" class="form-control">
-              <option v-for="lang in languages" :key="lang.code" :value="lang.code">
-                {{ lang.name }}
-              </option>
-            </select>
           </div>
 
-          <div class="form-group">
-            <label for="book-description">{{ $t('dashboard.book.description') }}:</label>
-            <textarea id="book-description" v-model="currentBook.description" class="form-control" rows="4"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="book-cover">{{ $t('dashboard.book.cover') }}:</label>
-            <input type="text" id="book-cover" v-model="currentBook.cover" class="form-control" />
-          </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" @click="closeModal">{{ $t('dashboard.book.cancel')  }}</button>
-          <button class="btn-save" @click="saveBook">{{ $t('dashboard.book.submit')  }}</button>
         </div>
       </div>
     </div>
@@ -412,6 +399,62 @@ export default {
 </template>
 
 <style scoped>
+
+.modal-body__upper-half {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-body__left {
+  flex: 0 0 35%;
+}
+
+.modal-body__left img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.modal-body__right {
+  flex: 0 0 60%;
+  justify-content: space-between;
+}
+
+.modal-body__right-titles {
+  margin-bottom: 2rem;
+}
+
+.modal-body__right-form-group {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.price-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-accent-orange);
+  margin-bottom: 1rem;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.2rem;
+}
+
+.info-value {
+  text-align: left;
+}
+
+.modal-body__lower-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
 .dashboard-container {
   width: 100%;
   padding: 2rem;
@@ -660,15 +703,6 @@ export default {
   background-color: #005a87;
 }
 
-.btn-view {
-  background-color: var(--color-accent-orange);
-  color: white;
-}
-
-.btn-view:hover {
-  background-color: #d17000;
-}
-
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
@@ -695,10 +729,11 @@ export default {
   background-color: white;
   border-radius: 12px;
   width: 90%;
-  max-width: 600px;
+  max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
 }
 
 .modal-header {
