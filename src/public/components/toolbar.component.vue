@@ -81,7 +81,7 @@ export default {
 
       <template #center>
         <div class="search-bar">
-          <pv-icon-field>
+          <pv-icon-field style="width: 600px;">
             <pv-input-icon><searchIcon class="nav-icon" /></pv-input-icon>
             <input
                 v-model="value1"
@@ -223,7 +223,7 @@ export default {
   text-transform: uppercase;
   letter-spacing: 3px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -275,7 +275,7 @@ export default {
   color: var(--color-text);
   background-color: transparent;
   outline: none;
-  width: 1200px;
+  width: 100%;
 }
 
 .search-bar input::placeholder {

@@ -32,6 +32,7 @@ export default {
         lastname: "",
         phone: ""
       },
+      currentUser : null,
       userEmail: "",
       delivery: false,
       shipping: {
@@ -40,11 +41,23 @@ export default {
         region: "",
         reference: ""
       },
+      status: 'pending',
       acceptedTerms: false,
       acceptedPrivacy: false,
 
       showConfirmation: false,
     }
+  },
+  computed: {
+    nameError() {
+      return this.recipient.name && !/^[A-Za-zÀ-ÿ\s]+$/.test(this.recipient.name);
+    },
+    lastnameError() {
+      return this.recipient.lastname && !/^[A-Za-zÀ-ÿ\s]+$/.test(this.recipient.lastname);
+    },
+    phoneError() {
+      return this.recipient.phone && !/^9\d{8}$/.test(this.recipient.phone);
+    },
   },
   methods: {
     async loadCart() { // Obtiene la información almacenada dentro de carrito de compras
@@ -56,13 +69,13 @@ export default {
       }
     },
     getSubtotal() { // Calcula el subtotal en base a los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => (total + item.book.price * item.quantity * 0.82), 0)
+      return this.cartItems.reduce((total, item) => (total + item.book.salePrice * item.quantity * 0.82), 0)
     },
     getIGV() { // Calcula el IGV en base al precio de los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => (total + item.book.price * item.quantity * 0.18), 0)
+      return this.cartItems.reduce((total, item) => (total + item.book.salePrice * item.quantity * 0.18), 0)
     },
     getTotal() { // Calcula el precio total en base a los elementos contenidos en el carrito de compras
-      return this.cartItems.reduce((total, item) => total + item.book.price * item.quantity, 0)
+      return this.cartItems.reduce((total, item) => total + item.book.salePrice * item.quantity, 0)
     },
     async removeItem(Id) { // Elimina un producto de la lista de compras en base a su id
       try {
@@ -84,18 +97,23 @@ export default {
                 : 1
         );
         this.code = generateOrderCode();
+        const statusOptions = ["pending", "in progress", "delivered"];
+        this.status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
         const newOrder = {
           id: newId,
           code: this.code,
           items: this.cartItems,
-          email: this.userEmail,
+          userId: this.currentUser.id,
+          userName: this.currentUser.display,
+          email: this.currentUser.email,
+          recipientName: `${this.recipient.name} ${this.recipient.lastname}`,
           phone,
-          fullName: `${this.recipient.name} ${this.recipient.lastname}`,
           delivery,
           shipping: this.delivery === true || this.delivery === 'true' ? { ...this.shipping } : null,
           total: this.getTotal(),
-          date: new Date().toISOString()
+          date: new Date().toISOString(),
+          status: this.status,
         };
         await service.createOrder(newOrder);
 
@@ -111,7 +129,9 @@ export default {
       try {
         const user = await getLoggedInUser();
         if (user) {
+          this.currentUser = user;
           this.userEmail = user.email;
+          console.log(this.currentUser.id, this.currentUser.display)
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -134,7 +154,11 @@ export default {
       });
     },
     validateStep2() { // Verifica que todos los campos del formulario del paso 2 hayan sido llenados
-      return this.recipient.name && this.recipient.lastname && this.recipient.phone;
+      if (this.nameError || this.lastnameError || this.phoneError) {
+        return false;
+      } else {
+        return this.recipient.name && this.recipient.lastname && this.recipient.phone;
+      }
     },
     validateStep3() { // Verifica que, de tratarse la orden de un delivery (entrega a domicilio), se registrem correctamente los campos "address", "district" y "reference"
       if (!this.delivery) return true;
@@ -188,21 +212,16 @@ export default {
                 : 1
         );
 
-        const updatedOrders = (this.user.order || []).map(order => ({
-          ...order,
-          orderstatus: "delivered"
-        }));
-
         const newOrder = {
           id: newId,
           code: this.code,
-          orderstatus: "pending"
+          status: this.status
         };
 
         try {
           await service.updateUser({
             ...this.user,
-            order: [...updatedOrders, newOrder]
+            order: [...this.user.order, newOrder]
           });
           this.showConfirmation = true;
 
@@ -239,7 +258,7 @@ export default {
           <div class="shopping-cart__item-info">
             <strong>{{ item.book.title }}</strong><br />
             <span>{{ item.book.author }}</span><br />
-            <span>S/ {{ item.book.price.toFixed(2) }}</span>
+            <span>S/ {{ item.book.salePrice.toFixed(2) }}</span>
           </div>
           <div class="shopping-cart__actions">
             <select v-model="item.quantity">
@@ -290,7 +309,7 @@ export default {
           <!-- Step 1: Summary-->
           <pv-step-panel v-slot="{ activateCallback }" value="1" aria-label="Step 1">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{$t("purchase.summary")}}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{$t("purchase.summary")}}</h3>
               <div class="summary-row">
                 <span>Subtotal</span>
                 <span class="summary-amount">S/ {{ getSubtotal().toFixed(2) }}</span>
@@ -313,28 +332,46 @@ export default {
           <!-- Step 2: Information -->
           <pv-step-panel v-slot="{ activateCallback }" value="2" aria-label="Step 2">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.info-recipient") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.info-recipient") }}</h3>
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ $t("purchase.name")}}</label>
-                  <input v-model="recipient.name" type="text"  required />
+                  <input v-model="recipient.name"
+                         type="text"
+                         required
+                         :class="{ 'is-invalid': nameError }"
+                         pattern="[A-Za-zÀ-ÿ\s]+"
+                  />
+                  <div v-if="nameError" class="error-msg">{{$t('purchase.just-letters')}}</div>
                 </div>
                 <div class="form-group">
                   <label>{{ $t("purchase.last-name")}}</label>
-                  <input v-model="recipient.lastname" type="text" required />
+                  <input v-model="recipient.lastname"
+                         type="text"
+                         required
+                         :class="{ 'is-invalid': lastnameError }"
+                         pattern="[A-Za-zÀ-ÿ\s]+"
+                  />
+                  <div v-if="lastnameError" class="error-msg">{{$t('purchase.just-letters')}}</div>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
                   <label>{{ $t("purchase.email")}}</label>
-                  <label>{{ userEmail }}</label>
+                  <label style="font-weight: 400; margin-top: 0.5rem">{{ userEmail }}</label>
                 </div>
                 <div class="form-group">
                   <label>{{ $t("purchase.phone")}}</label>
-                  <input v-model="recipient.phone" type="tel" required />
+                  <input v-model="recipient.phone"
+                         type="tel"
+                         required
+                         :class="{ 'is-invalid': phoneError }"
+                         pattern="^9\d{8}$"
+                  />
+                  <div v-if="phoneError" class="error-msg">{{$t('purchase.valid-number')}}</div>
                 </div>
               </div>
-              <pv-toast position="top-right" style="margin-top: 8.5rem" />
+              <pv-toast position="top-right" style="margin-top: 10rem" />
               <div class="nav-buttons">
                 <button type="button" @click="activateCallback('1')">{{ $t("purchase.back") }}</button>
                 <button type="button" @click="goToStep3(activateCallback)">
@@ -347,7 +384,7 @@ export default {
           <!-- Step 3: Delivery -->
           <pv-step-panel v-slot="{ activateCallback }" value="3" aria-label="Step 3">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.delivery") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.delivery") }}</h3>
               <div class="delivery-toggle nav-buttons">
                 <button type="button" :class="{ active: !delivery }" @click="delivery = false">
                   {{ $t("purchase.pickup-store") }}
@@ -377,7 +414,7 @@ export default {
                 <p>{{ $t("purchase.see-more")}}<router-link to="/shop">{{$t("purchase.here")}}</router-link></p>
               </div>
               <div class="nav-buttons">
-                <pv-toast position="top-right" style="margin-top: 8.5rem" />
+                <pv-toast position="top-right" style="margin-top: 10rem" />
                 <button @click="activateCallback('2')">{{ $t("purchase.back") }}</button>
                 <button type="button" @click="goToStep4(activateCallback)">
                   {{ $t("purchase.next") }}
@@ -389,7 +426,7 @@ export default {
           <!-- Step 4: Payment -->
           <pv-step-panel v-slot="{ activateCallback }" value="4" aria-label="Step 4">
             <div class="step-content">
-              <h3 class="h3__title go--orange">{{ $t("purchase.payment") }}</h3>
+              <h3 class="h2__title go--orange" style="margin-bottom: 2rem;">{{ $t("purchase.payment") }}</h3>
               <p>{{ $t("purchase.izipay")}}</p>
               <div class="izipay-box">
                 <img
@@ -409,7 +446,7 @@ export default {
                 </label>
               </div>
               <div class="nav-buttons">
-                <pv-toast position="top-right" style="margin-top: 8.5rem" />
+                <pv-toast position="top-right" style="margin-top: 10rem" />
                 <button type="button" @click="activateCallback('3')">{{$t("purchase.back")}}</button>
                 <button type="button" @click="handleSubmit(activateCallback)" aria-label="Confirm payment and finish purchase">
                   {{ $t("purchase.pay") }}
@@ -588,6 +625,15 @@ export default {
 .form-group input:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-secondary);
+}
+
+.is-invalid {
+  box-shadow: 0 0 0 2px #9f000c;
+}
+.error-msg {
+  color: #9f000c;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 .nav-buttons {

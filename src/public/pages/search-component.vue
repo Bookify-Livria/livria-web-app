@@ -43,7 +43,7 @@ export default {
 
 <style scoped>
 .search-container {
-  margin: 7.5rem calc(-1 * ((100vw - 100%) / 2)) 0;
+  margin: 10rem calc(-1 * ((100vw - 100%) / 2)) 0;
 }
 
 .search__fullwidth {

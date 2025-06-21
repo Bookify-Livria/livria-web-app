@@ -19,7 +19,7 @@ export class CartAssembler {
                 title: cartItem.book.title,
                 description: cartItem.book.description,
                 author: cartItem.book.author,
-                price: cartItem.book.price,
+                salePrice: cartItem.book.salePrice,
                 cover: cartItem.book.cover,
                 genre: cartItem.book.genre,
                 language: cartItem.book.language

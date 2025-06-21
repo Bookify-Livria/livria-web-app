@@ -19,4 +19,15 @@ export class OrderApiService {
                 throw error;
             });
     }
+
+    updateOrderStatus(orderId, newStatus) {
+        return axios.patch(`https://livria-6efh.onrender.com/order/${orderId}`, {
+            status: newStatus
+        })
+            .then(response => response.data)
+            .catch(error => {
+                console.error(`Error updating status of order ${orderId}:`, error);
+                throw error;
+            });
+    }
 }

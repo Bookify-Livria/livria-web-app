@@ -17,13 +17,16 @@ export class OrderAssembler {
             resource.id,
             resource.code,
             items,
+            resource.userId,
+            resource.userName,
             resource.email,
+            resource.recipientName,
             resource.phone,
-            resource.fullName,
             resource.delivery,
             shipping,
             resource.total,
-            resource.date
+            resource.date,
+            resource.status,
         );
     }
 
@@ -36,19 +39,22 @@ export class OrderAssembler {
             id: order.id,
             code: order.code,
             items: order.items.map(CartAssembler.toResource),
+            userId: order.userId,
+            userName: order.userName,
             email: order.email,
+            recipientName: order.recipientName,
             phone: order.phone,
-            fullName: order.fullName,
             delivery: order.delivery,
-            total: order.total,
-            date: order.date,
             shipping: order.delivery
                 ? {
                     address: order.shipping.address,
                     district: order.shipping.district,
                     reference: order.shipping.reference
                 }
-                : null
+                : null,
+            total: order.total,
+            date: order.date,
+            status: order.status,
         };
     }
 

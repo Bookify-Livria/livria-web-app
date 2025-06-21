@@ -109,13 +109,9 @@ export default {
               class="community__tweets-post"
           >
             <div class="post-user">@{{ post.username }}</div>
-            <div class="post-content">
+            <div :class="['post-content', { 'no-image': !post.img }]">
               <p>{{ post.content }}</p>
               <img v-if="post.img" :src="post.img" :alt="post.content" />
-            </div>
-            <div class="post-footer">
-              <span><heartIcon aria-label="Like post"/></span>
-              <span><commentIcon aria-label="Comment post"/></span>
             </div>
           </article>
         </div>
@@ -151,8 +147,8 @@ export default {
   width: 180px;
   height: 180px;
   position: fixed;
-  top: 12rem;
-  left: 16rem;
+  top: 14rem;
+  left: 12rem;
   z-index: 999;
 }
 
@@ -256,23 +252,25 @@ export default {
 .post-content p {
   flex: 0 0 70%;
   margin-right: 1rem;
+  font-size: 0.8rem;
 }
 
 .post-content img {
   flex: 0 0 25%;
-  height: 200px;
-  max-width: 200px;
+  height: 150px;
+  max-width: 150px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.post-footer {
-  margin-top: 0.8rem;
-  display: flex;
-  gap: 1rem;
-  color: var(--color-accent-orange);
-  font-size: 1.2rem;
+.post-content.no-image p {
+  flex: 0 0 100%;
+  margin-right: 0;
+}
+
+.post-content.no-image img {
+  display: none;
 }
 
 </style>

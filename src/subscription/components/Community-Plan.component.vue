@@ -90,7 +90,7 @@ export default {
           </div>
 
           <div class="nav-buttons">
-            <pv-toast position="top-right" style="margin-top: 8.5rem" />
+            <pv-toast position="top-right" style="margin-top: 10rem" />
             <button
                 class="pay-button"
                 type="button"

@@ -25,6 +25,20 @@ export default {
       info: []
     }
   },
+  computed: {
+    nicknameError() {
+      return this.value1 && !/^[A-Za-zÀ-ÿ\s]{1,20}$/.test(this.value1);
+    },
+    usernameError() {
+      return this.value2 && !/^[A-Za-z0-9]{1,20}$/.test(this.value2);
+    },
+    urlError() {
+      return this.value4 && !/^https?:\/\/[^\s]+$/.test(this.value4);
+    },
+    emailError() {
+      return this.value5 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value5);
+    },
+  },
   methods: {
     InvocaAPI() { // Permite obtener la información de los usuarios registrados en la Fake API
       const service = new UserApiService()
@@ -64,7 +78,9 @@ export default {
       }
     },
     async createUserWithAutoId() { // Permite registrar un nuevo usuario con una id auto asignada en base a la cantidad de usuario registrados
-      if (
+      if (this.nicknameError || this.usernameError || this.urlError || this.emailError) {
+        this.showFail();
+      } else if (
           this.value6 === this.value7 &&
           this.value1 &&
           this.value2 &&
@@ -114,33 +130,48 @@ export default {
 <template>
   <div class="all">
     <div class="head">
-      <div class="same-line">
-        <img src="../../assets/images/logo/logo.png" alt="Logo" height="60px">
-      </div>
+      <img src="../../assets/images/logo/logo.png" alt="Logo" height="45px">
       <language-switcher />
     </div>
     <div class="content">
       <pv-card>
         <template #title>{{ $t('register') }}</template>
         <template #content>
+          <div class="same-line">
+            <div class="form-group">
+              <div class="label-class">
+                <label class="form-label">{{ $t('displayinput') }}</label>
+              </div>
 
-          <div class="form-group">
-            <div class="label-class">
-              <label class="form-label">{{ $t('displayinput') }}</label>
+              <div class="input-class">
+                <pv-input-text
+                    v-model="value1"
+                    class="form-input"
+                    aria-label="Nickname input"
+                    :class="{ 'is-invalid': nicknameError }"
+                />
+                <div v-if="nicknameError" class="error-msg">
+                  {{ $t('errors.nickname') }}
+                </div>
+              </div>
             </div>
 
-            <div class="input-class">
-              <pv-input-text v-model="value1" class="form-input" aria-label="Username input"/>
-            </div>
-          </div>
+            <div class="form-group">
+              <div class="label-class">
+                <label class="form-label">{{ $t('userinput') }}</label>
+              </div>
 
-          <div class="form-group">
-            <div class="label-class">
-              <label class="form-label">{{ $t('userinput') }}</label>
-            </div>
-
-            <div class="input-class">
-              <pv-input-text v-model="value2" class="form-input" aria-label="Display name input"/>
+              <div class="input-class">
+                <pv-input-text
+                    v-model="value2"
+                    class="form-input"
+                    aria-label="Username input"
+                    :class="{ 'is-invalid': usernameError }"
+                />
+                <div v-if="usernameError" class="error-msg">
+                  {{ $t('errors.username') }}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -160,7 +191,15 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value4" class="form-input" aria-label="Icon URL input"/>
+              <pv-input-text
+                  v-model="value4"
+                  class="form-input"
+                  aria-label="Avatar URL input"
+                  :class="{ 'is-invalid': urlError }"
+              />
+              <div v-if="urlError" class="error-msg">
+                {{ $t('errors.url') }}
+              </div>
             </div>
           </div>
 
@@ -170,7 +209,16 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text inputmode="email" v-model="value5" class="form-input" aria-label="Email input"/>
+              <pv-input-text
+                  inputmode="email"
+                  v-model="value5"
+                  class="form-input"
+                  aria-label="Email input"
+                  :class="{ 'is-invalid': emailError }"
+              />
+              <div v-if="emailError" class="error-msg">
+                {{ $t('errors.email') }}
+              </div>
             </div>
           </div>
 
@@ -195,10 +243,12 @@ export default {
           </div>
         </template>
 
-        <template #footer class="foter">
+        <template #footer>
           <pv-toast ref="toast" position="top-right" style="margin-top: 8.5rem"/>
-          <pv-button @click="goToLogin()" class="form-button">{{ $t('back') }}</pv-button>
-          <pv-button type="submit" @click="createUserWithAutoId()" class="form-button" aria-label="Register button">{{ $t('register') }}</pv-button>
+          <div class="same-line">
+            <pv-button @click="goToLogin()" class="form-button">{{ $t('go-back') }}</pv-button>
+            <pv-button type="submit" @click="createUserWithAutoId()" class="form-button" aria-label="Register button">{{ $t('register') }}</pv-button>
+          </div>
         </template>
       </pv-card>
     </div>
@@ -226,29 +276,19 @@ export default {
   font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 3px;
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 600;
   color: var(--color-blue);
   margin: 0;
 }
 
-.same-line {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2rem;
-}
-
 .head {
   display: flex;
   justify-items: center;
-  justify-content: flex-end;
-  gap: 20rem;
-  color: var(--color-text);
+  justify-content: space-around;
   width: 100%;
-  padding-right: 27%;
+  padding: 2rem 8rem;
 }
-
 
 .form-group {
   display: block;
@@ -261,7 +301,7 @@ export default {
 
 .form-label {
   min-width: 90px;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .label-class {
@@ -292,7 +332,7 @@ export default {
 ::v-deep(.p-card-body) {
   justify-content: center;
   justify-items: center;
-  width: 70%;
+  width: 75%;
 }
 
 ::v-deep(.p-card-content) {
@@ -312,7 +352,6 @@ export default {
 
 ::v-deep(.p-password-input) {
   width: 100%;
-  padding: 0.5rem;
   font-size: 1rem;
 }
 
@@ -338,19 +377,31 @@ export default {
   background-color: transparent;
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
-  width: 200px;
-  height: 60px;
+  width: 175px;
+  height: 50px;
   border-radius: 15px;
-  font-size: 20px;
+  font-size: 18px;
   text-align: center;
   justify-content: center;
-  margin-top: 2rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
 }
 
-.foter {
-  gap: 0.5rem;
+.same-line {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.is-invalid {
+  border-color: #9f000c;
+  box-shadow: 0 0 0 2px #9f000c;
+}
+.error-msg {
+  color: #9f000c;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 </style>

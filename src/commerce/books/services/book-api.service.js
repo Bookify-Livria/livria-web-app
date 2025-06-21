@@ -19,4 +19,15 @@ export class BookApiService {
             });
     }
 
+    updateStockByBookId(bookId, newStockValue) {
+        return axios.patch(`https://livria-6efh.onrender.com/books/${bookId}`, {
+            stock: newStockValue
+        })
+            .then(response => response.data)
+            .catch(error => {
+                console.error(`Error updating stock of book ${bookId}:`, error);
+                throw error;
+            });
+    }
+
 }

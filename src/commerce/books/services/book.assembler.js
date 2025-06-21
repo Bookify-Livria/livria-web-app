@@ -5,7 +5,7 @@ export class BookAssembler {
     static toEntityFromResource(resource) {
 
         const reviews = Array.isArray(resource.reviews)
-            ? resource.reviews.map(review => new Review(review.id, review.username, review.content))
+            ? resource.reviews.map(review => new Review(review.id, review.username, review.content, review.stars))
             : [];
 
         return new Book(
@@ -13,7 +13,9 @@ export class BookAssembler {
             resource.title,
             resource.description,
             resource.author,
-            resource.price,
+            resource.purchasePrice,
+            resource.salePrice,
+            resource.stock,
             resource.cover,
             resource.genre,
             resource.language,

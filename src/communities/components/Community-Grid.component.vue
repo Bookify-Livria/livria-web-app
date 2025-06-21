@@ -90,12 +90,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 4.5rem;
+  gap: 2.5rem;
   padding: 0;
 }
 
 .custom-card-wrapper {
-  width: 260px;
+  width: 250px;
   background-color: #f9f9f9;
   padding: 1rem;
   border-radius: 12px;
@@ -140,11 +140,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 .plus-box {
-  width: 220px;
-  height: 220px;
+  width: 210px;
+  height: 210px;
   border: 1px solid #b2ebf2;
   background-color: #e0f7fa;
   border-radius: 8px;
