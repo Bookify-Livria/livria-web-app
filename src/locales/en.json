@@ -260,6 +260,7 @@
   },
 
   "livriaStore": "LIVRIA STORE",
+  "coming-soon": "Coming Soon!",
 
   "dashboard": {
     "loading": "Loading ...",
@@ -303,6 +304,19 @@
       "cover": "Book Cover URL",
       "cancel": "Cancel",
       "submit": "Save"
+    },
+    "inventory": {
+      "add-books": "Add a new book to the inventory",
+      "cover": "Cover",
+      "title": "Title",
+      "author": "Author",
+      "genre": "Genre",
+      "lang": "Language",
+      "stock": "Stock",
+      "purchase-price": "Purchase Price",
+      "quantity": "Quantity",
+      "amount": "Amount",
+      "add": "Add"
     }
   },
 
@@ -313,6 +327,7 @@
     "books": "Books",
     "orders": "Orders",
     "inventory": "Inventory",
+    "statistics": "Statistics",
     "settings": "Settings",
     "logout": "Log out"
   },
@@ -332,6 +347,7 @@
     "manage-books": "Manage Books",
     "manage-orders": "Manage Orders",
     "manage-inventory": "Manage Inventory",
+    "manage-statistics": "Statistics",
     "settings": "Settings",
     "system-info": "System Information",
     "version": "Version",

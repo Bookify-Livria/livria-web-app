@@ -16,6 +16,8 @@ import Shop from '../public/pages/shop.component.vue';
 import Dashboard from '../public/pages/dashboard.component.vue';
 import BooksManagement from '../public/pages/books-management.component.vue'
 import OrdersManagement from '../public/pages/orders-management.component.vue'
+import InventoryManagement from '../public/pages/inventory-management.component.vue'
+import StatisticsManagement from '../public/pages/statistics-management.component.vue'
 import Settings from '../public/pages/settings.component.vue'
 import AdminPinPage from "../public/pages/admin-pin-page.component.vue";
 
@@ -34,6 +36,8 @@ const router = createRouter({
         {path: "/dashboard", component: Dashboard},
         {path: "/books-management", component: BooksManagement},
         {path: "/orders-management", component: OrdersManagement},
+        {path: "/inventory-management", component: InventoryManagement},
+        {path: "/statistics-management", component: StatisticsManagement},
         {path: "/settings", component: Settings},
         {
             path: '/bookl',

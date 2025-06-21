@@ -43,6 +43,12 @@ export default {
           label: 'Inventory',
           icon: 'pi pi-clipboard',
           route: '/inventory-management'
+        },
+        {
+          id: 'statistics',
+          label: 'Statistics',
+          icon: 'pi pi-chart-bar',
+          route: '/statistics-management'
         }
       ]
     };

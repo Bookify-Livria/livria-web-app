@@ -10,7 +10,6 @@ export default {
     dashboardSidebar
   },
   setup() {
-    const loading = ref(true);
     const sidebarCollapsed = ref(false);
 
     const toggleSidebar = () => {
@@ -18,7 +17,6 @@ export default {
     };
 
     return {
-      loading,
       sidebarCollapsed,
       toggleSidebar
     };
@@ -34,11 +32,7 @@ export default {
     />
 
     <div class="main-content">
-      <div v-if="loading" class="loading-container">
-        <p>{{ $t('loading') || 'Loading orders data...' }}</p>
-      </div>
-
-      <div v-else>
+      <div>
         <ordersDashboard/>
       </div>
     </div>

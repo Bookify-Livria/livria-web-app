@@ -600,8 +600,7 @@ export default {
 .filter-section {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
-  padding-bottom: 1.5rem;
-  background-color: #ffffff; /* Added background for clarity */
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -711,15 +710,10 @@ export default {
   color: #222;
 }
 
-.customer-email {
-  font-size: 0.8rem; /* Slightly smaller */
-  color: #777;
-}
-
 .order-total {
   font-weight: bold;
   color: var(--color-blue);
-  text-align: center; /* Keep total centered if desired */
+  text-align: center;
 }
 
 .items-count {

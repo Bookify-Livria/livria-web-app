@@ -260,6 +260,7 @@
   },
 
   "livriaStore": "TIENDA DE LIVRIA",
+  "coming-soon": "Próximamente!",
 
   "dashboard": {
     "loading": "Cargando ...",
@@ -302,6 +303,19 @@
       "cover": "Portada URL del Libro",
       "cancel": "Cancelar",
       "submit": "Guardar Cambios"
+    },
+    "inventory": {
+      "add-books": "Agregar un nuevo libro al inventario",
+      "cover": "Portada",
+      "title": "Título",
+      "author": "Autor",
+      "genre": "Género",
+      "lang": "Lenguaje",
+      "stock": "Stock",
+      "purchase-price": "Precio de Compra",
+      "quantity": "Cantidad",
+      "amount": "Monto",
+      "add": "Comprar"
     }
   },
 
@@ -312,6 +326,7 @@
     "books": "Libros",
     "orders": "Pedidos",
     "inventory": "Inventario",
+    "statistics": "Estadísticas",
     "settings": "Ajustes",
     "logout": "Cerrar sesión"
   },
@@ -331,6 +346,7 @@
     "manage-books": "Gestionar Libros",
     "manage-orders": "Gestionar Pedidos",
     "manage-inventory": "Gestionar Inventario",
+    "manage-statistics": "Estadísticas",
     "settings": "Ajustes",
     "system-info": "Información del Sistema",
     "version": "Versión",

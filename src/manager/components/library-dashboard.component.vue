@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { BookApiService } from '../../commerce/books/services/book-api.service.js'
 
 export default {
-  name: "LibraryDashboard",
+  name: "libraryDashboard",
   setup() {
     const router = useRouter();
     const books = ref([]);
@@ -122,57 +122,10 @@ export default {
       return filtered;
     });
 
-    const navigateToBook = (book) => {
-      router.push(`/books/${encodeURIComponent(book.title)}`);
-    };
-
-    const editBook = (book) => {
+    const viewBook = (book) => {
       currentBook.value = { ...book };
       showEditModal.value = true;
       formErrors.value = {};
-    };
-
-    const validateForm = () => {
-      const errors = {};
-
-      if (!currentBook.value.title || currentBook.value.title.trim() === '') {
-        errors.title = 'El título es obligatorio';
-      }
-
-      if (!currentBook.value.author || currentBook.value.author.trim() === '') {
-        errors.author = 'El autor es obligatorio';
-      }
-
-      if (isNaN(currentBook.value.price) || currentBook.value.price <= 0) {
-        errors.price = 'El precio debe ser un número mayor que 0';
-      }
-
-      if (isNaN(currentBook.value.stock) || currentBook.value.stock < 0) {
-        errors.stock = 'El stock debe ser un número no negativo';
-      }
-
-      formErrors.value = errors;
-      return Object.keys(errors).length === 0;
-    };
-
-    const saveBook = async () => {
-      if (!validateForm()) return;
-
-      try {
-        const service = new BookApiService();
-        await service.updateBook(currentBook.value.id, currentBook.value);
-
-        // Update the book in the local array
-        const index = books.value.findIndex(book => book.id === currentBook.value.id);
-        if (index !== -1) {
-          books.value[index] = { ...currentBook.value };
-        }
-
-        showEditModal.value = false;
-        calculateStats(books.value);
-      } catch (error) {
-        console.error('Error updating book:', error);
-      }
     };
 
     const closeModal = () => {
@@ -203,9 +156,7 @@ export default {
       currentBook,
       formErrors,
       languages,
-      navigateToBook,
-      editBook,
-      saveBook,
+      viewBook,
       closeModal,
       getLanguageName
     };
@@ -312,13 +263,13 @@ export default {
             :key="book.id"
             class="book-card"
         >
-          <div class="book-cover" @click="navigateToBook(book)">
+          <div class="book-cover">
             <img :src="book.cover" :alt="book.title" />
           </div>
           <div class="book-info">
             <h3 class="book-title">{{ book.title }}</h3>
             <p class="book-author">{{ book.author }}</p>
-            <p class="book-price">S/ {{ book.price.toFixed(2) }}</p>
+            <p class="book-price">S/ {{ book.salePrice.toFixed(2) }}</p>
             <div class="book-meta">
               <span class="book-language">{{ getLanguageName(book.language) }}</span>
               <span class="book-stock">Stock: {{ book.stock || 0 }}</span>
@@ -327,7 +278,7 @@ export default {
               <span>{{ book.reviews?.length || 0 }} {{ $t('dashboard.reviews') }}</span>
             </div>
             <div class="book-actions">
-              <button class="btn-edit" @click="editBook(book)">
+              <button class="btn-edit" @click="viewBook(book)">
                 {{ $t('dashboard.view') }}
               </button>
             </div>
@@ -546,7 +497,10 @@ export default {
 .filter-section {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
-  padding-bottom: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .section-title {

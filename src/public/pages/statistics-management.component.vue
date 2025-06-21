@@ -1,11 +1,11 @@
 <script>
-import dashboardSidebar from "../../manager/components/dashboard-sidebar.component.vue"
-import inventoryDashboard from "@/manager/components/inventory-dashboard.component.vue";
+import dashboardSidebar from "@/manager/components/dashboard-sidebar.component.vue";
+import statisticsDashboard from "@/manager/components/statistics-dashboard.component.vue";
 
 export default {
-  name: "inventory-management.component",
+  name: "statistics-management.component",
   components: {
-    inventoryDashboard,
+    statisticsDashboard,
     dashboardSidebar,
   },
   data() {
@@ -30,7 +30,7 @@ export default {
 
     <div class="main-content">
       <div>
-        <inventoryDashboard/>
+        <statisticsDashboard />
       </div>
     </div>
   </div>

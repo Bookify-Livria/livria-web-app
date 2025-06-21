@@ -88,6 +88,10 @@ export default {
                 <i class="pi pi-clipboard"></i>
                 <span>{{ $t('dashboard-home.manage-inventory') }}</span>
               </div>
+              <div class="action-card" @click="$router.push('/statistics-management')">
+                <i class="pi pi-chart-bar"></i>
+                <span>{{ $t('dashboard-home.manage-statistics') }}</span>
+              </div>
               <div class="action-card" @click="$router.push('/settings')">
                 <i class="pi pi-cog"></i>
                 <span>{{ $t('dashboard-home.settings') }}</span>
@@ -217,7 +221,7 @@ export default {
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
 }
 
@@ -255,7 +259,7 @@ export default {
 .system-info {
   background-color: rgba(var(--color-accent-yellow-rgb), 0.05);
   border-radius: 10px;
-  padding: 1.5rem;
+  padding: 0.75rem 1.5rem 1.5rem;
 }
 
 .system-info h3 {
