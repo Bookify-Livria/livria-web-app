@@ -319,11 +319,11 @@ export default {
               <div class="modal-body__right-form-group">
                 <div class="modal-body__right-column">
                   <label class="info-label">{{ $t('dashboard.book.buyprice') }}:</label>
-                  <div class="price-value">S/ {{ currentBook.price?.toFixed(2) }}</div>
+                  <div class="price-value">S/ {{ currentBook.purchasePrice?.toFixed(2) }}</div>
                 </div>
                 <div class="modal-body__right-column">
                   <label class="info-label">{{ $t('dashboard.book.sellprice') }}:</label>
-                  <div class="price-value">S/ {{ currentBook.price?.toFixed(2) }}</div>
+                  <div class="price-value">S/ {{ currentBook.salePrice?.toFixed(2) }}</div>
                 </div>
               </div>
               <div class="modal-body__right-form-group" style="margin-top: auto;">
