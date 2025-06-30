@@ -71,7 +71,7 @@ export default {
   },
   methods: {
 
-    showSuccess() {
+    showSuccess() { // Muestra un mensaje flotante (Toast) de confirmación de actualización de contraseña
       try {
         this.$refs.toast.add({
           severity: 'success',
@@ -84,7 +84,7 @@ export default {
       }
     },
 
-    showFailFill() {
+    showFailFill() { // Muestra un mensaje flotante (Toast) de error si es que el usuario no ha llenado todos los campos del formulario
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -97,7 +97,7 @@ export default {
       }
     },
 
-    showFailPassword() {
+    showFailPassword() { // Muestra un mensaje flotante (Toast) de error si es que la contraseña es incorrecta
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -110,7 +110,7 @@ export default {
       }
     },
 
-    showFailConfirm() {
+    showFailConfirm() { // Muestra un mensaje flotante (Toast) de error si es que la nueva contraseña no coincide con "confirmar contraseña"
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -123,7 +123,7 @@ export default {
       }
     },
 
-    async InvocaAPI() {
+    async InvocaAPI() { // Obtiene la información de los usuario registrados en la Fake API y asigna los valores del usuario loggeado a una variable contenedor
       const service = new UserApiService();
 
       try {
@@ -143,9 +143,9 @@ export default {
       }
     },
 
-    async getLoggedInUserId() {
+    async getLoggedInUserId() { // Obtiene y devuelve la id del usuario loggeado
       try {
-        const response = await axios.get('http://localhost:3000/userlogin');
+        const response = await axios.get('https://livria-6efh.onrender.com/userlogin');
         const loginEntries = response.data;
 
         if (loginEntries.length > 0) {
@@ -162,11 +162,11 @@ export default {
       }
     },
 
-    goToLogin() {
+    goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
 
-    async changePassword(currentPassword, newPassword, confirmPassword) {
+    async changePassword(currentPassword, newPassword, confirmPassword) { // Permite validar los datos insertados en el formulario de cambio de contraseña y actualizar la información
       if (!currentPassword || !newPassword || !confirmPassword) {
         this.showFailFill();
         console.warn('All password fields must be filled.');
@@ -201,7 +201,7 @@ export default {
       }
     },
 
-    async deleteAccount() {
+    async deleteAccount() { // Permite al usuario borrar su cuenta de la Fake API
       const service = new UserApiService();
       this.goToLogin();
 
@@ -228,7 +228,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted() { // Al iniciar el componente, se carga la información de los usuarios almacenados en la Fake API y se asigna un valor al usuario loggeado
     this.InvocaAPI();
   }
 }
@@ -275,14 +275,23 @@ export default {
                 <p>{{ $t('order') }} #{{ order.code }}</p>
                 <div>
                   <pv-message
-                      v-if="order.orderstatus === 'pending'"
-                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      v-if="order.status === 'pending'"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
+                      aria-label="pending"
                   >
                     {{ $t('pending') }}
                   </pv-message>
                   <pv-message
-                      v-else-if="order.orderstatus === 'delivered'"
-                      style="border-radius:6px; width: 100px; padding: 0.5rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      v-if="order.status === 'in progress'"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      aria-label="pending"
+                  >
+                    {{ $t('in-progress') }}
+                  </pv-message>
+                  <pv-message
+                      v-else-if="order.status === 'delivered'"
+                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      aria-label="delivered"
                   >
                     {{ $t('delivered') }}
                   </pv-message>
@@ -301,34 +310,34 @@ export default {
         <template #content>
           <div class="same-line">
             <p>{{ $t('setting.allow-not')}}</p>
-            <pv-select-button v-model="value1" :default-value="value1" :options="options1" optionLabel="name"/>
+            <pv-select-button v-model="value1" :default-value="value1" :options="options1" optionLabel="name" aria-label="Yes / No"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.not-status')}}</p>
-            <pv-select-button v-model="value2" :default-value="value2" :options="options2" optionLabel="name"/>
+            <pv-select-button v-model="value2" :default-value="value2" :options="options2" optionLabel="name" aria-label="Yes / No"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.not-email')}}</p>
-            <pv-select-button v-model="value3" :default-value="value3" :options="options3" optionLabel="name"/>
+            <pv-select-button v-model="value3" :default-value="value3" :options="options3" optionLabel="name" aria-label="Yes / No"/>
           </div>
 
           <div class="same-line">
             <p>{{ $t('setting.visibility')}}</p>
-            <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name"/>
+            <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name" aria-label="Public / Private"/>
           </div>
 
           <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('setting.change-pass') }}</h3>
           <div class="same-line">
             <p>{{ $t('passinput')}}</p>
-            <pv-password v-model="valueA" class="pas" :feedback="false" />
+            <pv-password v-model="valueA" class="pas" :feedback="false" aria-label="Password input"/>
           </div>
           <div class="same-line">
             <p>{{ $t('setting.new-password')}}</p>
-            <pv-password v-model="valueB" class="pas" :feedback="false" />
+            <pv-password v-model="valueB" class="pas" :feedback="false" aria-label="New password input" />
           </div>
           <div class="same-line">
             <p>{{ $t('confpass')}}</p>
-            <pv-password v-model="valueC" class="pas" :feedback="false" />
+            <pv-password v-model="valueC" class="pas" :feedback="false" aria-label="Confirm new password"/>
           </div>
           <div class="same-line">
             <p></p>
@@ -337,11 +346,11 @@ export default {
           </div>
           <div class="set-options">
             <div class="buton">
-              <pv-button @click="deleteAccount()" class="but-set delete" severity="danger">{{ $t('delete1')}}</pv-button>
+              <pv-button @click="deleteAccount()" class="but-set delete" severity="danger" aria-label="Delete account">{{ $t('delete1')}}</pv-button>
             </div>
             <div class="butons">
-              <pv-button @click="goToLogin()" class="but-set logout" severity="warn">{{ $t('logout')}}</pv-button>
-              <pv-button class="but-set save" severity="success">{{ $t('save')}}</pv-button>
+              <pv-button @click="goToLogin()" class="but-set logout" severity="warn" aria-label="Log out">{{ $t('logout')}}</pv-button>
+              <pv-button class="but-set save" severity="success" aria-label="Save changes">{{ $t('save')}}</pv-button>
             </div>
           </div>
         </template>
@@ -369,6 +378,7 @@ export default {
   height: 100%;
   border-radius: 10px;
   color: var(--color-text);
+  font-size: 0.8rem;
   text-align: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -376,7 +386,7 @@ export default {
 ::v-deep(.p-card-title) {
   color: var(--color-accent-orange);
   font-weight: normal;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 ::v-deep(.p-message-text) {
@@ -453,8 +463,10 @@ export default {
   color: var(--color-blue);
   border: 2px solid var(--color-blue);
   width: 100px;
-  height: 40px;
-  border-radius: 15px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-top: 0.5rem;
 }
 
 ::v-deep(.p-selectbutton) {
@@ -463,26 +475,27 @@ export default {
 
 ::v-deep(.p-togglebutton) {
   background-color: transparent;
-  color: #2364A0;
-  border-color: #2364A0;
-  width: 80px;
-  height: 40px;
+  color: var(--color-blue);
+  border-color: var(--color-blue);
+  width: 75px;
+  height: 25px;
   font-weight: normal;
+  font-size: 0.8rem;
 }
 
 ::v-deep(.p-togglebutton.p-togglebutton-checked) {
-  color: white;
-  background-color: var(--color-accent-orange);
-  width: 80px;
-  height: 40px;
+  color: var(--color-blue);
+  background-color: var(--color-secondary);
+  width: 75px;
+  height: 25px;
 }
 
 ::v-deep(.p-togglebutton-checked .p-togglebutton-content) {
-  background: var(--color-accent-orange);
+  background: var(--color-secondary);
 }
 
 ::v-deep(.p-togglebutton:hover) {
-  background: var(--color-accent-orange);
+  background: var(--color-secondary);
 }
 
 ::v-deep(.p-password-input) {
@@ -504,38 +517,42 @@ export default {
 
 .pfp {
   color: var(--color-text);
+  border-radius: 50%;
+  overflow: hidden;
+  width: 250px;
+  height: 250px;
 }
 
 .delete {
   background-color: var(--color-accent-orange);
   color: white;
-  width: 170px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .logout {
   background-color: var(--color-accent-light-yellow);
   color: var(--color-text);
-  width: 150px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .save {
   background-color: var(--color-blue);
   color: white;
-  width: 150px;
-  height: 50px;
+  width: 175px;
+  height: 45px;
   border-radius: 15px;
 }
 
 .pas {
   width: 200px;
-  height: 40px;
+  height: 30px;
   border: 2px solid #2364A0;
   border-radius: 10px;
-  padding: 5px;
+  padding: 0.5rem;
   display: flex;
   align-content: center;
   justify-content: space-between;

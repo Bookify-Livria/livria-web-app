@@ -21,7 +21,7 @@ export default {
     }
   },
   methods: {
-    loadCommunity() {
+    loadCommunity() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
       const service = new CommunityApiService();
       const communityTitle = this.$route.params.name
 
@@ -32,7 +32,7 @@ export default {
       })
 
     },
-    async makePost() {
+    async makePost() { // Permite registrar una publicación con la información del usuario loggeado
       try {
         const service = new CommunityApiService();
         const currentUser = await getLoggedInUser();
@@ -68,7 +68,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted() { // AL iniciar el componente, automáticamente se carga la información de comunidades en la Fake API
     this.loadCommunity();
   }
 }
@@ -90,7 +90,7 @@ export default {
         <h1 class="h1__title">{{ community.name }}</h1>
         <h2 class="h2__title">{{ community.type }}</h2>
         <p>{{ community.description }}</p>
-        <button class="title__container-btn">{{ $t("comm.join")}}</button>
+        <button class="title__container-btn" aria-label="Join community">{{ $t("comm.join")}}</button>
       </header>
 
       <section class="community__content-interaction">
@@ -98,7 +98,7 @@ export default {
           <form @submit.prevent="makePost">
             <textarea v-model="newPost.content" :placeholder="$t('comm.thoughts')"></textarea>
             <input type="url" v-model="newPost.img" :placeholder="$t('comm.image')" />
-            <button type="submit" class="">{{ $t("comm.post")}}</button>
+            <button type="submit" class="" aria-label="Publish post">{{ $t("comm.post")}}</button>
           </form>
         </div>
 
@@ -109,13 +109,9 @@ export default {
               class="community__tweets-post"
           >
             <div class="post-user">@{{ post.username }}</div>
-            <div class="post-content">
+            <div :class="['post-content', { 'no-image': !post.img }]">
               <p>{{ post.content }}</p>
               <img v-if="post.img" :src="post.img" :alt="post.content" />
-            </div>
-            <div class="post-footer">
-              <span><heartIcon /></span>
-              <span><commentIcon /></span>
             </div>
           </article>
         </div>
@@ -151,8 +147,8 @@ export default {
   width: 180px;
   height: 180px;
   position: fixed;
-  top: 12rem;
-  left: 16rem;
+  top: 14rem;
+  left: 12rem;
   z-index: 999;
 }
 
@@ -256,23 +252,25 @@ export default {
 .post-content p {
   flex: 0 0 70%;
   margin-right: 1rem;
+  font-size: 0.8rem;
 }
 
 .post-content img {
   flex: 0 0 25%;
-  height: 200px;
-  max-width: 200px;
+  height: 150px;
+  max-width: 150px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.post-footer {
-  margin-top: 0.8rem;
-  display: flex;
-  gap: 1rem;
-  color: var(--color-accent-orange);
-  font-size: 1.2rem;
+.post-content.no-image p {
+  flex: 0 0 100%;
+  margin-right: 0;
+}
+
+.post-content.no-image img {
+  display: none;
 }
 
 </style>

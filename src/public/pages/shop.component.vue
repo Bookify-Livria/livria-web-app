@@ -14,13 +14,18 @@ export default defineComponent({
 
 <template>
   <toolbarComponent/>
+
+  <div class="title__container shop">
+    <h1 class="h1__title">{{ $t("store.title") }}</h1>
+    <p class="h3__title">{{ $t("store.subtitle") }}</p>
+  </div>
   <div class="shop-container">
     <div class="shop-left">
-      <h2>LIVRIA STORE</h2>
+      <h2>{{$t("livriaStore")}}</h2>
       <img src="../../assets/images/store/shopLivria.png" alt="Store_img" class="shop-photo" />
     </div>
     <div class="shop-right">
-      <h3 class="h3__title">{{$t("address")}}</h3>
+      <h3 class="h3__title">{{$t("store.address")}}</h3>
       <p>Av. República de Chile 661, Jesús María 15072, Peru</p>
       <iframe
           class="shop-map"
@@ -39,11 +44,16 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.shop {
+  margin: 10rem 2rem 0;
+}
+
 .shop-container {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 2rem;
-  padding: 17rem 3rem 9.5rem;
+  padding: 1rem;
   flex-wrap: wrap;
 }
 
