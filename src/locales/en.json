@@ -134,6 +134,7 @@
   "form": {
     "name": "Name",
     "description": "Description",
+    "select_category": "Select a category",
     "category": "Category",
     "image": "Profile Image URL",
     "sidebar": "Banner Image URL"

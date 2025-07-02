@@ -134,6 +134,7 @@
   "create-community": "Crear Comunidad",
   "form": {
     "name": "Nombre",
+    "select_category": "Seleccione la categoría",
     "description": "Descripción",
     "category": "Categoría",
     "image": "URL de la imagen"

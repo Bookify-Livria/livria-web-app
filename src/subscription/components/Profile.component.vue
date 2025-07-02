@@ -262,6 +262,7 @@ export default {
         </pv-card>
       </div>
 
+      <!-- Esto de acá es cuando user tenía ordenes en el db
       <div class="profile__info-half" v-if="user.order">
         <pv-card>
           <template #title>{{ $t('recent-orders') }}</template>
@@ -301,7 +302,7 @@ export default {
             <p v-else>{{ $t('no-order') }}</p>
           </template>
         </pv-card>
-      </div>
+      </div>-->
     </div>
 
     <div class="profile__config">

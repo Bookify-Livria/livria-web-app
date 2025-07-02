@@ -15,7 +15,25 @@ export default {
       newPost: {
         content: '',
         img: ''
+      },
+      genres: [
+        { value: 0, key: 'literatura' },
+        { value: 1, key: 'noficcion' },
+        { value: 2, key: 'ficcion' },
+        { value: 3, key: 'mangasycomics' },
+        { value: 4, key: 'juvenil' },
+        { value: 5, key: 'infantil' },
+        { value: 6, key: 'ebooks' }
+      ]
+    }
+  },
+  computed: {
+    displayedGenreKey() { // Esta propiedad computada buscará el 'key' del género basado en 'community.type'
+      if (this.community && typeof this.community.type === 'number') {
+        const foundGenre = this.genres.find(genre => genre.value === this.community.type);
+        return foundGenre ? foundGenre.key : '';
       }
+      return '';
     }
   },
   methods: {
@@ -108,7 +126,7 @@ export default {
     <main class="community__content">
       <header class="title__container">
         <h1 class="h1__title">{{ community.name }}</h1>
-        <h2 class="h2__title">{{ community.type }}</h2>
+        <h2 class="h2__title">{{ $t(`genres.${displayedGenreKey}`) }}</h2>
         <p>{{ community.description }}</p>
         <button class="title__container-btn" aria-label="Join community">{{ $t("comm.join")}}</button>
       </header>

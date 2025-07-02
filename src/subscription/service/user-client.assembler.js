@@ -10,11 +10,6 @@ export class UserClientAssembler {
             resource.password,
             resource.icon,
             resource.phrase,
-            (resource.order || []).map(o => ({
-                id: o.id,
-                code: o.code,
-                status: o.status
-            })),
             resource.subscription
         );
     }
@@ -32,11 +27,6 @@ export class UserClientAssembler {
             password: user.password,
             icon: user.icon,
             phrase: user.phrase,
-            order: (user.order || []).map(o => ({
-                id: o.id,
-                code: o.code,
-                status: o.status
-            })),
             subscription: user.subscription
         };
     }

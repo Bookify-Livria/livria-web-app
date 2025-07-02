@@ -741,21 +741,6 @@ export default {
   color: var(--color-text);
 }
 
-.form-control {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
-}
-
-.error-message {
-  color: #e53935;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-  display: block;
-}
-
 .modal-footer {
   padding: 1.5rem;
   border-top: 1px solid #eee;
