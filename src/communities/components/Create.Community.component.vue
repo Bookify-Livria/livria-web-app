@@ -8,20 +8,24 @@ export default {
       newCommunity: {
         name: '',
         description: '',
-        type: '',
+        type: 0,
         image: '',
-        banner: '',
-        posts: []
+        banner: ''
       }
     }
   },
   methods: {
     saveCommunity() { // Permite registrar una nueva comunidad
       const service = new CommunityApiService()
-      const neww = { ...this.newCommunity, id: Date.now().toString() }
+
+      const newId = this.posts?.length
+          ? (Math.max(...this.posts.map(p => parseInt(p.id))) + 1)
+          : 1;
+
+      const neww = { ...this.newCommunity, id: newId }
       service.createCommunity(neww).then(() => {
         this.$emit('created', neww)
-        this.newCommunity = { name: '', description: '', type: '', image: '', banner: '', posts: [] }
+        this.newCommunity = { name: '', description: '', type: 0, image: '', banner: ''}
       })
     },
     closeForm() { // Emite el evento "close" al cerrar el formulario
@@ -37,7 +41,7 @@ export default {
     <div id="formContainer" aria-label="Form container">
       <form @submit.prevent="saveCommunity">
         <input type="text" v-model="newCommunity.name" :placeholder="$t('form.name')" class="form-input" required>
-        <textarea v-model="newCommunity.type" :placeholder="$t('form.category')" class="form-input" required></textarea>
+        <input v-model="newCommunity.type" :placeholder="$t('form.category')" class="form-input" required></input>
         <input type="text" v-model="newCommunity.description" :placeholder="$t('form.description')" class="form-input" required>
         <input type="url" v-model="newCommunity.image" :placeholder="$t('form.image')" class="form-input" required>
         <input type="url" v-model="newCommunity.banner" :placeholder="$t('form.sidebar')" class="form-input" required>

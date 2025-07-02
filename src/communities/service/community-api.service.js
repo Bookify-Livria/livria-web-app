@@ -3,28 +3,19 @@ import { CommunityAssembler } from './community.assembler.js';
 
 export class CommunityApiService {
     getCommunities() {
-        return axios.get('https://livria-6efh.onrender.com/communities')
+        return axios.get('https://app-250621192653.azurewebsites.net/api/v1/communities')
             .then(response => CommunityAssembler.toEntitiesFromResponse(response))
             .catch(error => {
-                console.error('Error fetching books:', error);
+                console.error('Error fetching communities:', error);
                 throw error;
             });
     }
     createCommunity(community) {
-        return fetch('https://livria-6efh.onrender.com/communities', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(community)
-        }).then(res => res.json())
-    }
-    updateCommunity(community) {
-        return axios.put(`https://livria-6efh.onrender.com/communities/${community.id}`, community)
+        const adapted = CommunityAssembler.toResource(community);
+        return axios.post('https://app-250621192653.azurewebsites.net/api/v1/communities', adapted)
             .catch(error => {
-                console.error('Error updating users:', error);
+                console.error('Error creating community:', error);
                 throw error;
             });
     }
-
 }

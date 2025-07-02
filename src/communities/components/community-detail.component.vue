@@ -1,19 +1,17 @@
 <script>
 import { CommunityApiService } from "../service/community-api.service.js";
+import { PostApiService } from "@/communities/service/post-api.service.js";
 import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
-
-import heartIcon from "../../assets/images/icons/Favorite.svg";
-import commentIcon from "../../assets/images/icons/Chat.svg";
 
 export default {
   name: "community-detail.component",
   components: {
-    heartIcon,
-    commentIcon
+
   },
   data() {
     return {
       community: null,
+      posts: [],
       newPost: {
         content: '',
         img: ''
@@ -21,45 +19,67 @@ export default {
     }
   },
   methods: {
-    loadCommunity() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
+    loadInfo() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
       const service = new CommunityApiService();
       const communityTitle = this.$route.params.name
 
       service.getCommunities().then(data => {
-        this.community = data.find(b => b.name.toString().toLowerCase() === communityTitle.toLowerCase())
-      }).catch(error => {
-        console.error('Error loading community:', error)
-      })
+        this.community = data.find(b => b.name.toString().toLowerCase() === communityTitle.toLowerCase());
 
+        if (this.community && this.community.id) {
+          const communityId = this.community.id;
+          const derived = new PostApiService();
+
+          derived.getPosts().then(postsData => {
+            this.posts = postsData.filter(post => post.communityId === communityId);
+          }).catch(error => {
+            console.error('Error loading posts:', error);
+          });
+        } else {
+          console.warn('Community not found:', this.community);
+        }
+      }).catch(error => {
+        console.error('Error loading community:', error);
+      });
+
+    },
+    isValidUrl(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
     async makePost() { // Permite registrar una publicación con la información del usuario loggeado
       try {
-        const service = new CommunityApiService();
+        const derived = new PostApiService();
         const currentUser = await getLoggedInUser();
 
         if (!this.newPost.content.trim()) {
           return;
         }
 
-        const newId = this.community.posts?.length
-            ? String(Math.max(...this.community.posts.map(p => parseInt(p.id))) + 1)
-            : "1";
+        if (this.newPost.img && !this.isValidUrl(this.newPost.img)) {
+          return;
+        }
+
+        const newId = this.posts?.length
+            ? (Math.max(...this.posts.map(p => parseInt(p.id))) + 1)
+            : 1;
 
         const newPost = {
           id: newId,
+          communityId: this.community.id,
+          userId: currentUser.id,
           username: currentUser.user,
           content: this.newPost.content,
           img: this.newPost.img
         };
 
-        const updatedCommunity = {
-          ...this.community,
-          posts: [...(this.community.posts || []), newPost]
-        };
+        await derived.createPost(newPost);
 
-        await service.updateCommunity(updatedCommunity);
-
-        this.community.posts.push(newPost);
+        this.posts.push(newPost);
         this.newPost.content = '';
         this.newPost.img = '';
 
@@ -68,8 +88,8 @@ export default {
       }
     }
   },
-  mounted() { // AL iniciar el componente, automáticamente se carga la información de comunidades en la Fake API
-    this.loadCommunity();
+  mounted() { // Al iniciar el componente, automáticamente se carga la información de comunidades en la Fake API
+    this.loadInfo();
   }
 }
 </script>
@@ -104,7 +124,7 @@ export default {
 
         <div class="community__content-tweets">
           <article
-              v-for="post in community.posts.slice().reverse()"
+              v-for="post in this.posts.slice().reverse()"
               :key="post.id"
               class="community__tweets-post"
           >
