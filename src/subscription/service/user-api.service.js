@@ -38,6 +38,22 @@ export class UserApiService {
                 throw error;
             });
     }
+    async updateUserSubscription(userId, subscriptionPlan) {
+        try {
+            const payload = { newSubscriptionPlan: subscriptionPlan };
+
+            const response = await axios.put(
+                API_URL + `userclients/${userId}/subscription`,
+                payload,
+                { headers: authHeader() }
+            );
+            console.log(`Subscription updated for user ${userId}:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating subscription for user ${userId}:`, error);
+            throw error;
+        }
+    }
     deleteUser(id) {
         return axios.delete(API_URL + `userclients/${id}`, { headers: authHeader()})
             .catch(error => {
@@ -74,21 +90,6 @@ export class UserApiService {
             .then(response => response.data)
             .catch(error => {
                 console.error('Error fetching logged-in users:', error);
-                throw error;
-            });
-    }
-    createLoggedInUser(userData) {
-        return axios.post('https://livria-6efh.onrender.com/userLogin', userData)
-            .then(response => response.data)
-            .catch(error => {
-                console.error('Error creating logged-in user:', error);
-                throw error;
-            });
-    }
-    deleteLoggedInUser(id) {
-        return axios.delete(`https://livria-6efh.onrender.com/userLogin/${id}`)
-            .catch(error => {
-                console.error('Error deleting logged-in user:', error);
                 throw error;
             });
     }

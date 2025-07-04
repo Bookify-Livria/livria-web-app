@@ -1,7 +1,8 @@
 <script>
 import { CommunityApiService } from "../service/community-api.service.js";
-import { PostApiService } from "@/communities/service/post-api.service.js";
+import { PostApiService } from "../service/post-api.service.js";
 import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "community-detail.component",
@@ -72,7 +73,7 @@ export default {
     async makePost() { // Permite registrar una publicación con la información del usuario loggeado
       try {
         const derived = new PostApiService();
-        const currentUser = await getLoggedInUser();
+        const currentUser = new AuthService.getCurrentUser();
 
         if (!this.newPost.content.trim()) {
           return;
@@ -90,7 +91,7 @@ export default {
           id: newId,
           communityId: this.community.id,
           userId: currentUser.id,
-          username: currentUser.user,
+          username: currentUser.username,
           content: this.newPost.content,
           img: this.newPost.img
         };
