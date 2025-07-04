@@ -4,6 +4,7 @@ import { CartApiService} from "../../shared-services/cart-api.service.js";
 import { UserApiService } from "../../../subscription/service/user-api.service.js";
 import { FavoriteApiService } from "../services/favorite-api.service.js";
 import { BannedApiService } from "../services/banned-api.service.js";
+import { ReviewApiService } from "@/commerce/books/services/review-api.service.js";
 import bookmarkIcon from "../../../assets/images/icons/Bookmark.svg";
 import minusIcon from "../../../assets/images/icons/Minus.svg";
 import starIcon from "../../../assets/images/icons/Star.svg";
@@ -24,6 +25,7 @@ export default {
   data() {
     return {
       book: null,
+      reviews: [],
       quantity: 1,
       newReview: {
         content: '',
@@ -33,6 +35,25 @@ export default {
       isFavorited: false,
       isBanned: false,
       currentUser: null,
+
+      genres: [
+        { value: 0, key: 'literatura' },
+        { value: 1, key: 'noficcion' },
+        { value: 2, key: 'ficcion' },
+        { value: 3, key: 'mangasycomics' },
+        { value: 4, key: 'juvenil' },
+        { value: 5, key: 'infantil' },
+        { value: 6, key: 'ebooks' }
+      ]
+    }
+  },
+  computed: {
+    displayedGenreKey() { // Esta propiedad computada buscará el 'key' del género basado en 'book.genre'
+      if (this.book && typeof this.book.genre === 'number') {
+        const foundGenre = this.genres.find(genre => genre.value === this.book.genre);
+        return foundGenre ? foundGenre.key : '';
+      }
+      return '';
     }
   },
   methods: {
@@ -45,8 +66,17 @@ export default {
         const data = await service.getBooks();
         this.book = data.find(b => b.title.toString().toLowerCase() === bookTitle.toLowerCase());
 
-        if (this.book) {
+        if (this.book && this.book.id) {
           this.$emit('book-loaded', this.book.title);
+
+          const bookId = this.book.id;
+          const derived = new ReviewApiService();
+          derived.getReviews().then(reviewsData => {
+            this.reviews = reviewsData.filter(review => review.bookId === bookId);
+          }).catch(error => {
+            console.error('Error loading reviews:', error);
+          });
+
           const loggedUsers = await userApiService.getLoggedInUser();
           this.currentUser = loggedUsers.length > 0 ? loggedUsers[0] : null;
           if (this.currentUser) {
@@ -107,7 +137,7 @@ export default {
     },
     async makeReview() { // Permite al usuario registrar una reseña del libro en pantalla
       try {
-        const service = new BookApiService();
+        const service = new ReviewApiService();
 
         if (!this.newReview.content.trim()) {
           this.$toast.add({
@@ -119,25 +149,22 @@ export default {
           return;
         }
 
-        const newId = this.book.reviews?.length
-            ? String(Math.max(...this.book.reviews.map(p => parseInt(p.id))) + 1)
-            : "1";
+        const newId = this.reviews?.length
+            ? (Math.max(...this.book.reviews.map(p => parseInt(p.id))) + 1)
+            : 1;
 
         const newPostReview = {
           id: newId,
+          bookId: this.book.id,
+          userId: this.currentUser.id,
           username: this.currentUser.username,
           content: this.newReview.content,
           stars: this.newReview.stars.toString()
         };
 
-        const updatedReviews = {
-          ...this.book,
-          reviews: [...(this.book.reviews || []), newPostReview]
-        };
+        await service.createReview(newPostReview);
 
-        await service.updateBook(updatedReviews);
-
-        this.book.reviews.push(newPostReview);
+        this.reviews.push(newPostReview);
         this.newReview.content = '';
         this.newReview.stars = 0;
         this.hoverRating = 0;
@@ -277,7 +304,11 @@ export default {
     <div class="book-detail__right-section">
       <div class="book-detail__details-container">
         <h3 class="h2__title">{{ book.author }}</h3>
-        <p class="language">{{ $t('languages.' + book.language) }}</p>
+        <h3 class="h2__title go--blue">{{ book.genre }}</h3>
+        <!--
+        <p class="language">{{ $t(`genres.${displayedGenreKey}`) }}</p>
+        -->
+        <p class="language">{{ $t( book.language) }}</p>
         <p class="price">S/ {{ book.salePrice.toFixed(2) }}</p>
       </div>
 
@@ -339,7 +370,7 @@ export default {
         </div>
         <h3 class="h3__title">{{ $t('previous-reviews') }}</h3>
         <div
-            v-for="review in book.reviews.slice().reverse()"
+            v-for="review in reviews.slice().reverse()"
             :key="review.id"
             class="comments"
         >

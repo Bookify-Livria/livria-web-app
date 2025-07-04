@@ -1,6 +1,6 @@
 
 export class Book {
-    constructor(id, title, description, author, purchasePrice, salePrice, stock, cover, genre, language, reviews = []) {
+    constructor(id, title, description, author, purchasePrice, salePrice, stock, cover, genre, language) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -11,6 +11,5 @@ export class Book {
         this.cover = cover;
         this.genre = genre;
         this.language = language;
-        this.reviews = reviews;
     }
 }

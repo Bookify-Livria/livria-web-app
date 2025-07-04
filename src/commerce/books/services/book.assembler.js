@@ -4,10 +4,6 @@ import { Review } from '../model/review.entity.js';
 export class BookAssembler {
     static toEntityFromResource(resource) {
 
-        const reviews = Array.isArray(resource.reviews)
-            ? resource.reviews.map(review => new Review(review.id, review.username, review.content, review.stars))
-            : [];
-
         return new Book(
             resource.id,
             resource.title,
@@ -18,13 +14,27 @@ export class BookAssembler {
             resource.stock,
             resource.cover,
             resource.genre,
-            resource.language,
-            reviews
+            resource.language
         );
     }
 
     static toEntitiesFromResponse(response) {
         return response.data.map(this.toEntityFromResource);
+    }
+
+    static toResource(book) {
+        return {
+            id: book.id,
+            title: book.title,
+            description: book.description,
+            author: book.author,
+            purchasePrice: book.purchasePrice,
+            salePrice: book.salePrice,
+            stock: book.stock,
+            cover: book.cover,
+            genre: book.genre,
+            language: book.language
+        }
     }
 
 }

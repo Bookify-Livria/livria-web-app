@@ -54,7 +54,7 @@ export default {
     const genres = ref([
       { id: 'literatura', label: 'literature', colorClass: 'go--orange' },
       { id: 'noficcion', label: 'non-fiction', colorClass: 'go--yellow' },
-      { id: 'ficcion', label: 'fiction', colorClass: 'go--blue' },
+      { id: 'fiction', label: 'fiction', colorClass: 'go--blue' },
       { id: 'mangasycomics', label: 'mangas and comics', colorClass: 'go--orange' },
       { id: 'juvenil', label: 'juvenile', colorClass: 'go--yellow' },
       { id: 'infantil', label: 'children', colorClass: 'go--blue' },
