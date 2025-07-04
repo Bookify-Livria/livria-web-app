@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { BookApiService } from '../../commerce/books/services/book-api.service.js'
 
 export default {
-  name: "LibraryDashboard",
+  name: "libraryDashboard",
   setup() {
     const router = useRouter();
     const books = ref([]);
@@ -59,8 +59,8 @@ export default {
       stats.value.totalBooks = books.length;
       stats.value.totalGenres = [...new Set(books.map(book => book.genre))].length;
 
-      // Calculate average price
-      const totalPrice = books.reduce((sum, book) => sum + book.price, 0);
+      // Calculate average salePrice
+      const totalPrice = books.reduce((sum, book) => sum + book.salePrice, 0);
       stats.value.averagePrice = totalPrice / books.length;
 
       // Find most reviewed book
@@ -109,9 +109,9 @@ export default {
           case 'title':
             return a.title.localeCompare(b.title);
           case 'price_asc':
-            return a.price - b.price;
+            return a.salePrice - b.salePrice;
           case 'price_desc':
-            return b.price - a.price;
+            return b.salePrice - a.salePrice;
           case 'reviews':
             return (b.reviews?.length || 0) - (a.reviews?.length || 0);
           default:
@@ -122,57 +122,10 @@ export default {
       return filtered;
     });
 
-    const navigateToBook = (book) => {
-      router.push(`/books/${encodeURIComponent(book.title)}`);
-    };
-
-    const editBook = (book) => {
+    const viewBook = (book) => {
       currentBook.value = { ...book };
       showEditModal.value = true;
       formErrors.value = {};
-    };
-
-    const validateForm = () => {
-      const errors = {};
-
-      if (!currentBook.value.title || currentBook.value.title.trim() === '') {
-        errors.title = 'El título es obligatorio';
-      }
-
-      if (!currentBook.value.author || currentBook.value.author.trim() === '') {
-        errors.author = 'El autor es obligatorio';
-      }
-
-      if (isNaN(currentBook.value.price) || currentBook.value.price <= 0) {
-        errors.price = 'El precio debe ser un número mayor que 0';
-      }
-
-      if (isNaN(currentBook.value.stock) || currentBook.value.stock < 0) {
-        errors.stock = 'El stock debe ser un número no negativo';
-      }
-
-      formErrors.value = errors;
-      return Object.keys(errors).length === 0;
-    };
-
-    const saveBook = async () => {
-      if (!validateForm()) return;
-
-      try {
-        const service = new BookApiService();
-        await service.updateBook(currentBook.value.id, currentBook.value);
-
-        // Update the book in the local array
-        const index = books.value.findIndex(book => book.id === currentBook.value.id);
-        if (index !== -1) {
-          books.value[index] = { ...currentBook.value };
-        }
-
-        showEditModal.value = false;
-        calculateStats(books.value);
-      } catch (error) {
-        console.error('Error updating book:', error);
-      }
     };
 
     const closeModal = () => {
@@ -203,9 +156,7 @@ export default {
       currentBook,
       formErrors,
       languages,
-      navigateToBook,
-      editBook,
-      saveBook,
+      viewBook,
       closeModal,
       getLanguageName
     };
@@ -245,14 +196,14 @@ export default {
         </div>
         <div class="stat-card">
           <h3>{{ $t('dashboard.most-reviewed') }}</h3>
-          <p class="stat-value">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
+          <p class="stat-value long">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.mostReviewedBook">
             {{ stats.mostReviewedBook.reviews?.length || 0 }} {{ $t('dashboard.reviews')  }}
           </p>
         </div>
         <div class="stat-card">
           <h3>{{ $t('dashboard.best-selling')  }}</h3>
-          <p class="stat-value">{{ stats.bestSellingBook?.title || 'N/A' }}</p>
+          <p class="stat-value long">{{ stats.bestSellingBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.bestSellingBook">
             {{ stats.bestSellingBook.sales || 0 }} {{ $t('dashboard.copies') }}
           </p>
@@ -261,7 +212,7 @@ export default {
 
       <!-- Filter and Search Options -->
       <div class="filter-section">
-        <h2 class="section-title">{{ $t('dashboard.book-collection') }}</h2>
+        <h2 class="h2__title" style="margin-bottom: 2rem">{{ $t('dashboard.book-collection') }}</h2>
 
         <div class="search-bar">
           <input
@@ -312,13 +263,13 @@ export default {
             :key="book.id"
             class="book-card"
         >
-          <div class="book-cover" @click="navigateToBook(book)">
+          <div class="book-cover">
             <img :src="book.cover" :alt="book.title" />
           </div>
           <div class="book-info">
             <h3 class="book-title">{{ book.title }}</h3>
             <p class="book-author">{{ book.author }}</p>
-            <p class="book-price">S/ {{ book.price.toFixed(2) }}</p>
+            <p class="book-price">S/ {{ book.salePrice.toFixed(2) }}</p>
             <div class="book-meta">
               <span class="book-language">{{ getLanguageName(book.language) }}</span>
               <span class="book-stock">Stock: {{ book.stock || 0 }}</span>
@@ -327,10 +278,7 @@ export default {
               <span>{{ book.reviews?.length || 0 }} {{ $t('dashboard.reviews') }}</span>
             </div>
             <div class="book-actions">
-              <button class="btn-edit" @click="editBook(book)">
-                {{ $t('dashboard.edit') }}
-              </button>
-              <button class="btn-view" @click="navigateToBook(book)">
+              <button class="btn-edit" @click="viewBook(book)">
                 {{ $t('dashboard.view') }}
               </button>
             </div>
@@ -343,71 +291,58 @@ export default {
       </div>
     </div>
 
-    <!-- Edit Book Modal -->
+    <!-- View Book Modal -->
     <div v-if="showEditModal" class="modal-backdrop">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>{{ $t('dashboard.book.edit-book') }}</h2>
+          <h2>{{ $t('dashboard.book.view-book') }}</h2>
           <button class="close-btn" @click="closeModal">&times;</button>
         </div>
         <div class="modal-body" v-if="currentBook">
-          <div class="form-group">
-            <label for="book-title">{{ $t('dashboard.book.title') }}:</label>
-            <input type="text" id="book-title" v-model="currentBook.title" class="form-control" />
-            <span class="error-message" v-if="formErrors.title">{{ formErrors.title }}</span>
-          </div>
-
-          <div class="form-group">
-            <label for="book-author">{{ $t('dashboard.book.author') }}:</label>
-            <input type="text" id="book-author" v-model="currentBook.author" class="form-control" />
-            <span class="error-message" v-if="formErrors.author">{{ formErrors.author }}</span>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="book-price">{{ $t('dashboard.book.price') }}:</label>
-              <input type="number" id="book-price" v-model.number="currentBook.price" class="form-control" step="0.01" />
-              <span class="error-message" v-if="formErrors.price">{{ formErrors.price }}</span>
+          <div class="modal-body__upper-half">
+            <div class="modal-body__left">
+              <img :src="currentBook.cover" alt="Book Cover"/>
             </div>
-
-            <div class="form-group">
-              <label for="book-stock">{{ $t('dashboard.book.stock') }}:</label>
-              <input type="number" id="book-stock" v-model.number="currentBook.stock" class="form-control" />
-              <span class="error-message" v-if="formErrors.stock">{{ formErrors.stock }}</span>
+            <div class="modal-body__right">
+              <div class="modal-body__right-titles">
+                <div class="modal-body__right-form-group">
+                  <div class="h1__title" style="text-align: left">{{ currentBook.title }}</div>
+                </div>
+                <div class="modal-body__right-form-group">
+                  <div class="h2__title">{{ currentBook.author }}</div>
+                </div>
+                <div class="modal-body__right-form-group">
+                  <div><strong>{{ $t(`genres.${currentBook.genre}`) || currentBook.genre }}</strong></div>
+                  <div>{{ getLanguageName(currentBook.language) }}</div>
+                </div>
+              </div>
+              <div class="modal-body__right-form-group">
+                <div class="modal-body__right-column">
+                  <label class="info-label">{{ $t('dashboard.book.buyprice') }}:</label>
+                  <div class="price-value">S/ {{ currentBook.purchasePrice?.toFixed(2) }}</div>
+                </div>
+                <div class="modal-body__right-column">
+                  <label class="info-label">{{ $t('dashboard.book.sellprice') }}:</label>
+                  <div class="price-value">S/ {{ currentBook.salePrice?.toFixed(2) }}</div>
+                </div>
+              </div>
+              <div class="modal-body__right-form-group" style="margin-top: auto;">
+                <label class="info-label">{{ $t('dashboard.book.stock') }}:</label>
+                <div class="info-value">{{ currentBook.stock }}</div>
+              </div>
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="book-genre">{{ $t('dashboard.book.genre') }}:</label>
-            <select id="book-genre" v-model="currentBook.genre" class="form-control">
-              <option v-for="genre in genres" :key="genre" :value="genre">
-                {{ $t(`genres.${genre}`) || genre }}
-              </option>
-            </select>
+          <div class="modal-body__lower-half">
+            <label class="info-label">{{ $t('synopsis') }}:</label>
+            <div class="info-value">{{ currentBook.description }}</div>
           </div>
 
           <div class="form-group">
-            <label for="book-language">{{ $t('dashboard.book.language') }}:</label>
-            <select id="book-language" v-model="currentBook.language" class="form-control">
-              <option v-for="lang in languages" :key="lang.code" :value="lang.code">
-                {{ lang.name }}
-              </option>
-            </select>
           </div>
 
-          <div class="form-group">
-            <label for="book-description">{{ $t('dashboard.book.description') }}:</label>
-            <textarea id="book-description" v-model="currentBook.description" class="form-control" rows="4"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="book-cover">{{ $t('dashboard.book.cover') }}:</label>
-            <input type="text" id="book-cover" v-model="currentBook.cover" class="form-control" />
-          </div>
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" @click="closeModal">{{ $t('dashboard.book.cancel')  }}</button>
-          <button class="btn-save" @click="saveBook">{{ $t('dashboard.book.submit')  }}</button>
         </div>
       </div>
     </div>
@@ -415,6 +350,62 @@ export default {
 </template>
 
 <style scoped>
+
+.modal-body__upper-half {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-body__left {
+  flex: 0 0 35%;
+}
+
+.modal-body__left img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.modal-body__right {
+  flex: 0 0 60%;
+  justify-content: space-between;
+}
+
+.modal-body__right-titles {
+  margin-bottom: 2rem;
+}
+
+.modal-body__right-form-group {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.price-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-accent-orange);
+  margin-bottom: 1rem;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.2rem;
+}
+
+.info-value {
+  text-align: left;
+}
+
+.modal-body__lower-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
 .dashboard-container {
   width: 100%;
   padding: 2rem;
@@ -423,6 +414,11 @@ export default {
 .dashboard-header {
   text-align: center;
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dashboard-title {
@@ -433,8 +429,9 @@ export default {
 }
 
 .dashboard-subtitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.8;
 }
 
@@ -460,42 +457,50 @@ export default {
 }
 
 .stat-card {
-  background-color: white;
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card h3 {
   font-size: 0.9rem;
   color: var(--color-text);
   opacity: 0.8;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
   color: var(--color-accent-orange);
+  text-align: center;
+}
+
+.long {
+  font-size: 1.2rem;
 }
 
 .stat-detail {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.7;
-  margin-top: 0.5rem;
+  margin: 0;
 }
 
 .filter-section {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
-  padding-bottom: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .section-title {
@@ -542,6 +547,7 @@ export default {
   border: 1px solid #ddd;
   background-color: white;
   font-size: 0.9rem;
+  color: var(--color-text);
 }
 
 .books-grid {
@@ -551,75 +557,76 @@ export default {
 }
 
 .book-card {
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-color: var(--color-light);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .book-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.book-cover {
-  height: 260px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 10px;
 }
 
 .book-cover img {
-  width: auto;
-  height: 100%;
+  width: 135px;
+  height: 210px;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.book-cover:hover img {
-  transform: scale(1.05);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin: 2rem auto 0;
+  display: block;
 }
 
 .book-info {
-  padding: 1.5rem;
-  padding-top: .1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .book-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.05rem;
+  margin-top: 0;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .book-author {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--color-text);
-  margin-bottom: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  text-align: center;
 }
 
 .book-price {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--color-accent-orange);
-  margin-bottom: 0.75rem;
+  color: var(--color-blue);
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .book-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
   opacity: 0.7;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .book-reviews {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text);
   opacity: 0.7;
   margin-bottom: 1rem;
@@ -628,6 +635,7 @@ export default {
 .book-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: auto;
 }
 
 .btn-edit, .btn-view {
@@ -647,15 +655,6 @@ export default {
 
 .btn-edit:hover {
   background-color: #005a87;
-}
-
-.btn-view {
-  background-color: var(--color-accent-orange);
-  color: white;
-}
-
-.btn-view:hover {
-  background-color: #d17000;
 }
 
 .no-results {
@@ -684,10 +683,11 @@ export default {
   background-color: white;
   border-radius: 12px;
   width: 90%;
-  max-width: 600px;
+  max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
 }
 
 .modal-header {
@@ -739,21 +739,6 @@ export default {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   color: var(--color-text);
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
-}
-
-.error-message {
-  color: #e53935;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-  display: block;
 }
 
 .modal-footer {

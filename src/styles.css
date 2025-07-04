@@ -59,14 +59,24 @@ p {
   font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 3px;
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 600;
   color: var(--color-blue);
   margin: 0;
 }
 
+.h2__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-accent-yellow);
+  margin: 0;
+}
+
 .h3__title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -148,7 +158,6 @@ button:hover {
 
 #app {
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 

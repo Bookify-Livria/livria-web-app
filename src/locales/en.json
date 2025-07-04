@@ -5,7 +5,7 @@
   },
   "notifications": "Notifications",
   "cart-toolbar": "Cart",
-  "shop": "Shop",
+  "shop": "Store",
   "literature": "Literature",
   "non-fiction": "Non-Fiction",
   "fiction": "Fiction",
@@ -16,7 +16,7 @@
   "recommendations": "Recommendations",
   "communities": "Communities",
   "genre": "Genre",
-  "plan": "PLAN COMUNIDAD",
+  "plan": "COMMUNITY PLAN",
   "plan-content-1": "Discover a new level of connection on Livria with the Community Plan and its \"Communities\" section. Immerse yourself in a space where shared interests come to life, allowing you to join communities created by other users with similar affinities.",
   "plan-content-2": "In each community, you can express your ideas through posts and enrich interactions by participating in discussions by commenting on other people's posts.",
 
@@ -26,12 +26,13 @@
     "reminder": "We hope you like them! Remember, you can mark your interest in each book with the bookmark and negative icons, respectively."
   },
 
-<<<<<<< Updated upstream
-=======
-  "address": "Address",
+  "store" : {
+    "title": "Our Store",
+    "subtitle" : "Come visit us at our store!",
+    "address": "Address"
+  },
   "empty-list": "Empty Notifications List",
 
->>>>>>> Stashed changes
   "Search": "Search for: ",
   "NoSearch": "No results found in the search",
   "RecoSearch": "The following recommendations might interest you",
@@ -56,6 +57,13 @@
   "loading-book": "Loading Book...",
   "synopsis": "Synopsis",
   "comments": "Comments",
+  "success": "Success",
+  "add-favorite": "You successfully added this book to your favorites!",
+  "add-banned": "You successfully added this book to you banned list!",
+  "reviews": "Reviews",
+  "make-review": "Leave a review for this book",
+  "previous-reviews": "Check out other users' reviews",
+  "review-empty-content": "We can't post your review because it has no content.",
   "languages": {
     "es": "Spanish",
     "en": "English"
@@ -89,6 +97,7 @@
   "english": "English",
   "spanish": "Spanish",
   "delete": "Delete selection",
+
   "phrase": "Discover the joy of reading in a vibrant literary community.",
   "navigation": "Navegation",
   "home": "Home",
@@ -101,13 +110,14 @@
   "help": "Help",
   "frequent-questions": "Frequent Questions",
   "contact-us": "Contact Us",
-  "copyrights":"Â© 2025 Bookify - Livria. All rights reserved.",
+  "copyrights":"© 2025 Bookify - Livria. All rights reserved.",
 
 
   "profile": "Profile",
   "recent-orders": "My Recent Orders",
   "delivered": "Delivered",
   "pending": "Pending",
+  "in-progress": "In Progress",
   "settings": "Settings",
   "account": "Account",
   "setting": {
@@ -115,20 +125,28 @@
     "not-status": "Allow notifications for order status",
     "not-email": "Allow email notifications",
     "visibility": "Profile visibility",
-    "current-password": "Current password",
+    "change-pass": "Change password",
     "new-password": "New password"
   },
-
 
   "communities-intro": "Connect with readers with similar interests by joining Livria communities. You can also create your own!",
   "create-community": "Create Community",
   "form": {
     "name": "Name",
     "description": "Description",
+    "select_category": "Select a category",
     "category": "Category",
-    "image": "Image URL"
+    "image": "Profile Image URL",
+    "sidebar": "Banner Image URL"
   },
   "see-more": "See More +",
+
+  "comm" : {
+    "thoughts": "What are your thoughts?",
+    "join": "Join +",
+    "post": "Post",
+    "image": "Paste here the url from an image you'd like to add."
+  },
 
   "yes": "Yes",
   "no": "No",
@@ -154,10 +172,19 @@
   "emailerror": "Please enter a valid email address",
   "admin-access": "Administrator Access",
   "security-pin": "Security Pin",
-  "phone-input": "Phone Number",
-  "send-again": "Send Security Pin Again",
+  "go-back": "Go Back",
+
+  "errors": {
+    "nickname": "Letters only (max. 20 characters).",
+    "username": "Letters or numbers only (max. 20 characters).",
+    "url": "Must be a valid link.",
+    "email": "Invalid email."
+  },
 
   "createacc": "Don't have an account?",
+  "subscription": "Subscription",
+  "yes-subs": "Community Plan",
+  "no-subs": "Free Plan",
   "no-phrase": "No phrase yet",
   "no-order": "No orders yet",
   "password-error": "Password error",
@@ -186,6 +213,7 @@
   "or": "OR",
 
   "purchase": {
+    "finish": "Finish your purchase",
     "step-summary": "Summary",
     "step-id": "Identification",
     "step-delivery": "Delivery",
@@ -216,7 +244,9 @@
     "reference": "Reference",
     "izipay": "All our payments are made through Izipay. Upon accepting the terms and conditions, you will be redirected to the Izipay page where you can make your payment. A payment confirmation will be sent to your email.",
     "terms": "I have read and authorize the processing of my data according to the Privacy Policy and Terms and Conditions.",
-    "privacy": "I authorize the processing of my data for commercial promotion purposes according to the Privacy Policy."
+    "privacy": "I authorize the processing of my data for commercial promotion purposes according to the Privacy Policy.",
+    "just-letters": "Enter only letters",
+    "valid-number": "Enter a valid peruvian number"
   },
 
   "noti": {
@@ -231,6 +261,7 @@
   },
 
   "livriaStore": "LIVRIA STORE",
+  "coming-soon": "Coming Soon!",
 
   "dashboard": {
     "loading": "Loading ...",
@@ -262,10 +293,11 @@
     "view": "View",
     "no-books-found": "No books were found with the selected filters",
     "book": {
-      "edit-book": "Edit Book",
+      "view-book": "View Book",
       "title": "Book Title",
       "author": "Book Author",
-      "price": "Book Price",
+      "buyprice": "Purchase Price",
+      "sellprice": "Sale Price",
       "stock": "Book Stock",
       "genre": "Book Genre",
       "language": "Book Language",
@@ -273,6 +305,19 @@
       "cover": "Book Cover URL",
       "cancel": "Cancel",
       "submit": "Save"
+    },
+    "inventory": {
+      "add-books": "Add a new book to the inventory",
+      "cover": "Cover",
+      "title": "Title",
+      "author": "Author",
+      "genre": "Genre",
+      "lang": "Language",
+      "stock": "Stock",
+      "purchase-price": "Purchase Price",
+      "quantity": "Quantity",
+      "amount": "Amount",
+      "add": "Add"
     }
   },
 
@@ -282,6 +327,8 @@
     "dashboard": "Home",
     "books": "Books",
     "orders": "Orders",
+    "inventory": "Inventory",
+    "statistics": "Statistics",
     "settings": "Settings",
     "logout": "Log out"
   },
@@ -300,6 +347,8 @@
     "quick-actions": "Quick Actions",
     "manage-books": "Manage Books",
     "manage-orders": "Manage Orders",
+    "manage-inventory": "Manage Inventory",
+    "manage-statistics": "Statistics",
     "settings": "Settings",
     "system-info": "System Information",
     "version": "Version",
@@ -340,8 +389,9 @@
     "sort-date-asc": "Date (Oldest First)",
     "sort-total-desc": "Total (Highest to Lowest)",
     "sort-total-asc": "Total (Lowest to Highest)",
-    "order-number": "Order Number",
+    "order-number": "Order Code",
     "customer": "Customer",
+    "recipient" : "Recipient",
     "date": "Date",
     "total": "Total",
     "status_t": "Status",
@@ -356,11 +406,12 @@
     "customer-info": "Customer Information",
     "customer-name": "Customer Name",
     "customer-email": "Customer Email",
-    "customer-phone": "Customer Phone",
+    "recipient-name": "Recipient Name",
+    "recipient-phone": "Recipient Phone",
     "shipping-info": "Shipping Information",
     "shipping-address": "Shipping Address",
-    "shipping-city": "Shipping City",
-    "shipping-postal": "Postal Code",
+    "shipping-district": "Shipping District",
+    "shipping-reference": "Reference",
     "order-items": "Order Items",
     "item": "Item",
     "quantity": "Quantity",
@@ -387,7 +438,9 @@
     "user": "User",
     "admin": "Aministrator",
     "name": "Name",
+    "username": "Username",
     "email": "Email",
+    "security-pin": "Security Pin",
     "role": "Role",
     "language": "Language",
     "change-password": "Change Password",

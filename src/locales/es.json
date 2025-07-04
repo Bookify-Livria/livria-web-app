@@ -3,12 +3,7 @@
     "search": "Buscar",
     "account": "Cuenta"
   },
-<<<<<<< Updated upstream
-
-
-=======
   "notifications": "Notificaciones",
->>>>>>> Stashed changes
   "cart-toolbar": "Carrito",
   "shop": "Tienda",
   "literature": "Literatura",
@@ -21,7 +16,7 @@
   "recommendations": "Recomendaciones",
   "communities": "Comunidades",
   "genre": "Género",
-  "plan": "COMMUNITY PLAN",
+  "plan": "PLAN COMUNIDAD",
   "plan-content-1": "Descubre un nuevo nivel de conexión en Livria con el Plan Comunidad y su sección de \"Comunidades\". Sumérgete en un espacio donde los intereses compartidos cobran vida, permitiéndote unirte a comunidades creadas por otros usuarios con afinidades similares.",
   "plan-content-2": "En cada comunidad, podrás expresar tus ideas a través de publicaciones y enriquecer las interacciones participando en los debates mediante comentarios en las publicaciones de los demás.",
 
@@ -31,12 +26,13 @@
     "reminder": "¡Ojalá te gusten! Recuerda que puedes marcar tu interés en cada libro con los íconos del marcador y del signo negativo, respectivamente."
   },
 
-<<<<<<< Updated upstream
-=======
-  "address": "Dirección",
+  "store" : {
+    "title": "Nuestra Tienda",
+    "subtitle" : "Ven a visitarnos en nuestra tienda!",
+    "address": "Dirección"
+  },
   "empty-list": "Vaciar Lista de Notificaciones",
 
->>>>>>> Stashed changes
   "Search": "Resultados de: ",
   "NoSearch": "No se encontraron resultados para la búsqueda",
   "RecoSearch": "Puede que te interesen las siguientes recomendaciones",
@@ -61,6 +57,13 @@
   "loading-book": "Cargando Libro...",
   "synopsis": "Sinópsis",
   "comments": "Comentarios",
+  "success": "Éxito",
+  "add-favorite": "¡Has añadido este libro a tus favoritos!",
+  "add-banned": "¡Has añadido este libro a tu lista de prohibidos!",
+  "reviews": "Reseñas",
+  "make-review": "Deja una reseña para este libro",
+  "previous-reviews": "Mira las reseñas de otros usuarios",
+  "review-empty-content": "No pudimos publicar tu reseña porque está vacía.",
   "languages": {
     "es": "Español",
     "en": "Inglés"
@@ -94,6 +97,7 @@
   "english": "Inglés",
   "spanish": "Español",
   "delete": "Borrar selección",
+
   "phrase": "Descubre el placer de leer en una vibrante comunidad literaria.",
   "navigation": "Navegación",
   "home": "Inicio",
@@ -113,6 +117,7 @@
   "recent-orders": "Mis Últimos Pedidos",
   "delivered": "Entregado",
   "pending": "Pendiente",
+  "in-progress": "En Progreso",
   "settings": "Configuración",
   "account": "Cuenta",
   "setting": {
@@ -120,7 +125,7 @@
     "not-status": "Notificaciones de estado de pedido",
     "not-email": "Notificaciones por correo",
     "visibility": "Visibilidad del perfil",
-    "current-password": "Contraseña actual",
+    "current-password": "Cambiar contraseña",
     "new-password": "Nueva contraseña"
   },
 
@@ -129,11 +134,19 @@
   "create-community": "Crear Comunidad",
   "form": {
     "name": "Nombre",
+    "select_category": "Seleccione la categoría",
     "description": "Descripción",
     "category": "Categoría",
     "image": "URL de la imagen"
   },
   "see-more": "Ver Más +",
+
+  "comm" : {
+    "thoughts": "¿En qué estás pensando?",
+    "join": "Unirse +",
+    "post": "Publicar",
+    "image": "Pega aquí la URL de una imagen que quieras agregar."
+  },
 
   "yes": "Sí",
   "no": "No",
@@ -157,8 +170,21 @@
   "emailinput": "Correo electrónico",
   "register": "Registrarse",
   "emailerror": "Ingrese un correo electrónico válido",
+  "admin-access": "Acceso de Administrator",
+  "security-pin": "Pin de Seguridad",
+  "go-back": "Atrás",
+
+  "errors": {
+    "nickname": "Solo letras (máx. 20 caracteres).",
+    "username": "Solo letras o números (máx. 20 caracteres).",
+    "url": "Debe ser un enlace válido.",
+    "email": "Correo electrónico no válido."
+  },
 
   "createacc": "¿No tienes una cuenta?",
+  "subscription": "Suscripción",
+  "yes-subs": "Plan Communidad",
+  "no-subs": "Plan Free",
   "no-phrase": "Ninguna frase",
   "no-order": "Ninguna orden registrada",
   "password-error": "Error de contraseña",
@@ -174,6 +200,7 @@
   "register-fail-details": "Algunos campos están vacíos o las contraseñas no son iguales",
   "register-success": "Registro exitoso",
   "register-success-details": "¡Bienvenido a Livria!",
+
   "update-success": "Contraseña actualizada exitosamente",
   "update-success-details": "La contraseña ha sido actualizada.",
   "update-fill-fail": "Debe llenar todos los campos",
@@ -186,6 +213,7 @@
   "or": "O",
 
   "purchase": {
+    "finish": "Finaliza tu compra",
     "step-summary": "Resumen",
     "step-id": "Identificación",
     "step-delivery": "Entrega",
@@ -216,7 +244,9 @@
     "reference": "Referencia",
     "izipay": "Todos nuestros pagos se realizan a través de Izipay. Al aceptar los términos y condiciones, será redirigido a la página de Izipay donde podrá realizar su pago. Recibirá una confirmación de pago en su correo electrónico.",
     "terms": "He leído y autorizo el tratamiento de mis datos de acuerdo con la Política de Privacidad y los Términos y Condiciones.",
-    "privacy": "Autorizo el tratamiento de mis datos con fines de promoción comercial según la Política de Privacidad."
+    "privacy": "Autorizo el tratamiento de mis datos con fines de promoción comercial según la Política de Privacidad.",
+    "just-letters": "Ingrese solo letras",
+    "valid-number": "Ingrese un número peruano válido"
   },
 
   "noti": {
@@ -231,6 +261,7 @@
   },
 
   "livriaStore": "TIENDA DE LIVRIA",
+  "coming-soon": "Próximamente!",
 
   "dashboard": {
     "loading": "Cargando ...",
@@ -261,10 +292,11 @@
     "View": "Ver",
     "no-books-found": "No se encontraron libros con los filtros seleccionados",
     "book": {
-      "edit-book": "Editar Libro",
+      "view-book": "Ver Libro",
       "title": "Título del Libro",
       "author": "Autor del Libro",
-      "price": "Precio del Libro",
+      "buyprice": "Precio de Compra",
+      "sellprice": "Precio de Venta",
       "stock": "Stock del Libro",
       "genre": "Género del Libro",
       "language": "Idioma del Libro",
@@ -272,6 +304,19 @@
       "cover": "Portada URL del Libro",
       "cancel": "Cancelar",
       "submit": "Guardar Cambios"
+    },
+    "inventory": {
+      "add-books": "Agregar un nuevo libro al inventario",
+      "cover": "Portada",
+      "title": "Título",
+      "author": "Autor",
+      "genre": "Género",
+      "lang": "Lenguaje",
+      "stock": "Stock",
+      "purchase-price": "Precio de Compra",
+      "quantity": "Cantidad",
+      "amount": "Monto",
+      "add": "Comprar"
     }
   },
 
@@ -281,6 +326,8 @@
     "dashboard": "Inicio",
     "books": "Libros",
     "orders": "Pedidos",
+    "inventory": "Inventario",
+    "statistics": "Estadísticas",
     "settings": "Ajustes",
     "logout": "Cerrar sesión"
   },
@@ -299,6 +346,8 @@
     "quick-actions": "Acciones Rápidas",
     "manage-books": "Gestionar Libros",
     "manage-orders": "Gestionar Pedidos",
+    "manage-inventory": "Gestionar Inventario",
+    "manage-statistics": "Estadísticas",
     "settings": "Ajustes",
     "system-info": "Información del Sistema",
     "version": "Versión",
@@ -339,8 +388,9 @@
     "sort-date-asc": "Fecha (Más Antiguo Primero)",
     "sort-total-desc": "Total (Mayor a Menor)",
     "sort-total-asc": "Total (Menor a Mayor)",
-    "order-number": "N° de Pedido",
+    "order-number": "Código de Pedido",
     "customer": "Cliente",
+    "recipient": "Destinatario",
     "date": "Fecha",
     "total": "Total",
     "status_t": "Estado",
@@ -355,11 +405,12 @@
     "customer-info": "Información del Cliente",
     "customer-name": "Nombre del Cliente",
     "customer-email": "Correo Electrónico del Cliente",
-    "customer-phone": "Número de Teléfono del Cliente",
+    "recipient-name": "Nombre del Destinatario",
+    "recipient-phone": "Número de Teléfono del Destinatario",
     "shipping-info": "Información de Envío",
     "shipping-address": "Dirección de Envío",
-    "shipping-city": "Ciudad de Envío",
-    "shipping-postal": "Código Postal de Envío",
+    "shipping-district": "Distrito de Envío",
+    "shipping-reference": "Referencia de Envío",
     "order-items": "Artículos del Pedido",
     "item": "Artículo",
     "quantity": "Cantidad",
@@ -386,7 +437,9 @@
     "user": "Usuario",
     "admin": "Administrador",
     "name": "Nombre",
+    "username": "Nombre de Usuario",
     "email": "Correo Electrónico",
+    "security-pin": "Pin de Securidad",
     "role": "Rol",
     "language": "Idioma",
     "change-password": "Cambiar Contraseña",

@@ -15,27 +15,26 @@ export class CommunityAssembler {
         if (!item) {
             return null;
         }
-
-        return {
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            type: item.type,
-            image: item.image
-        };
+        return new Community(
+            item.id,
+            item.name,
+            item.description,
+            item.type,
+            item.image,
+            item.banner,
+        );
     }
 
-    // Convert entity model to API model (for creating/updating)
-    static toApiModel(entity) {
-        if (!entity) {
-            return null;
+    //Convert data to API item using the entity model
+    static toResource(community) {
+        return {
+            id: community.id,
+            name: community.name,
+            description: community.description,
+            type: community.type,
+            image: community.image,
+            banner: community.banner
         }
-
-        return {
-            name: entity.name,
-            description: entity.description,
-            type: entity.type,
-            image: entity.image
-        };
     }
+
 }

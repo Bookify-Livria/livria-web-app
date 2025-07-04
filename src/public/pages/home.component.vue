@@ -54,7 +54,7 @@ export default {
     const genres = ref([
       { id: 'literatura', label: 'literature', colorClass: 'go--orange' },
       { id: 'noficcion', label: 'non-fiction', colorClass: 'go--yellow' },
-      { id: 'ficcion', label: 'fiction', colorClass: 'go--blue' },
+      { id: 'fiction', label: 'fiction', colorClass: 'go--blue' },
       { id: 'mangasycomics', label: 'mangas and comics', colorClass: 'go--orange' },
       { id: 'juvenil', label: 'juvenile', colorClass: 'go--yellow' },
       { id: 'infantil', label: 'children', colorClass: 'go--blue' },
@@ -125,7 +125,7 @@ export default {
 
 <style scoped>
 .home-container {
-  margin: 7.5rem calc(-1 * ((95vw - 100%) / 2));
+  margin: 10rem calc(-1 * ((95vw - 100%) / 2)) 0;
 }
 
 .p-carousel {
@@ -134,7 +134,7 @@ export default {
 
 .carousel-slide {
   width: 100%;
-  height: 600px;
+  height: 400px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -163,7 +163,7 @@ export default {
 }
 
 .carousel-description {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #ffffff;
   max-width: 800px;
   margin-bottom: 1.5rem;
@@ -192,7 +192,7 @@ export default {
 }
 
 .carousels__section-title {
-  margin: 0 1rem 1rem;
+  margin: 0 1rem;
 }
 
 .carousels__section-link {

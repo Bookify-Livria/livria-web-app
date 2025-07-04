@@ -1,8 +1,6 @@
 <script>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
-import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
+import { UserApiService } from "@/subscription/service/user-api.service.js";
 
 export default {
   name: "DashboardSidebar",
@@ -16,109 +14,140 @@ export default {
       default: false
     }
   },
-  setup(props, { emit }) {
-    const router = useRouter();
-    const activeItem = ref('dashboard');
-    const userInfo = ref(null);
-
-    // Sidebar navigation items
-    const navItems = ref([
-      {
-        id: 'dashboard',
-        label: 'Dashboard',
-        icon: 'pi pi-home',
-        route: '/dashboard'
-      },
-      {
-        id: 'books',
-        label: 'Books',
-        icon: 'pi pi-book',
-        route: '/books-management'
-      },
-      {
-        id: 'orders',
-        label: 'Orders',
-        icon: 'pi pi-shopping-cart',
-        route: '/orders-management'
-      }
-    ]);
-
-    // Set active item based on current route
-    const updateActiveItem = () => {
-      const currentPath = router.currentRoute.value.path;
-      const matchingItem = navItems.value.find(item => currentPath.includes(item.route));
-      if (matchingItem) {
-        activeItem.value = matchingItem.id;
-      }
+  data() {
+    return {
+      activeItem: 'dashboard',
+      admin: null,
+      activeBottomAction: null,
+      navItems: [
+        {
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: 'pi pi-home',
+          route: '/dashboard'
+        },
+        {
+          id: 'books',
+          label: 'Books',
+          icon: 'pi pi-book',
+          route: '/books-management'
+        },
+        {
+          id: 'orders',
+          label: 'Orders',
+          icon: 'pi pi-shopping-cart',
+          route: '/orders-management'
+        },
+        {
+          id: 'inventory',
+          label: 'Inventory',
+          icon: 'pi pi-clipboard',
+          route: '/inventory-management'
+        },
+        {
+          id: 'statistics',
+          label: 'Statistics',
+          icon: 'pi pi-chart-bar',
+          route: '/statistics-management'
+        }
+      ]
     };
-
-    // Load user information
-    const fetchUserInfo = async () => {
+  },
+  computed: {
+    sidebarClasses() {
+      return {
+        'sidebar-collapsed': this.collapsed
+      };
+    }
+  },
+  methods: {
+    updateActiveItem() {
+      const currentPath = this.$router.currentRoute.value.path;
+      const matchingItem = this.navItems.find(item => currentPath.includes(item.route));
+      if (matchingItem) {
+        this.activeItem = matchingItem.id;
+        this.activeBottomAction = null;
+      } else if (currentPath.includes('/settings')) {
+        this.activeBottomAction = 'settings';
+        this.activeItem = null;
+      } else if (currentPath.includes('/login')) {
+        this.activeBottomAction = 'logout';
+        this.activeItem = null;
+      } else {
+        this.activeItem = null;
+        this.activeBottomAction = null;
+      }
+    },
+    async fetchUserInfo() { // Carga la información del administrador
       try {
-        const user = await getLoggedInUser();
-        userInfo.value = user;
+        const userApiService = new UserApiService();
+        this.admin = await userApiService.getAdminUser();
+
       } catch (error) {
         console.error("Error getting user info:", error);
       }
-    };
+    },
+    navigateTo(item) { // Permite la navegación
+      if (['settings', 'logout'].includes(item.id)) {
+        this.activeBottomAction = item.id;
+        this.activeItem = null;
+      } else {
+        this.activeItem = item.id;
+        this.activeBottomAction = null;
+      }
 
-    // Initialize user info and active item
-    fetchUserInfo();
-    updateActiveItem();
-
-    // Computed classes for the sidebar based on collapsed state
-    const sidebarClasses = computed(() => {
-      return {
-        'sidebar-collapsed': props.collapsed
-      };
-    });
-
-    // Navigate to the selected route
-    const navigateTo = (item) => {
-      activeItem.value = item.id;
-      router.push(item.route);
-    };
-
+      this.$router.push(item.route);
+    },
     // Toggle sidebar collapsed state
-    const toggleSidebar = () => {
-      emit('toggle-sidebar');
-    };
-
-    return {
-      activeItem,
-      navItems,
-      userInfo,
-      sidebarClasses,
-      navigateTo,
-      toggleSidebar
-    };
+    toggleSidebar() {
+      this.$emit('toggle-sidebar');
+    }
+  },
+  mounted() {
+    this.fetchUserInfo();
+    this.updateActiveItem();
   }
 };
 </script>
 
 <template>
   <div class="sidebar-container" :class="sidebarClasses">
-    <!-- Toggle Button -->
     <div class="sidebar-toggle" @click="toggleSidebar">
       <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
     </div>
 
-    <div class="lang-btn">
-      <LanguageSwitcher></LanguageSwitcher>
+    <div class="header">
+      <img alt="livria_logo" class="header__logo" src="../../assets/images/logo/logo.png" />
     </div>
 
-    <!-- User Profile Section -->
+    <div class="color-bar">
+      <div class="color-bar__section color-bar__section--orange"></div>
+      <div class="color-bar__section color-bar__section--yellow"></div>
+      <div class="color-bar__section color-bar__section--light-yellow"></div>
+      <div class="color-bar__section color-bar__section--dark-blue"></div>
+      <div class="color-bar__section color-bar__section--light"></div>
+      <div class="color-bar__section color-bar__section--teal"></div>
+    </div>
+
     <div class="sidebar-user-profile">
       <div class="user-avatar">
-        <span>{{ userInfo?.user?.charAt(0).toUpperCase() || 'U' }}</span>
+        <span>{{ admin?.username?.charAt(0).toUpperCase() || 'U' }}</span>
       </div>
       <div class="user-info" v-if="!collapsed">
-        <h3>{{ userInfo?.user || $t('sidebar.user') }}</h3>
-        <p>{{ userInfo?.role || $t('sidebar.role') }}</p>
+        <h3>{{ admin?.display }}</h3>
+        <p>{{ $t('sidebar.role') }}</p>
       </div>
     </div>
 
-    <!-- Navigation Menu -->
+    <div class="color-bar">
+      <div class="color-bar__section color-bar__section--orange"></div>
+      <div class="color-bar__section color-bar__section--yellow"></div>
+      <div class="color-bar__section color-bar__section--light-yellow"></div>
+      <div class="color-bar__section color-bar__section--dark-blue"></div>
+      <div class="color-bar__section color-bar__section--light"></div>
+      <div class="color-bar__section color-bar__section--teal"></div>
+    </div>
+
     <div class="sidebar-nav">
       <ul>
         <li
@@ -133,13 +162,31 @@ export default {
       </ul>
     </div>
 
-    <!-- Bottom Actions -->
+    <div class="lang-btn">
+      <LanguageSwitcher></LanguageSwitcher>
+    </div>
+
+    <div class="color-bar">
+      <div class="color-bar__section color-bar__section--orange"></div>
+      <div class="color-bar__section color-bar__section--yellow"></div>
+      <div class="color-bar__section color-bar__section--light-yellow"></div>
+      <div class="color-bar__section color-bar__section--dark-blue"></div>
+      <div class="color-bar__section color-bar__section--light"></div>
+      <div class="color-bar__section color-bar__section--teal"></div>
+    </div>
+
     <div class="sidebar-actions">
-      <div class="action-item" @click="navigateTo({id: 'settings', route: '/settings'})">
+      <div
+          class="action-item"
+          :class="{ active: activeBottomAction === 'settings' }"
+          @click="navigateTo({id: 'settings', route: '/settings'})">
         <i class="pi pi-cog"></i>
         <span v-if="!collapsed">{{ $t('sidebar.settings') }}</span>
       </div>
-      <div class="action-item" @click="navigateTo({id: 'logout', route: '/login'})">
+      <div
+          class="action-item"
+          :class="{ active: activeBottomAction === 'logout' }"
+          @click="navigateTo({id: 'logout', route: '/login'})">
         <i class="pi pi-sign-out"></i>
         <span v-if="!collapsed">{{ $t('sidebar.logout') }}</span>
       </div>
@@ -173,7 +220,7 @@ export default {
   top: 20px;
   width: 30px;
   height: 30px;
-  background-color: var(--color-primary);
+  background-color: var(--color-blue);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -188,15 +235,31 @@ export default {
   font-size: 1rem;
 }
 
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  margin: 1rem 0;
+}
+
+.header__logo {
+  width: auto;
+  height: 40px;
+}
+
 .sidebar-user-profile {
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  padding: 2rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  gap: 1rem;
+  width: 100%;
 }
 
 .user-avatar {
-  width: 40px;
+  width: 20%;
   height: 40px;
   border-radius: 50%;
   background-color: var(--color-accent-orange);
@@ -208,13 +271,14 @@ export default {
 }
 
 .user-info {
-  margin-left: 1rem;
+  width: 70%;
 }
 
 .user-info h3 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
+  text-align: left;
 }
 
 .user-info p {
@@ -245,7 +309,7 @@ export default {
   white-space: nowrap;
 }
 
-.sidebar-nav li:hover {
+.sidebar-nav li:hover, .action-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -272,7 +336,6 @@ export default {
 
 .sidebar-actions {
   padding: 1rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .action-item {
@@ -306,7 +369,7 @@ export default {
   justify-content: center;       /* centra contenido horizontal */
   align-items: center;           /* centra contenido vertical */
   width: fit-content;            /* tamaño ajustado al contenido */
-  margin: 1.8rem auto 0;
+  margin: 2rem auto;
 }
 
 .sidebar-collapsed .sidebar-actions .action-item {

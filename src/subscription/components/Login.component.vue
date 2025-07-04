@@ -1,32 +1,32 @@
 <script>
-import axios from 'axios';
 
-import { ref } from 'vue';
 import 'primeicons/primeicons.css';
-<<<<<<< Updated upstream
-=======
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
 import {notifyEvent} from "../../public/shared-services/to-notify.js";
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 import { UserApiService } from "../service/user-api.service.js";
->>>>>>> Stashed changes
 
 const value1 = '';
 const value2 = '';
 
 export default {
   name: "Login",
-
+  components: {
+    LanguageSwitcher,
+  },
+  data() {
+    return {
+      value1: '',
+      value2: ''
+    }
+  },
   methods: {
-    async clearLogin() {
+    async clearLogin() { // Permite al sistema eliminar los datos almacenados en userlogin
       try {
-        const response = await axios.get('http://localhost:3000/userlogin');
-        const users = response.data;
+        const response = new UserApiService();
+        const users = await response.getLoggedInUser();
 
         await Promise.all(users.map(user =>
-            axios.delete(`http://localhost:3000/userlogin/${user.id}`)
+            response.deleteLoggedInUser(user.id)
         ));
 
         console.log("Cleared login.");
@@ -35,7 +35,7 @@ export default {
       }
     },
 
-    async createLogin(userId, valueA, valueB) {
+    async createLogin(userId, valueA, valueB) { // Permite al sistema registrar la información de login al momento de completarse
       const newUser = {
         id: userId,
         username: valueA,
@@ -43,22 +43,18 @@ export default {
       };
 
       try {
-        const response = await axios.post('http://localhost:3000/userlogin', newUser);
-        console.log("Login session created:", response.data);
+        const response = new UserApiService();
+        const user = await response.createLoggedInUser(newUser);
+        console.log("Login session created for:", user.username);
       } catch (error) {
         console.error("Error creating login session:", error);
       }
     },
 
-    async validateLogin(valueA, valueB) {
+    async validateLogin(valueA, valueB) { // Permite al sistema comparar la información registrada en el login con la de los usuarios registrados en la Fake API
       try {
-<<<<<<< Updated upstream
-        const response = await axios.get('http://localhost:3000/users');
-        const users = response.data;
-=======
         const response = new UserApiService();
         const clients = await response.getUsers();
->>>>>>> Stashed changes
 
         const admin = await response.getAdminUser();
 
@@ -85,22 +81,13 @@ export default {
         return null;
       }
     },
-    goToHome() {
+    goToHome() { // Permite al usuario acceder a la ruta de "Home"
       this.$router.push('/home');
     },
-    goToRegister() {
+    goToRegister() { // Permite al usuario acceder a la ruta de "Register"
       this.$router.push('/register');
     },
-<<<<<<< Updated upstream
-    async handleLogin(valueA, valueB) {
-      const matchedUser = await this.validateLogin(valueA, valueB);
-      if (matchedUser && valueA!=='' && valueB!=='') {
-        await this.createLogin(matchedUser.id, valueA, valueB);
-        this.showLogin();
-        await notifyEvent("login");
-        this.goToHome();
-=======
-    goToAdminAccess(){
+    goToAdminAccess(){ // Permite al usuario acceder a la ruta de "Acceso de Administrador"
       this.$router.push('/access');
     },
     async handleLogin(valueA, valueB) { // Permite validar el inicio de sesión y registar la información del usuario loggeado
@@ -112,13 +99,12 @@ export default {
         } else {
           this.goToHome();
         }
->>>>>>> Stashed changes
       } else {
         this.showFail();
       }
     },
 
-    showLogin() {
+    showLogin() { // Muestra un mensaje flotante (Toast) de confirmación de inicio de sesión si es exitoso
       try {
         this.$refs.toast.add({
           severity: 'success',
@@ -131,7 +117,7 @@ export default {
       }
     },
 
-    showFail() {
+    showFail() { // Muestra un mensaje flotante (Toast) de error de inicio de sesión si es fallido
       try {
         this.$refs.toast.add({
           severity: 'error',
@@ -145,7 +131,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted() { // Al iniciar el componente, elimina los datos registrados en el Login
     this.clearLogin();
   },
 }
@@ -154,15 +140,8 @@ export default {
 <template>
   <div class="all">
     <div class="head">
-<<<<<<< Updated upstream
-      <div class="same-line">
-        <img src="https://i.imgur.com/dZ7eqsw.jpg" alt="Logo" width="60px" height="60px">
-        <h1 class="name">Livria</h1>
-      </div>
-=======
         <img src="../../assets/images/logo/logo.png" alt="Logo" height="45px">
         <language-switcher />
->>>>>>> Stashed changes
     </div>
     <div class="content">
       <pv-card>
@@ -175,13 +154,13 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value1" class="form-input" />
+              <pv-input-text v-model="value1" class="form-input" aria-label="User input"/>
             </div>
           </div>
 
           <div class="form-group">
             <div class="label-class">
-              <label class="form-label">{{ $t('passinput')}}</label>
+              <label class="form-label" aria-label="Password input">{{ $t('passinput')}}</label>
             </div>
 
             <div class="input-class">
@@ -189,21 +168,22 @@ export default {
             </div>
 
             <div class="link-class">
-              <a href="" class="forgot-password">{{ $t('passforg')}}</a>
+              <a href="" class="forgot-password" aria-label="Forgot password">{{ $t('passforg')}}</a>
             </div>
           </div>
         </template>
 
         <template #footer>
           <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-          <pv-button @click="handleLogin(value1, value2)" class="form-button">{{ $t('login')}}</pv-button>
+          <pv-button @click="handleLogin(value1, value2)" class="form-button" aria-label="Login button">{{ $t('login')}}</pv-button>
         </template>
       </pv-card>
       <div class="division">{{ $t('or')}}</div>
       <pv-card>
         <template #content class="ext-buttons">
           <div>
-            <pv-button @click="goToRegister()" class="justify-center external"  :label="$t('createacc')" iconPos="left" />
+            <p style="text-align: center">{{ $t("createacc")}}</p>
+            <pv-button @click="goToRegister()" class="justify-center external"  :label="$t('register')" iconPos="left" aria-label="Register button"/>
           </div>
         </template>
       </pv-card>
@@ -215,10 +195,8 @@ export default {
 
 .all {
   display: block;
-  background: white;
   justify-content: space-around;
   justify-items: center;
-  width: 100%;
   height: 100%;
   top: 0;
   right: 0;
@@ -230,16 +208,6 @@ export default {
 
 ::v-deep(.p-card-title) {
   text-align: center;
-<<<<<<< Updated upstream
-}
-
-.same-line {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-=======
   font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -249,23 +217,12 @@ export default {
   margin: 0;
 }
 
->>>>>>> Stashed changes
 .head {
+  display: flex;
   justify-items: center;
-<<<<<<< Updated upstream
-  justify-content: center;
-  gap: 2rem;
-  color: black;
-  width: 100%;
-}
-
-.name{
-  margin-left: 15px;
-=======
   justify-content: space-around;
   width: 100%;
   padding: 2rem 8rem;
->>>>>>> Stashed changes
 }
 
 .form-group {
@@ -297,15 +254,12 @@ export default {
   justify-items: right;
   text-align: right;
   width: 100%;
-<<<<<<< Updated upstream
-=======
   margin-top: 1rem;
->>>>>>> Stashed changes
 }
 
 .form-input {
   width: 100%;
-  border: 2px solid black;
+  border: 2px solid var(--color-text);
   justify-self: center;
   padding: 0.5rem;
   border-radius: 5px;
@@ -315,19 +269,11 @@ export default {
   color: var(--color-blue);
 }
 
-.p-card {
-  width: 100%;
-}
-
 .content {
-  width: 100%;
+  width: 50%;
   justify-items: center;
   justify-content: center;
   align-items: center;
-}
-
-::v-deep(.p-card-title) {
-  font-size: 2.5rem;
 }
 
 ::v-deep(.p-card-body) {
@@ -357,17 +303,9 @@ export default {
 }
 
 .division {
-<<<<<<< Updated upstream
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: #000000;
-  font-size: 2rem;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .45);
-=======
   margin: 20px 0;
   color: var(--color-text);
   font-size: 1.2rem;
->>>>>>> Stashed changes
 
   display: flex;
   justify-content: center;
@@ -382,12 +320,12 @@ export default {
   }
 
   &::before {
-    background: linear-gradient(to right, rgba(240,240,240,0), #000000);
+    background: linear-gradient(to right, rgba(240,240,240,0), var(--color-text));
     margin-right: 4vh;
   }
 
   &::after {
-    background: linear-gradient(to left, rgba(240,240,240,0), #000000);
+    background: linear-gradient(to left, rgba(240,240,240,0), var(--color-text));
     margin-left: 4vh;
 
   }
@@ -398,6 +336,7 @@ export default {
   width: 50%;
 }
 
+.form-button,
 .external {
   background-color: transparent;
   color: var(--color-blue);
@@ -405,41 +344,23 @@ export default {
   width: 175px;
   height: 50px;
   border-radius: 15px;
-<<<<<<< Updated upstream
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
   justify-content: center;
-  margin-top: 0.5rem;
 }
 
-
 .p-card {
-  background: var(--color-light);
   border: 2px solid transparent;
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 10px;
   margin-bottom: 1rem;
-  color: black;
+  color: var(--color-text);
   text-align: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   align-items: center;
   justify-content: center;
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
   width: 100%;
-}
-
-.form-button {
-  background-color: transparent;
-  color: var(--color-blue);
-  border: 2px solid var(--color-blue);
-  width: 180px;
-  height: 60px;
-  border-radius: 15px;
-  font-size: 20px;
-=======
-  font-size: 18px;
->>>>>>> Stashed changes
-  text-align: center;
-  justify-content: center;
 }
 
 

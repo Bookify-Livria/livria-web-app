@@ -1,44 +1,47 @@
 <script>
-import { ref } from 'vue'
-import dashboardSidebar from "../../manager/components/dashboard-sidebar.component.vue"
-import { getLoggedInUser } from "../shared-services/get-logged-user.js"
+import dashboardSidebar from "../../manager/components/dashboard-sidebar.component.vue";
+import { UserApiService } from "@/subscription/service/user-api.service.js";
 
 export default {
   name: "dashboard.component",
   components: {
     dashboardSidebar
   },
-  setup() {
-    const userInfo = ref(null);
-    const loading = ref(true);
-    const sidebarCollapsed = ref(false);
-
-    const fetchUserInfo = async () => {
+  data() {
+    return {
+      admin: null,
+      loading: true,
+      sidebarCollapsed: false,
+    };
+  },
+  computed: {
+    mainContentClasses() {
+      return {
+        'sidebar-expanded': !this.sidebarCollapsed
+      };
+    }
+  },
+  methods: {
+    async fetchUserInfo() { // Carga la información del administrador
       try {
-        loading.value = true;
-        const user = await getLoggedInUser();
-        userInfo.value = user;
+        this.loading = true;
+        const userApiService = new UserApiService();
+        this.admin = await userApiService.getAdminUser();
+
       } catch (error) {
         console.error("Error getting user info:", error);
       } finally {
-        loading.value = false;
+        this.loading = false;
       }
-    };
-
-    const toggleSidebar = () => {
-      sidebarCollapsed.value = !sidebarCollapsed.value;
-    };
-
-    fetchUserInfo();
-
-    return {
-      userInfo,
-      loading,
-      sidebarCollapsed,
-      toggleSidebar
-    };
+    },
+    toggleSidebar() { // Para ocultar el menú vertical
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+    }
+  },
+  mounted() {
+    this.fetchUserInfo();
   }
-}
+};
 </script>
 
 <template>
@@ -62,11 +65,11 @@ export default {
 
           <div class="user-greeting">
             <div class="user-avatar">
-              <span>{{ userInfo?.user?.charAt(0).toUpperCase() || 'U' }}</span>
+              <span>{{ admin?.username?.charAt(0).toUpperCase() || 'U' }}</span>
             </div>
             <div class="greeting-text">
-              <h2>{{ $t('dashboard-home.hello') }}, {{ userInfo?.user || $t('dashboard-home.user') }}!</h2>
-              <p>{{ $t('dashboard-home.role') }}: {{ userInfo?.role || $t('dashboard-home.admin') }}</p>
+              <h2>{{ $t('dashboard-home.hello') }}, {{ admin?.display || $t('dashboard-home.user') }}!</h2>
+              <p>{{ $t('dashboard-home.role') }}: {{ $t('dashboard-home.admin') }}</p>
             </div>
           </div>
 
@@ -80,6 +83,14 @@ export default {
               <div class="action-card" @click="$router.push('/orders-management')">
                 <i class="pi pi-shopping-cart"></i>
                 <span>{{ $t('dashboard-home.manage-orders') }}</span>
+              </div>
+              <div class="action-card" @click="$router.push('/inventory-management')">
+                <i class="pi pi-clipboard"></i>
+                <span>{{ $t('dashboard-home.manage-inventory') }}</span>
+              </div>
+              <div class="action-card" @click="$router.push('/statistics-management')">
+                <i class="pi pi-chart-bar"></i>
+                <span>{{ $t('dashboard-home.manage-statistics') }}</span>
               </div>
               <div class="action-card" @click="$router.push('/settings')">
                 <i class="pi pi-cog"></i>
@@ -102,7 +113,8 @@ export default {
 <style scoped>
 .dashboard-page {
   display: flex;
-  min-height: 100vh;
+  max-height: 100vh;
+  margin-bottom: 0;
 }
 
 .main-content {
@@ -110,6 +122,7 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 70px;
+  margin-top: 3rem;
   transition: margin-left 0.3s ease;
   width: 100%;
 }
@@ -130,7 +143,6 @@ export default {
 }
 
 .welcome-container {
-  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -146,19 +158,20 @@ export default {
 .welcome-header {
   text-align: center;
   margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #f0f0f0;
 }
 
 .welcome-header h1 {
-  font-size: 2.2rem;
+  font-size: 2rem;
   color: var(--color-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .welcome-header p {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--color-text);
+  text-align: center;
   opacity: 0.8;
 }
 
@@ -167,7 +180,7 @@ export default {
   align-items: center;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background-color: rgba(var(--color-primary-rgb), 0.05);
+  background-color: rgba(var(--color-blue-rgb), 0.05);
   border-radius: 10px;
 }
 
@@ -186,9 +199,8 @@ export default {
 }
 
 .greeting-text h2 {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--color-primary);
-  margin-bottom: 0.3rem;
 }
 
 .greeting-text p {
@@ -202,14 +214,14 @@ export default {
 }
 
 .quick-actions h3 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: var(--color-primary);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 }
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
 }
 
@@ -245,9 +257,9 @@ export default {
 }
 
 .system-info {
-  background-color: rgba(var(--color-primary-rgb), 0.05);
+  background-color: rgba(var(--color-accent-yellow-rgb), 0.05);
   border-radius: 10px;
-  padding: 1.5rem;
+  padding: 0.75rem 1.5rem 1.5rem;
 }
 
 .system-info h3 {

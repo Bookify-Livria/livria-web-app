@@ -11,43 +11,45 @@ export default {
     Button,
     CreateCommunity
   },
+
   data() {
     return {
       communities: [],
       showForm: false
     }
   },
-  mounted() {
+  mounted() { // AL iniciar el componente, se carga automáticamente la información de comunidades en la Fake API
     this.fetchCommunities()
   },
   methods: {
-    fetchCommunities() {
+    fetchCommunities() { // Permite cargar la información de comunidades dentro de la Fake API
       const service = new CommunityApiService()
       service.getCommunities().then(data => {
         this.communities = data
       })
     },
-    showCreateForm() {
+    showCreateForm() { // Permite mostrar un formulario
       this.showForm = true
     },
-    hideCreateForm() {
+    hideCreateForm() { // Permite ocultar un formulario
       this.showForm = false
     },
-    handleCommunityCreated(newCommunity) {
+    handleCommunityCreated(newCommunity) { // Permite registar una nueva comunidad y cierra el formulario de creación automáticamente
       this.communities.push(newCommunity)
       this.hideCreateForm()
     },
-    redirectToCommunity(communityId) {
-      this.$router.push({ name: 'CommunityView', params: { id: communityId } });
-    },
+    goToDetail(community) { // Permite al usuario acceder a la pantalla de "más información" para una respectiva comunidad
+      this.$router.push({ name: 'CommunityView', params: { name: community.name } })
+    }
   }
 }
 </script>
 
 <template>
   <div class="community-grid">
+    <!-- Create Button -->
     <div class="custom-card-wrapper">
-      <pv-card class="create-card">
+      <pv-card class="create-card" aria-label="Create community section">
         <template #content>
           <div class="create-content">
             <div class="plus-box" @click="showCreateForm">
@@ -58,23 +60,22 @@ export default {
         </template>
       </pv-card>
     </div>
-
+    <!-- Communities Grid -->
     <div
         v-for="community in communities"
         :key="community.id"
         class="custom-card-wrapper"
-        @click="redirectToCommunity(community.id)"
     >
       <pv-card>
         <template #header>
           <img :src="community.image" :alt="community.name" class="community-cover" />
         </template>
         <template #title>
-          <div class="community-title">{{ community.name }}</div>
+          <div class="community-title" aria-label="Commnity title">{{ community.name }}</div>
         </template>
         <template #footer>
           <div class="flex justify-end">
-            <button class="see-more-btn">{{$t('see-more')}}</button>
+            <button @click="goToDetail(community)" class="see-more-btn" aria-label="See more for community">{{$t('see-more')}}</button>
           </div>
         </template>
       </pv-card>
@@ -89,12 +90,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 4.5rem;
+  gap: 2.5rem;
   padding: 0;
 }
 
 .custom-card-wrapper {
-  width: 260px;
+  width: 250px;
   background-color: #f9f9f9;
   padding: 1rem;
   border-radius: 12px;
@@ -139,11 +140,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 .plus-box {
-  width: 220px;
-  height: 220px;
+  width: 210px;
+  height: 210px;
   border: 1px solid #b2ebf2;
   background-color: #e0f7fa;
   border-radius: 8px;

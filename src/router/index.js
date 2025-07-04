@@ -11,16 +11,15 @@ import Login from "../public/pages/login-page.component.vue";
 import Register from "../public/pages/register-page.component.vue";
 import Purchase from "../public/pages/purchase.component.vue";
 import SubscriptionComponent from "../public/pages/subscription.component.vue";
-<<<<<<< Updated upstream
-=======
 import CommunityView from '../public/pages/view-communities.component.vue';
 import Shop from '../public/pages/shop.component.vue';
 import Dashboard from '../public/pages/dashboard.component.vue';
 import BooksManagement from '../public/pages/books-management.component.vue'
 import OrdersManagement from '../public/pages/orders-management.component.vue'
+import InventoryManagement from '../public/pages/inventory-management.component.vue'
+import StatisticsManagement from '../public/pages/statistics-management.component.vue'
 import Settings from '../public/pages/settings.component.vue'
 import AdminPinPage from "../public/pages/admin-pin-page.component.vue";
->>>>>>> Stashed changes
 
 const router = createRouter({
     history: createWebHistory(),
@@ -33,14 +32,13 @@ const router = createRouter({
         {path: '/register', component: Register},
         {path: '/access', component: AdminPinPage},
         {path: "/purchase", component: Purchase},
-<<<<<<< Updated upstream
-=======
         {path: "/shop", component: Shop},
         {path: "/dashboard", component: Dashboard},
         {path: "/books-management", component: BooksManagement},
         {path: "/orders-management", component: OrdersManagement},
+        {path: "/inventory-management", component: InventoryManagement},
+        {path: "/statistics-management", component: StatisticsManagement},
         {path: "/settings", component: Settings},
->>>>>>> Stashed changes
         {
             path: '/bookl',
             name: 'LiteratureBooks',
@@ -88,7 +86,11 @@ const router = createRouter({
             name: 'Recommendations',
             component: Recommendation
         },
-        {path: '/books/:title', name: 'BookDetail', component: SingularBook},
+        {
+            path: '/books/:title',
+            name: 'BookDetail',
+            component: SingularBook
+        },
         {
             path: '/search',
             name: 'BookSearch',
@@ -98,16 +100,12 @@ const router = createRouter({
             path: '/subscription',
             name: 'CommunitySubscription',
             component: SubscriptionComponent
-<<<<<<< Updated upstream
-        }
-=======
         },
         {
             path: '/communities/:name',
             name: 'CommunityView',
             component: CommunityView
         },
->>>>>>> Stashed changes
     ]
 })
 

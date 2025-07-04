@@ -9,7 +9,7 @@ export default {
     }
   },
   methods: {
-    goToDetail() {
+    goToDetail() { // Permite al usuario acceder directamente a la ruta que contiene los detalles de un determinado libro
       this.$router.push({ name: 'BookDetail', params: { title: this.book.title } })
     }
   }
@@ -18,7 +18,7 @@ export default {
 
 <template>
 
-  <div v-if="book" class="book-item-container" @click="goToDetail">
+  <div v-if="book" class="book-item-container" @click="goToDetail" aria-label="View book details">
     <pv-card>
       <template #header>
         <img :src="book.cover" :alt="book.title" class="book-cover" />
@@ -30,7 +30,7 @@ export default {
         <div class="book-subtitle">{{ book.author }}</div>
       </template>
       <template #footer>
-        <div class="book-subtitle book-price">S/ {{ book.price.toFixed(2) }}</div>
+        <div class="book-subtitle book-price">S/ {{ book.salePrice.toFixed(2) }}</div>
       </template>
     </pv-card>
   </div>
@@ -47,10 +47,11 @@ export default {
   border-radius: 12px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   height: 100%;
-  width: 21rem;
+  min-height: 23rem;
+  width: 16rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -60,8 +61,8 @@ export default {
 }
 
 .book-cover {
-  width: 160px;
-  height: 260px;
+  width: 135px;
+  height: 210px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -70,7 +71,7 @@ export default {
 }
 
 .book-title {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 0.25rem;
@@ -79,12 +80,14 @@ export default {
 
 .book-subtitle {
   display: flex;
+  font-size: 0.8rem;
   justify-content: center;
   width: 100%;
   padding: 0 1rem;
 }
 
 .book-price {
+  font-size: 0.9rem;
   font-weight: 600;
   margin-top: 1rem;
 }
