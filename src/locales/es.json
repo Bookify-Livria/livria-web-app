@@ -178,10 +178,13 @@
     "nickname": "Solo letras (máx. 20 caracteres).",
     "username": "Solo letras o números (máx. 20 caracteres).",
     "url": "Debe ser un enlace válido.",
-    "email": "Correo electrónico no válido."
+    "email": "Correo electrónico no válido.",
+    "password-length": "Debe tener al menos 6 caracteres."
+    
   },
 
   "createacc": "¿No tienes una cuenta?",
+  "enterasadmin": "Ingresa como Administrador",
   "subscription": "Suscripción",
   "yes-subs": "Plan Communidad",
   "no-subs": "Plan Free",

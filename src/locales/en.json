@@ -178,10 +178,12 @@
     "nickname": "Letters only (max. 20 characters).",
     "username": "Letters or numbers only (max. 20 characters).",
     "url": "Must be a valid link.",
-    "email": "Invalid email."
+    "email": "Invalid email.",
+    "password-length": "Must be at least 6 characters."
   },
 
   "createacc": "Don't have an account?",
+  "enterasadmin": "Sign In as Administrator",
   "subscription": "Subscription",
   "yes-subs": "Community Plan",
   "no-subs": "Free Plan",

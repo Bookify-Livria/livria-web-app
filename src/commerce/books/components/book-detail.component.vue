@@ -35,25 +35,6 @@ export default {
       isFavorited: false,
       isBanned: false,
       currentUser: null,
-
-      genres: [
-        { value: 0, key: 'literatura' },
-        { value: 1, key: 'noficcion' },
-        { value: 2, key: 'ficcion' },
-        { value: 3, key: 'mangasycomics' },
-        { value: 4, key: 'juvenil' },
-        { value: 5, key: 'infantil' },
-        { value: 6, key: 'ebooks' }
-      ]
-    }
-  },
-  computed: {
-    displayedGenreKey() { // Esta propiedad computada buscará el 'key' del género basado en 'book.genre'
-      if (this.book && typeof this.book.genre === 'number') {
-        const foundGenre = this.genres.find(genre => genre.value === this.book.genre);
-        return foundGenre ? foundGenre.key : '';
-      }
-      return '';
     }
   },
   methods: {
@@ -305,9 +286,6 @@ export default {
       <div class="book-detail__details-container">
         <h3 class="h2__title">{{ book.author }}</h3>
         <h3 class="h2__title go--blue">{{ book.genre }}</h3>
-        <!--
-        <p class="language">{{ $t(`genres.${displayedGenreKey}`) }}</p>
-        -->
         <p class="language">{{ $t( book.language) }}</p>
         <p class="price">S/ {{ book.salePrice.toFixed(2) }}</p>
       </div>
