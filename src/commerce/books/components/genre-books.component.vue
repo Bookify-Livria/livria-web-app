@@ -45,10 +45,15 @@ export default {
     }
   },
   mounted() {
-    const service = new BookApiService() // Al iniciar el componente, se obtiene automáticamente la información de los libros contenidos en la Fake API
+    // Al iniciar el componente, se obtiene automáticamente la información de los libros contenidos en la Fake API
+    const service = new BookApiService()
     service.getBooks().then(data => {
       this.books = data
+      console.log('Books loaded successfully. Number of books:', this.books.length);
     })
+        .catch(error => {
+          console.error('Error loading books:', error);
+        });
   },
   methods: {
     toggleLanguage(lang) { // Permite al usuario alternar el filtro de búsqueda por idiomas (inglés o español)

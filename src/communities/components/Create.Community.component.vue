@@ -13,13 +13,13 @@ export default {
         banner: ''
       },
       genres: [
-        { value: 0, key: 'literatura' },
-        { value: 1, key: 'noficcion' },
-        { value: 2, key: 'ficcion' },
-        { value: 3, key: 'mangasycomics' },
-        { value: 4, key: 'juvenil' },
-        { value: 5, key: 'infantil' },
-        { value: 6, key: 'ebooks' }
+        { value: 0, key: 'literature' },
+        { value: 1, key: 'non_fiction' },
+        { value: 2, key: 'fiction' },
+        { value: 3, key: 'mangas_comics' },
+        { value: 4, key: 'juvenile' },
+        { value: 5, key: 'children' },
+        { value: 6, key: 'ebooks_audiobooks' }
       ]
     }
   },

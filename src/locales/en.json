@@ -78,13 +78,13 @@
   },
 
   "genres": {
-    "literatura": "Literature",
-    "ficcion": "Fiction",
-    "noficcion": "Non-Fiction",
-    "mangasycomics": "Manga & Comics",
-    "juvenil": "Young Adult",
-    "infantil": "Children",
-    "ebooks": "eBooks",
+    "literature": "Literature",
+    "fiction": "Fiction",
+    "non_fiction": "Non-Fiction",
+    "mangas_comics": "Manga & Comics",
+    "juvenile": "Juvenile",
+    "children": "Children",
+    "ebooks_audiobooks": "eBooks & Audiobooks",
     "default": "Genre"
   },
 
