@@ -28,12 +28,9 @@ export class PostAssembler {
     //Convert data to API item using the entity model
     static toResource(post) {
         return {
-            id: post.id,
-            communityId: post.communityId,
-            userId: post.userId,
             username: post.username,
             content: post.content,
-            image: post.img
+            img: post.img
         }
     }
     

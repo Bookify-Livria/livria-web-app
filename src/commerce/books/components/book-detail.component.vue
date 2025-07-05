@@ -1,13 +1,13 @@
 <script>
 import { BookApiService } from '../services/book-api.service.js'
 import { CartApiService} from "../../shared-services/cart-api.service.js";
-import { UserApiService } from "../../../subscription/service/user-api.service.js";
 import { FavoriteApiService } from "../services/favorite-api.service.js";
 import { BannedApiService } from "../services/banned-api.service.js";
-import { ReviewApiService } from "@/commerce/books/services/review-api.service.js";
+import { ReviewApiService } from "../services/review-api.service.js";
 import bookmarkIcon from "../../../assets/images/icons/Bookmark.svg";
 import minusIcon from "../../../assets/images/icons/Minus.svg";
 import starIcon from "../../../assets/images/icons/Star.svg";
+import AuthService from "../../../public/shared-services/authentication.service.js";
 
 export default {
   name: 'BookDetail',
@@ -39,33 +39,40 @@ export default {
   },
   methods: {
     async loadBook() { // Obtiene información del libro seleccionado y asigna su valor a una variable
-      const service = new BookApiService();
-      const userApiService = new UserApiService();
+      const book_Service = new BookApiService();
+      const review_Service = new ReviewApiService();
+      const authUser = AuthService.getCurrentUser();
+
+      console.log('AuthService.getCurrentUser() result at start of loadBook:', authUser);
 
       try {
         const bookTitle = this.$route.params.title;
-        const data = await service.getBooks();
+        const data = await book_Service.getBooks();
         this.book = data.find(b => b.title.toString().toLowerCase() === bookTitle.toLowerCase());
 
-        if (this.book && this.book.id) {
+        this.currentUser = authUser;
+
+        if (this.book && this.book.id && this.currentUser && this.currentUser.userId) {
           this.$emit('book-loaded', this.book.title);
 
           const bookId = this.book.id;
-          const derived = new ReviewApiService();
-          derived.getReviews().then(reviewsData => {
+
+          await review_Service.getReviews().then(reviewsData => {
             this.reviews = reviewsData.filter(review => review.bookId === bookId);
+            console.log('Reviews loaded successfully:', this.reviews);
           }).catch(error => {
             console.error('Error loading reviews:', error);
           });
 
-          const loggedUsers = await userApiService.getLoggedInUser();
-          this.currentUser = loggedUsers.length > 0 ? loggedUsers[0] : null;
-          if (this.currentUser) {
-            await this.checkBookStatus();
-          }
+          await this.checkBookStatus();
+        } else {
+          console.warn('Cannot load reviews or check book status: Book or User ID is not available.',
+              'Book:', this.book,
+              'CurrentUser:', this.currentUser);
+
         }
       } catch (error) {
-        console.error('Error loading book:', error);
+        console.error('Error in loadBook:', error);
       }
     },
     async checkBookStatus() {
@@ -130,26 +137,25 @@ export default {
           return;
         }
 
-        const newId = this.reviews?.length
-            ? (Math.max(...this.book.reviews.map(p => parseInt(p.id))) + 1)
-            : 1;
-
         const newPostReview = {
-          id: newId,
           bookId: this.book.id,
-          userId: this.currentUser.id,
-          username: this.currentUser.username,
+          userClientId: this.currentUser.userId,
           content: this.newReview.content,
-          stars: this.newReview.stars.toString()
+          stars: this.newReview.stars
         };
 
-        await service.createReview(newPostReview);
+        const createdReview = await service.createReview(newPostReview);
 
-        this.reviews.push(newPostReview);
-        this.newReview.content = '';
-        this.newReview.stars = 0;
-        this.hoverRating = 0;
+        if (createdReview && createdReview.id) {
+          this.reviews.push(createdReview);
 
+          this.newReview.content = '';
+          this.newReview.stars = 0;
+          this.hoverRating = 0;
+
+        } else {
+          console.error('Backend did not return a valid review object:', createdReview);
+        }
       } catch (error) {
         console.error('Error posting!!!', error);
       }

@@ -1,9 +1,12 @@
 import axios from "axios";
-import { ReviewAssembler } from "@/commerce/books/services/review.assembler.js";
+import { ReviewAssembler } from "./review.assembler.js";
+import authHeader from "../../../public/shared-services/auth-header.js";
+
+const API_URL = 'https://app-250621192653.azurewebsites.net/api/v1/';
 
 export class ReviewApiService {
     getReviews() {
-        return axios.get('https://app-250621192653.azurewebsites.net/api/v1/reviews')
+        return axios.get(API_URL + 'reviews', { headers: authHeader()})
             .then(response => ReviewAssembler.toEntitiesFromResponse(response))
             .catch(error => {
                 console.error('Error fetching reviews:', error);
@@ -13,7 +16,14 @@ export class ReviewApiService {
 
     createReview(review) {
         const adapted = ReviewAssembler.toResource(review);
-        return axios.post('https://app-250621192653.azurewebsites.net/api/v1/reviews', adapted)
+
+        // --- ADD THESE CONSOLE.LOGS ---
+        console.log('Sending review to API:', adapted);
+        console.log('Auth Headers:', authHeader());
+        // --- END ADDITIONS ---
+
+        return axios.post(API_URL + 'reviews', adapted, { headers: authHeader()})
+            .then(response => ReviewAssembler.toEntityFromResource(response.data))
             .catch(error => {
                 console.error('Error creating review:', error);
                 throw error;

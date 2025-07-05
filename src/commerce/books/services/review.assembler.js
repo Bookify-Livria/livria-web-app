@@ -6,7 +6,7 @@ export class ReviewAssembler {
         return new Review(
             resource.id,
             resource.bookId,
-            resource.userId,
+            resource.userClientId,
             resource.username,
             resource.content,
             resource.stars
@@ -19,10 +19,8 @@ export class ReviewAssembler {
 
     static toResource(review) {
         return {
-            id: review.id,
             bookId: review.bookId,
-            userId: review.userId,
-            username: review.username,
+            userClientId: review.userClientId,
             content: review.content,
             stars: review.stars,
         }

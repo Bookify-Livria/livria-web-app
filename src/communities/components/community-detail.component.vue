@@ -70,40 +70,43 @@ export default {
         return false;
       }
     },
-    async makePost() { // Permite registrar una publicación con la información del usuario loggeado
+    async makePost() {
       try {
         const derived = new PostApiService();
-        const currentUser = new AuthService.getCurrentUser();
+        const currentUser = AuthService.getCurrentUser();
 
-        if (!this.newPost.content.trim()) {
+        if (!this.community || !this.community.id || !currentUser || !currentUser.username) {
+          console.error('Missing community ID or currentUser username:', this.community, currentUser);
+          return;
+        }
+        if (!this.newPost.content || !this.newPost.content.trim()) {
+          return;
+        }
+        if (!this.isValidUrl(this.newPost.img)) {
           return;
         }
 
-        if (this.newPost.img && !this.isValidUrl(this.newPost.img)) {
-          return;
-        }
+        console.log('Community ID for post:', this.community.id);
+        console.log('Current User Username for post:', currentUser.username);
 
-        const newId = this.posts?.length
-            ? (Math.max(...this.posts.map(p => parseInt(p.id))) + 1)
-            : 1;
-
-        const newPost = {
-          id: newId,
-          communityId: this.community.id,
-          userId: currentUser.id,
+        const payloadToSend = {
           username: currentUser.username,
           content: this.newPost.content,
           img: this.newPost.img
         };
 
-        await derived.createPost(newPost);
+        const createdPost = await derived.createPost(payloadToSend, this.community.id);
 
-        this.posts.push(newPost);
-        this.newPost.content = '';
-        this.newPost.img = '';
+        if (createdPost && createdPost.id) {
+          this.posts.push(createdPost);
+          this.newPost.content = '';
+          this.newPost.img = '';
 
+        } else {
+          console.error('Backend did not return a valid post object:', createdPost);
+        }
       } catch (error) {
-        console.error('Error posting!!!', error);
+        console.error('Error posting:', error); // Changed from 'Error posting!!!' for clarity
       }
     }
   },

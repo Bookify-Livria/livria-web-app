@@ -53,13 +53,9 @@ class AuthService {
             throw error;
         }
     }
-
     logOut() {
         localStorage.removeItem('user');
         console.log("User logged out, token removed from localStorage.");
-    }
-    logOut() {
-        localStorage.removeItem('user');
     }
     register(user) {
         return axios.post(API_URL + 'register', {

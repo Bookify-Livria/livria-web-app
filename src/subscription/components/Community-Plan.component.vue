@@ -14,10 +14,19 @@ export default {
       acceptedTerms: false,
       acceptedPrivacy: false,
       showConfirmation: false,
+      planAccess: false
     };
   },
-
   methods: {
+    loadInfo() {
+      const freshUser = AuthService.getCurrentUser();
+      this.user = freshUser;
+
+      if (this.user.subscription === "communityplan") {
+        this.goCommunities();
+      }
+
+    },
     goCommunities(){ // Permite al usuario acceder directamente a la ruta de "communitites"
       this.$router.push('/communities');
     },
@@ -31,8 +40,6 @@ export default {
     },
     async updateSubs() { // Permite asignar la suscripción a comunidades del usuario loggeado
       const service = new UserApiService();
-      const freshUser = AuthService.getCurrentUser();
-      this.user = freshUser;
 
       if (!this.user) {
         console.error('No se pudo obtener el usuario loggeado. Operación de actualización cancelada.');
@@ -51,6 +58,9 @@ export default {
       }
     },
   },
+  mounted(){
+    this.loadInfo();
+  }
 };
 </script>
 
