@@ -22,10 +22,11 @@ export class BookApiService {
             });
     }
 
-    updateStockByBookId(bookId, newStockValue) {
-        return axios.patch(API_URL + `books/${bookId}`, {
-            stock: newStockValue
-        }, { headers: authHeader()})
+    updateStockByBookId(bookId, quantityToAddValue) {
+        const requestBody = {
+            quantityToAdd: quantityToAddValue
+        };
+        return axios.put(API_URL + `books/${bookId}/stock`, requestBody, { headers: authHeader()})
             .then(response => response.data)
             .catch(error => {
                 console.error(`Error updating stock of book ${bookId}:`, error);
@@ -36,6 +37,7 @@ export class BookApiService {
     addNewBook(book) {
         const adapted = BookAssembler.toResource(book);
         return axios.post(API_URL + 'books', adapted, { headers: authHeader()})
+            .then(response => BookAssembler.toEntityFromResource(response.data))
             .catch(error => {
                 console.error('Error adding book:', error);
                 throw error;

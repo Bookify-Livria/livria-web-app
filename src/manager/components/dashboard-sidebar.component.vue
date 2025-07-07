@@ -1,6 +1,6 @@
 <script>
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
-import { UserApiService } from "@/subscription/service/user-api.service.js";
+import { UserApiService } from "../../subscription/service/user-api.service.js";
 
 export default {
   name: "DashboardSidebar",
@@ -130,12 +130,24 @@ export default {
     </div>
 
     <div class="sidebar-user-profile">
-      <div class="user-avatar">
-        <span>{{ admin?.username?.charAt(0).toUpperCase() || 'U' }}</span>
+      <div class="user-top">
+        <div class="user-avatar">
+          <span>{{ admin?.username?.charAt(0).toUpperCase() || 'U' }}</span>
+        </div>
+        <div class="user-info" v-if="!collapsed">
+          <h3>{{ admin?.display }}</h3>
+          <p>{{ $t('sidebar.role') }}</p>
+        </div>
       </div>
-      <div class="user-info" v-if="!collapsed">
-        <h3>{{ admin?.display }}</h3>
-        <p>{{ $t('sidebar.role') }}</p>
+      <div class="user-capital">
+        <div class="user-capital-container">
+          <div class="user-info">
+            <p>{{ $t('sidebar.capital')}}</p>
+          </div>
+          <div class="user-capital-amount">
+            <h2 class="h2__title">{{ admin?.capital }}</h2>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -249,13 +261,18 @@ export default {
   height: 40px;
 }
 
-.sidebar-user-profile {
+.user-top {
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 1.5rem;
   gap: 1rem;
   width: 100%;
+}
+
+.sidebar-user-profile {
+  display: flex;
+  flex-direction: column;
 }
 
 .user-avatar {
@@ -286,6 +303,12 @@ export default {
   font-size: 0.8rem;
   opacity: 0.8;
   color: #fff;
+}
+
+.user-capital-container {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem 1.5rem;
 }
 
 .sidebar-nav {

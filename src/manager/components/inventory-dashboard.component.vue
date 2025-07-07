@@ -1,21 +1,21 @@
 <script>
 import { BookApiService } from '../../commerce/books/services/book-api.service.js';
+import {UserApiService} from "../../subscription/service/user-api.service.js";
 
 export default {
   name: "inventoryDashboard",
   data() {
     return {
       books: [],
-      genres: [],
-      stats: {
-        totalBooks: 0,
-        totalGenres: 0,
-        averagePrice: 0,
-        mostReviewedBook: null,
-        booksInStock: 0,
-        bestSellingBook: null
+      newBook: {
+        title: '',
+        author: '',
+        description: '',
+        genre: '',
+        language: '',
+        cover: '',
+        stock: 0
       },
-      loading: true,
       selectedGenre: 'all',
       selectedLanguage: 'all',
       sortOption: 'title',
@@ -24,11 +24,20 @@ export default {
       currentBook: null,
       newStock: 0,
       formErrors: {},
-
+      admin: null,
       // Language options
       languages: [
-        { code: 'es', name: 'Español' },
-        { code: 'en', name: 'English' },
+        { code: 'es', name: 'Español', value: 'español' },
+        { code: 'en', name: 'English', value: 'english' },
+      ],
+      genres: [
+        { value: 0, key: 'literature' },
+        { value: 1, key: 'non_fiction' },
+        { value: 2, key: 'fiction' },
+        { value: 3, key: 'mangas_comics' },
+        { value: 4, key: 'juvenile' },
+        { value: 5, key: 'children' },
+        { value: 6, key: 'ebooks_audiobooks' }
       ]
     };
   },
@@ -76,7 +85,6 @@ export default {
   methods: {
     async loadBooks() {
       try {
-        this.loading = true;
         const service = new BookApiService();
         const data = await service.getBooks();
 
@@ -85,67 +93,12 @@ export default {
           newStock: 0 // Temporary property for the quantity input, initialized to 0
         }));
 
-        // Extract unique genres
-        const uniqueGenres = [...new Set(data.map(book => book.genre))];
-        this.genres = uniqueGenres;
+        const userApiService = new UserApiService();
+        this.admin = await userApiService.getAdminUser();
 
-        // Calculate statistics
-        this.calculateStats(data);
-
-        this.loading = false;
       } catch (error) {
         console.error('Error loading books:', error);
-        this.loading = false;
       }
-    },
-    calculateStats(books) {
-      if (!books.length) {
-        // Reset stats if no books
-        this.stats = {
-          totalBooks: 0,
-          totalGenres: 0,
-          averagePrice: 0,
-          mostReviewedBook: null,
-          booksInStock: 0,
-          bestSellingBook: null
-        };
-        return;
-      }
-
-      this.stats.totalBooks = books.length;
-      this.stats.totalGenres = [...new Set(books.map(book => book.genre))].length;
-
-      // Calculate average salePrice
-      const totalPrice = books.reduce((sum, book) => sum + (book.salePrice || 0), 0);
-      this.stats.averagePrice = books.length > 0 ? totalPrice / books.length : 0;
-
-      // Find most reviewed book
-      let mostReviewed = null;
-      if (books.length > 0) {
-        mostReviewed = books[0]; // Initialize with the first book
-        books.forEach(book => {
-          if ((book.reviews?.length || 0) > (mostReviewed.reviews?.length || 0)) {
-            mostReviewed = book;
-          }
-        });
-      }
-      this.stats.mostReviewedBook = mostReviewed;
-
-      // Count books in stock
-      this.stats.booksInStock = books.filter(book => book.stock > 0).length;
-
-      // Find best selling book
-      let bestSelling = null;
-      if (books.length > 0) {
-        bestSelling = books[0]; // Initialize with the first book
-        books.forEach(book => {
-          // Assuming 'sales' property exists and represents sales count
-          if ((book.sales || 0) > (bestSelling.sales || 0)) {
-            bestSelling = book;
-          }
-        });
-      }
-      this.stats.bestSellingBook = bestSelling;
     },
     getLanguageName(code) {
       const lang = this.languages.find(lang => lang.code === code);
@@ -155,7 +108,7 @@ export default {
       const quantityToAdd = parseFloat(book.newStock) || 0;
       const amount = book.purchasePrice * quantityToAdd;
       // Format as Peruvian Sol (S/) for clarity
-      return `S/ ${amount.toFixed(2)}`;
+      return amount.toFixed(2);
     },
     // New method to handle adding stock
     async addStock(book) {
@@ -164,6 +117,16 @@ export default {
       if (isNaN(quantityToAdd) || quantityToAdd <= 0) {
         return;
       }
+        const amount = this.getAmount(book);
+
+        console.log(this.admin.capital)
+        console.log(amount)
+
+        if (this.admin.capital < amount) {
+          this.$toast.add({severity:'error', summary: 'Error', detail:this.$t('purchase.no-money'), life:5000});
+          return;
+        }
+
       try {
         const service = new BookApiService();
         const newTotalStock = book.stock + quantityToAdd;
@@ -173,10 +136,59 @@ export default {
         book.stock = newTotalStock;
         book.newStock = 0;
 
-        this.calculateStats(this.books);
-
       } catch (error) {
         console.error(`Error al actualizar el stock de "${book.title}":`, error);
+      }
+    },
+    isValidUrl(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    async addNewBook() {
+      try {
+        const service = new BookApiService();
+
+        if (!this.newBook.title.trim() || !this.newBook.author.trim() || !this.newBook.description.trim() ||
+            !this.newBook.genre || !this.newBook.language || !this.newBook.cover.trim() ||
+            this.newBook.stock < 0) {
+          this.$toast.add({severity:'error', summary: 'Error', detail:this.$t('purchase.field-missing'), life:5000});
+          return;
+        }
+        if (!this.isValidUrl(this.newBook.cover)) {
+          return;
+        }
+
+        const bookToAdd = {
+          title: this.newBook.title,
+          description: this.newBook.description,
+          author: this.newBook.author,
+          stock: this.newBook.stock,
+          cover: this.newBook.cover,
+          genre: this.newBook.genre,
+          language: this.newBook.language
+        }
+
+        const addedBook = await service.addNewBook(bookToAdd);
+
+        if (addedBook && addedBook.id) {
+          this.books.push(addedBook);
+        } else {
+          console.error('Backend did not return a valid book object after creation:', addedBook);
+        }
+
+        this.newBook.title = '';
+        this.newBook.author = '';
+        this.newBook.stock = 0;
+        this.newBook.cover = '';
+        this.newBook.genre = '';
+        this.newBook.language = '';
+
+      } catch (error) {
+        console.error('Error adding book:', error);
       }
     }
   },
@@ -192,15 +204,58 @@ export default {
       <h1 class="dashboard-title">{{ $t('dashboard.title') }}</h1>
     </div>
 
-    <div v-if="loading" class="dashboard-loading">
-      <p>{{ $t('dashboard.loading') }}</p>
-    </div>
-
-    <div v-else class="dashboard-content">
-      <!-- Coming Soon -->
+    <div class="dashboard-content">
       <div class="system-info">
-        <h3 class="system-info-h3">{{ $t('dashboard.inventory.add-books') }}</h3>
-        <h3 class="h1__title">{{ $t('coming-soon') }}</h3>
+        <h2 class="h2__title" style="margin-bottom: 1rem">{{ $t('dashboard.inventory.add-books') }}</h2>
+        <div class="inputs-block">
+          <div class="left-block">
+            <div class="form-group">
+              <label>{{ $t("form.title")}}</label>
+              <input type="text" v-model="newBook.title" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label>{{ $t("form.author")}}</label>
+              <input type="text" v-model="newBook.author" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label>{{ $t("form.description")}}</label>
+              <textarea v-model="newBook.description" class="form-input" required></textarea>
+            </div>
+          </div>
+          <div class="right-block">
+            <div class="form-group">
+              <label>{{ $t("form.genre")}}</label>
+              <select id="genre-filter" v-model="newBook.genre" class="form-input" required>
+                <option :value="0" disabled>{{ $t("form.select_category") }}</option>
+                <option v-for="genre in genres" :key="genre.value" :value="genre.key">
+                  {{ $t(`genres.${genre.key}`) }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>{{ $t("form.language")}}</label>
+              <select id="language-filter" v-model="newBook.language" class="form-input">
+                <option value="all" disabled>{{ $t('dashboard.all-languages') }}</option>
+                <option v-for="lang in languages" :key="lang.code" :value="lang.value">
+                  {{ lang.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>{{ $t("form.cover")}}</label>
+              <input type="url" v-model="newBook.cover" class="form-input" required>
+            </div>
+          </div>
+        </div>
+        <div class="doneinfo-block">
+          <div class="mini-block">
+            <p>{{ $t("form.stock")}} : </p>
+            <input type="number" v-model="newBook.stock" class="stock-input" required>
+          </div>
+          <div class="mini-block">
+            <button @click="addNewBook()">{{ $t("form.add")}}</button>
+          </div>
+        </div>
       </div>
 
       <!-- Filter and Search Options -->
@@ -222,7 +277,7 @@ export default {
             <select id="genre-filter" v-model="selectedGenre" class="filter-select">
               <option value="all">{{ $t('dashboard.all-genres') }}</option>
               <option v-for="genre in genres" :key="genre" :value="genre">
-                {{ $t(`genres.${genre}`) }}
+                {{ $t(`genres.${genres.key}`) }}
               </option>
             </select>
           </div>
@@ -287,7 +342,7 @@ export default {
             </td>
             <td>
               <div class="customer-info">
-                <div class="customer-name" style="text-transform: uppercase">{{ book.language }}</div>
+                <div class="customer-name" style="text-transform: capitalize">{{ book.language }}</div>
               </div>
             </td>
             <td>
@@ -309,10 +364,11 @@ export default {
             </td>
             <td>
               <div class="customer-info">
-                <div class="customer-name">{{ getAmount(book) }}</div>
+                <div class="customer-name">S/ {{ getAmount(book) }}</div>
               </div>
             </td>
             <td>
+              <pv-toast position="top-right" style="margin-top: 2rem" />
               <button style="padding: 0.3rem 0.5rem" @click="addStock(book)">
                 <i class="pi pi-plus"></i>
               </button>
@@ -352,22 +408,6 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.dashboard-subtitle {
-  font-size: 1rem;
-  color: var(--color-text);
-  text-align: center;
-  opacity: 0.8;
-}
-
-.dashboard-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-  font-size: 1.2rem;
-  color: var(--color-primary);
-}
-
 .dashboard-content {
   max-width: 1400px;
   margin: 0 auto;
@@ -380,12 +420,6 @@ export default {
   margin-bottom: 3rem;
 }
 
-.system-info-h3 {
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  margin-bottom: 1rem;
-}
-
 .filter-section {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
@@ -395,11 +429,58 @@ export default {
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 1.5rem;
+.inputs-block {
+  display: flex;
+  width: 100%;
+  padding: 0 1rem;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 600px;
+  margin-bottom: 1rem;
+}
+
+.form-input, .form-group textarea {
+  width: 100%;
+  background-color: rgba(var(--color-accent-orange-rgb), 0.15);
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  color: var(--color-text);
+}
+
+.right-block .form-input {
+  background-color: rgba(var(--color-secondary-rgb), 0.15);
+}
+
+.doneinfo-block {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+
+.mini-block {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.stock-input {
+  padding: 0.5rem;
+  background-color: rgba(var(--color-accent-yellow-rgb), 0.15);
+  border: none;
+  border-radius: 5px;
+  width: 55px;
+  height: 40px;
+  color: var(--color-text);
 }
 
 .search-bar {

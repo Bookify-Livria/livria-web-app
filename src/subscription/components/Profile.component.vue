@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { UserApiService } from "../service/user-api.service.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 
 export default {
@@ -70,7 +71,6 @@ export default {
     };
   },
   methods: {
-
     showSuccess() { // Muestra un mensaje flotante (Toast) de confirmación de actualización de contraseña
       try {
         this.$refs.toast.add({
@@ -83,7 +83,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
     showFailFill() { // Muestra un mensaje flotante (Toast) de error si es que el usuario no ha llenado todos los campos del formulario
       try {
         this.$refs.toast.add({
@@ -96,7 +95,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
     showFailPassword() { // Muestra un mensaje flotante (Toast) de error si es que la contraseña es incorrecta
       try {
         this.$refs.toast.add({
@@ -109,7 +107,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
     showFailConfirm() { // Muestra un mensaje flotante (Toast) de error si es que la nueva contraseña no coincide con "confirmar contraseña"
       try {
         this.$refs.toast.add({
@@ -122,19 +119,16 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
-    async InvocaAPI() { // Obtiene la información de los usuario registrados en la Fake API y asigna los valores del usuario loggeado a una variable contenedor
+    async InvocaAPI() { // Obtiene la información del usuario loggeado y asigna los valores del usuario loggeado a una variable contenedor
       const service = new UserApiService();
+      const user = AuthService.getCurrentUser();
 
       try {
-        const data = await service.getUsers();
-        this.info = data;
-        console.log("All users:", this.info);
+        const authUser = await service.getUserById(user.userId);
 
-        const loggedInUserId = await this.getLoggedInUserId();
-
-        if (loggedInUserId) {
-          this.user = this.info.find(user => String(user.id) === String(loggedInUserId));
+        if (authUser) {
+          this.user = authUser;
+          console.warn("User found: ", this.user.username);
         } else {
           console.warn("No logged-in user found.");
         }
@@ -142,30 +136,9 @@ export default {
         console.error("Failed to load user data:", error);
       }
     },
-
-    async getLoggedInUserId() { // Obtiene y devuelve la id del usuario loggeado
-      try {
-        const response = await axios.get('https://livria-6efh.onrender.com/userlogin');
-        const loginEntries = response.data;
-
-        if (loginEntries.length > 0) {
-          const loggedInUserId = loginEntries[0].id;
-          console.log("Logged in user ID:", loggedInUserId);
-          return loggedInUserId;
-        } else {
-          console.warn("No user is currently logged in.");
-          return null;
-        }
-      } catch (error) {
-        console.error("Error fetching logged-in user ID:", error);
-        return null;
-      }
-    },
-
     goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
-
     async changePassword(currentPassword, newPassword, confirmPassword) { // Permite validar los datos insertados en el formulario de cambio de contraseña y actualizar la información
       if (!currentPassword || !newPassword || !confirmPassword) {
         this.showFailFill();
@@ -200,7 +173,6 @@ export default {
         console.error('Failed to update password:', error);
       }
     },
-
     async deleteAccount() { // Permite al usuario borrar su cuenta de la Fake API
       const service = new UserApiService();
       this.goToLogin();

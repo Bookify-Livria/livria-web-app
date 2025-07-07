@@ -137,7 +137,16 @@
     "select_category": "Select a category",
     "category": "Category",
     "image": "Profile Image URL",
-    "sidebar": "Banner Image URL"
+    "sidebar": "Banner Image URL",
+    "title": "Title",
+    "author": "Author",
+    "genre": "Genre",
+    "language": "Language",
+    "cover": "URL Cover Image",
+    "purchase-price": "Purchase Price",
+    "sale-price": "Sale Price",
+    "stock": "Stock",
+    "add": "Add new book"
   },
   "see-more": "See More +",
 
@@ -228,6 +237,7 @@
     "pay": "Complete Order",
     "notice": "Wait!!!",
     "cart-empty": "We can't proceed with the purchase because your cart is empty.",
+    "no-money": "We can't proceed with the purchase because you don't have enough money.",
     "field-missing": "We can't proceed with the purchase because there's one or more fields missing.",
     "info-recipient": "Recipient Information",
     "delivery": "Delivery Information",
@@ -332,7 +342,8 @@
     "inventory": "Inventory",
     "statistics": "Statistics",
     "settings": "Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "capital": "Your Capital"
   },
 
   "sidebar.categories": "Genres",

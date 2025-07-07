@@ -121,27 +121,6 @@ export default {
 
       // Calculate average order value
       this.stats.averageOrderValue = this.stats.totalRevenue / orders.length;
-
-      // Find most popular book (the book that appears in most orders)
-      const bookOccurrences = {};
-      orders.forEach(order => {
-        order.items?.forEach(item => {
-          if (!bookOccurrences[item.bookId]) {
-            bookOccurrences[item.bookId] = {
-              count: 0,
-              title: item.title
-            };
-          }
-          bookOccurrences[item.bookId].count += item.quantity || 1;
-        });
-      });
-      let mostPopular = { count: 0, title: 'N/A' };
-      Object.values(bookOccurrences).forEach(book => {
-        if (book.count > mostPopular.count) {
-          mostPopular = book;
-        }
-      });
-      this.stats.mostPopularBook = mostPopular.title;
     },
     isWithinDateRange(dateString, range) {
       if (range === 'all') return true;
@@ -268,10 +247,6 @@ export default {
         <div class="stat-card">
           <h3>{{ $t('dashboard-orders.avg-order-value') }}</h3>
           <p class="stat-value">{{ formatCurrency(stats.averageOrderValue) }}</p>
-        </div>
-        <div class="stat-card">
-          <h3>{{ $t('dashboard-orders.most-popular-book') }}</h3>
-          <p class="stat-value">{{ stats.mostPopularBook || 'N/A' }}</p>
         </div>
       </div>
 
@@ -564,9 +539,9 @@ export default {
 }
 
 .stats-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted for better responsiveness */
-  gap: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
   margin-bottom: 2.5rem;
 }
 
@@ -574,6 +549,7 @@ export default {
   background-color: rgba(var(--color-secondary-rgb), 0.15);
   border-radius: 12px;
   padding: 2rem;
+  width: 300px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center; /* Center content */

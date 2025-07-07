@@ -17,11 +17,6 @@ export class ReviewApiService {
     createReview(review) {
         const adapted = ReviewAssembler.toResource(review);
 
-        // --- ADD THESE CONSOLE.LOGS ---
-        console.log('Sending review to API:', adapted);
-        console.log('Auth Headers:', authHeader());
-        // --- END ADDITIONS ---
-
         return axios.post(API_URL + 'reviews', adapted, { headers: authHeader()})
             .then(response => ReviewAssembler.toEntityFromResource(response.data))
             .catch(error => {

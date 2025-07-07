@@ -137,7 +137,16 @@
     "select_category": "Seleccione la categoría",
     "description": "Descripción",
     "category": "Categoría",
-    "image": "URL de la imagen"
+    "image": "URL de la imagen",
+    "title": "Título",
+    "author": "Autor(a)",
+    "genre": "Género",
+    "language": "Lenguaje",
+    "cover": "URL de Imagen de la Portada",
+    "purchase-price": "Precio de Compra",
+    "sale-price": "Precio de Venta",
+    "stock": "Stock",
+    "add": "Añadir nuevo libro"
   },
   "see-more": "Ver Más +",
 
@@ -229,6 +238,7 @@
     "pay": "Completar Orden",
     "notice": "Espera!!!",
     "cart-empty": "No podemos continuar con la compra porque su carrito está vacío.",
+    "no-money": "We can't proceed with the purchase because you don't have enough money.",
     "field-missing": "No podemos continuar con la compra porque faltan uno o más campos.",
     "info-recipient": "Información del Destinatario",
     "delivery": "Información de Entrega",
@@ -332,7 +342,8 @@
     "inventory": "Inventario",
     "statistics": "Estadísticas",
     "settings": "Ajustes",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "capital": "Tu Capital"
   },
 
   "sidebar.categories": "Géneros",

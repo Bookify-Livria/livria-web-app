@@ -9,19 +9,8 @@ export class UserAdminAssembler {
             resource.email,
             resource.password,
             resource.adminAccess,
-            resource.securityPin
+            resource.securityPin,
+            resource.capital,
         );
-    }
-
-    static toResource(user) {
-        return {
-            id: user.id,
-            display: user.display,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            adminAccess: user.adminAccess,
-            securityPin: user.securityPin
-        };
     }
 }
