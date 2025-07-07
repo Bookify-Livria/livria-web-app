@@ -424,6 +424,7 @@
     "shipping-info": "Información de Envío",
     "shipping-address": "Dirección de Envío",
     "shipping-district": "Distrito de Envío",
+    "shipping-city": "Ciudad de Envío",
     "shipping-reference": "Referencia de Envío",
     "order-items": "Artículos del Pedido",
     "item": "Artículo",

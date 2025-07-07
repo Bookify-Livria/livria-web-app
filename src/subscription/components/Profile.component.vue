@@ -4,6 +4,7 @@ import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { UserApiService } from "../service/user-api.service.js";
 import AuthService from "../../public/shared-services/authentication.service.js";
+import {OrderApiService} from "../../commerce/orders/services/order-api.service.js";
 
 
 export default {
@@ -65,9 +66,9 @@ export default {
         icon: '',
         password: 'Loading...',
         phrase: 'Loading...',
-        order: [],
         subscription: 'false',
       },
+      orders: []
     };
   },
   methods: {
@@ -128,7 +129,11 @@ export default {
 
         if (authUser) {
           this.user = authUser;
-          console.warn("User found: ", this.user.username);
+          console.log("User found: ", this.user.username);
+
+          const orderService = new OrderApiService();
+          this.orders = await orderService.getUserOrders(this.user.id);
+
         } else {
           console.warn("No logged-in user found.");
         }
@@ -179,8 +184,6 @@ export default {
 
       try {
         await service.deleteUser(this.user.id);
-
-        await this.clearLogin();
 
         this.$refs.toast.add({
           severity: 'success',
@@ -234,36 +237,36 @@ export default {
         </pv-card>
       </div>
 
-      <!-- Esto de acá es cuando user tenía ordenes en el db
-      <div class="profile__info-half" v-if="user.order">
+      <div class="profile__info-half">
         <pv-card>
           <template #title>{{ $t('recent-orders') }}</template>
           <template #content>
-            <div v-if="user.order && user.order.length">
+            <p v-if="!orders">{{ $t('no-order') }}</p>
+            <div class="profile__info-half-orders">
               <div
                   class="same-line"
-                  v-for="order in user.order.slice().reverse()"
+                  v-for="order in orders"
                   :key="order.id"
               >
                 <p>{{ $t('order') }} #{{ order.code }}</p>
                 <div>
                   <pv-message
                       v-if="order.status === 'pending'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
                       aria-label="pending"
                   >
                     {{ $t('pending') }}
                   </pv-message>
                   <pv-message
                       v-if="order.status === 'in progress'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
                       aria-label="pending"
                   >
                     {{ $t('in-progress') }}
                   </pv-message>
                   <pv-message
                       v-else-if="order.status === 'delivered'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
                       aria-label="delivered"
                   >
                     {{ $t('delivered') }}
@@ -271,10 +274,9 @@ export default {
                 </div>
               </div>
             </div>
-            <p v-else>{{ $t('no-order') }}</p>
           </template>
         </pv-card>
-      </div>-->
+      </div>
     </div>
 
     <div class="profile__config">
@@ -409,10 +411,16 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
+  height: 100%;
 }
 
 .profile__info-half {
   flex: 0 0 45%;
+}
+
+.profile__info-half-orders {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .profile__config {

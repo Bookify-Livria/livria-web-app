@@ -258,7 +258,7 @@ export default {
             <p class="book-author">{{ book.author }}</p>
             <p class="book-price">S/ {{ book.salePrice.toFixed(2) }}</p>
             <div class="book-meta">
-              <span class="book-language">{{ getLanguageName(book.language) }}</span>
+              <span class="book-language" style="text-transform: capitalize">{{ getLanguageName(book.language) }}</span>
               <span class="book-stock">Stock: {{ book.stock || 0 }}</span>
             </div>
             <div class="book-reviews">

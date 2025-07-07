@@ -6,7 +6,8 @@ import Button from 'primevue/button'
 import toolbarComponent from "../components/toolbar.component.vue"
 import footerComponent from "../components/footer-content.component.vue"
 import bookCarousel from "../../commerce/books/components/books-carousel.component.vue"
-import { getLoggedInUser } from "../shared-services/get-logged-user.js";
+import {UserApiService} from "../../subscription/service/user-api.service.js";
+import AuthService from "../shared-services/authentication.service.js";
 
 export default {
   name: "home.component",
@@ -21,8 +22,12 @@ export default {
 
     const goToCommunity = async () => {
       try {
-        const user = await getLoggedInUser();
-        if (user.subscription) {
+        const service = new UserApiService();
+        const user = AuthService.getCurrentUser();
+
+        const authUser = await service.getUserById(user.userId);
+
+        if (authUser.subscription === "communityplan") {
           router.push("/communities");
         } else {
           router.push("/subscription");

@@ -385,20 +385,23 @@ export default {
 }
 
 .book-detail__left-section {
-  flex: 0 0 30%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   background-color: var(--color-light);
+  border-radius: 15px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   padding: 2rem;
-  height: 70vh;
+  gap: 2rem;
+  height: fit-content;
 }
 
 .book-detail__image-container {
   width: 300px;
   height: 450px;
+  margin-top: 1rem;
 }
 
 .book-detail__image-cover {
@@ -420,7 +423,7 @@ export default {
 }
 
 .book-detail__right-section {
-  flex: 0 0 65%;
+  width: 65%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -476,7 +479,7 @@ export default {
 }
 
 .book-detail__opinion {
-  margin-top: 17rem;
+  margin-top: 12rem;
   border-top: 1px solid #ccc;
   padding-top: 1rem;
 }

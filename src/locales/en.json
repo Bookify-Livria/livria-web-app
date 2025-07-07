@@ -424,6 +424,7 @@
     "shipping-info": "Shipping Information",
     "shipping-address": "Shipping Address",
     "shipping-district": "Shipping District",
+    "shipping-city": "Shipping City",
     "shipping-reference": "Reference",
     "order-items": "Order Items",
     "item": "Item",

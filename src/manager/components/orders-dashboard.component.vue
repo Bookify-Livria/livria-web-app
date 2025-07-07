@@ -102,7 +102,6 @@ export default {
           pendingOrders: 0,
           completedOrders: 0,
           averageOrderValue: 0,
-          mostPopularBook: null
         };
         return;
       }
@@ -313,7 +312,7 @@ export default {
             <td><strong># {{ order.code }}</strong></td>
             <td>
               <div class="customer-info">
-                <div class="customer-name">{{ order.userName }}</div>
+                <div class="customer-name">{{ order.userFullName }}</div>
               </div>
             </td>
             <td>
@@ -374,11 +373,11 @@ export default {
               <div class="customer-info-grid">
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.customer-name') }}:</span>
-                  <span class="info-value">{{ currentOrder.userName }}</span>
+                  <span class="info-value">{{ currentOrder.userFullName }}</span>
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.customer-email') }}:</span>
-                  <span class="info-value">{{ currentOrder.email }}</span>
+                  <span class="info-value">{{ currentOrder.userEmail }}</span>
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.recipient-name') }}:</span>
@@ -386,7 +385,7 @@ export default {
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.recipient-phone') }}:</span>
-                  <span class="info-value">{{ currentOrder.phone || $t('dashboard-orders.none') }}</span>
+                  <span class="info-value">{{ currentOrder.userPhone || $t('dashboard-orders.none') }}</span>
                 </div>
               </div>
             </div>
@@ -394,13 +393,17 @@ export default {
             <div class="shipping-info-section" v-if="currentOrder.shipping">
               <h3>{{ $t('dashboard-orders.shipping-info') }}</h3>
               <div class="shipping-info-grid">
-                <div class="info-group full-width">
+                <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.shipping-address') }}:</span>
                   <span class="info-value">{{ currentOrder.shipping.address || $t('dashboard-orders.none') }}</span>
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.shipping-district') }}:</span>
                   <span class="info-value">{{ currentOrder.shipping.district || $t('dashboard-orders.none') }}</span>
+                </div>
+                <div class="info-group">
+                  <span class="info-label">{{ $t('dashboard-orders.shipping-city') }}:</span>
+                  <span class="info-value">{{ currentOrder.shipping.city || $t('dashboard-orders.none') }}</span>
                 </div>
                 <div class="info-group">
                   <span class="info-label">{{ $t('dashboard-orders.shipping-reference') }}:</span>
@@ -423,7 +426,7 @@ export default {
                 <tbody>
                 <tr v-for="(item, index) in currentOrder.items" :key="index">
                   <td>
-                    <div class="order-item-info">
+                    <div class="order-item-info" style="text-align: left">
                       <strong>{{ item.book.title }}</strong>
                       <small>{{ item.book.author }}</small>
                     </div>
@@ -846,6 +849,7 @@ h3 {
   border: 1px solid #eaeaea;
   padding: 0.8rem;
   text-align: center;
+  min-width: 100px;
 }
 
 .order-items-table th {

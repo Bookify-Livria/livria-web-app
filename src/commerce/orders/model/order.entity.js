@@ -1,18 +1,18 @@
 
 export class Order {
-    constructor(id, code, items, userId, userName, email, recipientName, phone, isDelivery, shipping = null, total, date, status) {
+    constructor(id, code, userClientId, userEmail, userPhone, userFullName, recipientName, status, isDelivery, shipping = null, total, date, items) {
         this.id = id;
         this.code = code;
-        this.items = items; // CartItem[]
-        this.userId = userId;
-        this.userName = userName;
-        this.email = email;
+        this.userClientId = userClientId;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userFullName = userFullName;
         this.recipientName = recipientName;
-        this.phone = phone;
-        this.delivery = isDelivery;
+        this.status = status;
+        this.isDelivery = isDelivery;
         this.shipping = shipping;
         this.total = total;
         this.date = date;
-        this.status = status;
+        this.items = items; // CartItem[]
     }
 }
