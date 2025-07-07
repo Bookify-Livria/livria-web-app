@@ -4,7 +4,7 @@ import { BookAssembler } from '../../books/services/book.assembler.js';
 export class CartAssembler {
     static toEntityFromResource(resource) {
         const book = BookAssembler.toEntityFromResource(resource.book);
-        return new CartItem(resource.id, book, resource.quantity);
+        return new CartItem(resource.id, book, resource.quantity, resource.userClientId);
     }
 
     static toEntitiesFromResponse(response) {
@@ -13,18 +13,9 @@ export class CartAssembler {
 
     static toResource(cartItem) {
         return {
-            id: cartItem.id,
-            book: {
-                id: cartItem.book.id,
-                title: cartItem.book.title,
-                description: cartItem.book.description,
-                author: cartItem.book.author,
-                salePrice: cartItem.book.salePrice,
-                cover: cartItem.book.cover,
-                genre: cartItem.book.genre,
-                language: cartItem.book.language
-            },
-            quantity: cartItem.quantity
+            bookId: cartItem.bookId,
+            quantity: cartItem.quantity,
+            userClientId: cartItem.userClientId,
         };
     }
 }

@@ -1,7 +1,6 @@
 <script>
 import { CommunityApiService } from "../service/community-api.service.js";
 import { PostApiService } from "../service/post-api.service.js";
-import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
 import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {

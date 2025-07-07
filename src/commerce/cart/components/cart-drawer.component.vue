@@ -1,6 +1,8 @@
 <script>
 import {CartApiService} from "../../shared-services/cart-api.service.js";
 import trashIcon from "../../../assets/images/icons/Trash.svg";
+import {UserApiService} from "../../../subscription/service/user-api.service.js";
+import AuthService from "../../../public/shared-services/authentication.service.js";
 
 export default {
   name: "cartDrawer",
@@ -10,7 +12,8 @@ export default {
   data() {
     return {
       visibleRight: false,
-      cartItems: []
+      cartItems: [],
+      currentUser: null
     }
   },
   methods: {
@@ -24,7 +27,13 @@ export default {
     async loadCart() { // Carga la información almacenada dentro del carrito de compras (lista de compras)
       try {
         const service = new CartApiService()
-        this.cartItems = await service.getCart()
+        const userService = new UserApiService();
+        const user = AuthService.getCurrentUser();
+        const authUser = await userService.getUserById(user.userId);
+
+        this.currentUser = authUser;
+
+        this.cartItems = await service.getCart(this.currentUser.id);
       } catch (error) {
         console.error("Error fetching cart:", error)
       }
@@ -32,11 +41,19 @@ export default {
     getSubtotal() { // Calcula el sub total de los productos almacenados dentro del carrito de compras
       return this.cartItems.reduce((total, item) => total + item.book.salePrice * item.quantity, 0)
     },
+    async updateBookQuantity(cartId, quantity) { //Actualiza la cantidad de un libro en el carrito
+      try {
+        const service = new CartApiService();
+        await service.updateQuantity(cartId, this.currentUser.id, quantity);
+      } catch (error) {
+        console.error("Error updating quantity of cart item:", error)
+      }
+    },
     async removeItem(Id) { // Elimina un único elemento de la lista de compras en base a su id
       try {
         const service = new CartApiService()
-        await service.removeFromCart(Id)
-        this.cartItems = await service.getCart()
+        await service.removeFromCart(Id, this.currentUser.id)
+        this.cartItems = await service.getCart(this.currentUser.id);
       } catch (error) {
         console.error("Error deleting item:", error)
       }
@@ -44,7 +61,7 @@ export default {
     async emptyCart(){ // Elimina todos los elementos almacenados dentro del carrito de compras
       try {
         const service = new CartApiService();
-        await service.clearCart();
+        await service.clearCart(this.currentUser.id);
         this.cartItems = [];
       } catch (error) {
         console.error("Error clearing shopping cart:", error);
@@ -75,7 +92,7 @@ export default {
     <pv-drawer v-model:visible="visibleRight" position="right" style="width: 600px" aria-labelledby="cart-title">
       <template #header>
         <div class="title__container">
-          <h1 id="cart-title" class="h1__title go--yellow">{{$t('cart')}}</h1>
+          <h1 id="cart-title" class="h1__title go--yellow">{{$t('cart-toolbar')}}</h1>
         </div>
       </template>
 
@@ -88,7 +105,7 @@ export default {
           <span>S/ {{ item.book.salePrice.toFixed(2) }}</span>
         </div>
         <div class="shopping-cart__actions">
-          <select v-model="item.quantity" aria-label="Item quantity for book">
+          <select v-model="item.quantity" @change="updateBookQuantity(item.id, item.quantity)" aria-label="Item quantity for book">
             <option v-for="n in 3" :key="n" :value="n">{{ n }}</option>
           </select>
           <button @click="removeItem(item.id)" aria-label="Remove item from cart"><trashIcon /></button>

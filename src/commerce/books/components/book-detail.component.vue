@@ -43,14 +43,13 @@ export default {
       const review_Service = new ReviewApiService();
       const authUser = AuthService.getCurrentUser();
 
-      console.log('AuthService.getCurrentUser() result at start of loadBook:', authUser);
+      this.currentUser = authUser;
 
       try {
         const bookTitle = this.$route.params.title;
         const data = await book_Service.getBooks();
         this.book = data.find(b => b.title.toString().toLowerCase() === bookTitle.toLowerCase());
 
-        this.currentUser = authUser;
 
         if (this.book && this.book.id && this.currentUser && this.currentUser.userId) {
           this.$emit('book-loaded', this.book.title);
@@ -84,25 +83,23 @@ export default {
       const favorites = await favoriteService.getFavorites();
       const banned = await bannedService.getBanned();
 
-      this.isFavorited = favorites.some(fav => fav.userId === this.currentUser.id && fav.bookId === this.book.id);
-      this.isBanned = banned.some(ban => ban.userId === this.currentUser.id && ban.bookId === this.book.id);
+      this.isFavorited = favorites.some(fav => fav.userId === this.currentUser.userId && fav.bookId === this.book.id);
+      this.isBanned = banned.some(ban => ban.userId === this.currentUser.userId && ban.bookId === this.book.id);
     },
-    async addToCart(book, quantity) { // Agrega al carrito de compras el libro seleccionado, con una cantidad seleccionada por el usuario
+    async addToCart() { // Agrega al carrito de compras el libro seleccionado, con una cantidad seleccionada por el usuario
       try {
         const service = new CartApiService();
-        const currentCart = await service.getCart();
 
-        const newId = String(
-            currentCart.length > 0
-                ? Math.max(...currentCart.map(item => parseInt(item.id))) + 1
-                : 1
-        );
+        console.log(this.book.id);
+        console.log(this.quantity);
+        console.log(this.currentUser.userId);
 
         const cartItem = {
-          id: newId,
-          book,
-          quantity: parseInt(quantity)
+          bookId: this.book.id,
+          quantity: this.quantity,
+          userClientId: this.currentUser.userId,
         };
+
         await service.addToCart(cartItem);
       } catch (error) {
         console.error("Error adding item:", error)
@@ -173,7 +170,7 @@ export default {
         if (this.isFavorited) {
           // Quitar si ya está como favorite
           const favorites = await favoriteService.getFavorites();
-          const favItem = favorites.find(f => f.userId === this.currentUser.id && f.bookId === this.book.id);
+          const favItem = favorites.find(f => f.userId === this.currentUser.userId && f.bookId === this.book.id);
           if (favItem) {
             await favoriteService.deleteFavorite(favItem.id);
             this.isFavorited = false;
@@ -182,7 +179,7 @@ export default {
           // Añadir como favorite viendo que no esté en banned
           if (this.isBanned) {
             const banned = await bannedService.getBanned();
-            const bannedItem = banned.find(b => b.userId === this.currentUser.id && b.bookId === this.book.id);
+            const bannedItem = banned.find(b => b.userId === this.currentUser.userId && b.bookId === this.book.id);
             if (bannedItem) {
               await bannedService.deleteBanned(bannedItem.id);
               this.isBanned = false;
@@ -196,7 +193,7 @@ export default {
 
           const newFavorite = {
             id: newFavoriteId,
-            userId: this.currentUser.id,
+            userId: this.currentUser.userId,
             userUsername: this.currentUser.username,
             bookId: this.book.id,
             bookTitle: this.book.title
@@ -227,7 +224,7 @@ export default {
         if (this.isBanned) {
           // Quitar de banned si ya existe
           const banned = await bannedService.getBanned();
-          const bannedItem = banned.find(b => b.userId === this.currentUser.id && b.bookId === this.book.id);
+          const bannedItem = banned.find(b => b.userId === this.currentUser.userId && b.bookId === this.book.id);
           if (bannedItem) {
             await bannedService.deleteBanned(bannedItem.id);
             this.isBanned = false;
@@ -236,7 +233,7 @@ export default {
           // Añadir a banned viendo que no esté en favorite
           if (this.isFavorited) {
             const favorites = await favoriteService.getFavorites();
-            const favItem = favorites.find(f => f.userId === this.currentUser.id && f.bookId === this.book.id);
+            const favItem = favorites.find(f => f.userId === this.currentUser.userId && f.bookId === this.book.id);
             if (favItem) {
               await favoriteService.deleteFavorite(favItem.id);
               this.isFavorited = false;
@@ -250,7 +247,7 @@ export default {
 
           const newBanned = {
             id: newBannedId,
-            userId: this.currentUser.id,
+            userId: this.currentUser.userId,
             userUsername: this.currentUser.username,
             bookId: this.book.id,
             bookTitle: this.book.title
@@ -304,7 +301,7 @@ export default {
         </select>
         <div class="book-detail__add-cart">
           <pv-toast position="top-right" style="margin-top: 10rem" />
-          <button @click="addToCart(book, quantity); showConfirmation()" aria-label="Add to cart">{{ $t('add-to-cart') }}</button>
+          <button @click="addToCart(); showConfirmation()" aria-label="Add to cart">{{ $t('add-to-cart') }}</button>
         </div>
         <span
             aria-label="Mark as 'favorite'"
