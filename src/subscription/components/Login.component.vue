@@ -2,8 +2,6 @@
 
 import 'primeicons/primeicons.css';
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
-import {notifyEvent} from "../../public/shared-services/to-notify.js";
-import { UserApiService } from "../service/user-api.service.js";
 import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {

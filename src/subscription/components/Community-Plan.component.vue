@@ -2,7 +2,6 @@
 import AuthService from "../../public/shared-services/authentication.service.js";
 import {UserApiService} from "../service/user-api.service.js";
 import confirmation from "../components/Subscription-confirmation.component.vue"
-import {notifyEvent} from "../../public/shared-services/to-notify.js";
 
 export default {
   name: "CommunityPlanComponent",
@@ -51,7 +50,6 @@ export default {
 
         this.showConfirmation = true;
         console.log('showConfirmation:', this.showConfirmation);
-        await notifyEvent("plan");
         this.youveGotANoti();
       } catch (error) {
         console.error('Fail!!!!!!!', error);

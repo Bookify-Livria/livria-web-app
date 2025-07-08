@@ -2,7 +2,6 @@
 import { CartApiService } from "../../shared-services/cart-api.service.js";
 import { OrderApiService } from "../services/order-api.service.js";
 import { UserApiService } from "../../../subscription/service/user-api.service.js";
-import { notifyEvent } from "../../../public/shared-services/to-notify.js";
 import OrderConfirmation from "./order-confirmation.component.vue";
 
 import trashIcon from "../../../assets/images/icons/Trash.svg";
@@ -223,7 +222,6 @@ export default {
         }
 
         this.showConfirmation = true;
-        await notifyEvent("order");
         this.youveGotANoti();
 
       } catch (err) {

@@ -24,7 +24,9 @@ export default {
         { value: 4, key: 'juvenile' },
         { value: 5, key: 'children' },
         { value: 6, key: 'ebooks_audiobooks' }
-      ]
+      ],
+      isMember: false,
+      currentUser: null
     }
   },
   computed: {
@@ -34,6 +36,9 @@ export default {
         return foundGenre ? foundGenre.key : '';
       }
       return '';
+    },
+    buttonText() {
+      return this.isMember ? this.$t("comm.leave") : this.$t("comm.join");
     }
   },
   methods: {
@@ -53,6 +58,12 @@ export default {
           }).catch(error => {
             console.error('Error loading posts:', error);
           });
+
+          this.currentUser = AuthService.getCurrentUser();
+
+          this.isMember = false;
+          console.warn('Membership status cannot be determined on page load without a dedicated API endpoint for it.');
+
         } else {
           console.warn('Community not found:', this.community);
         }
@@ -67,6 +78,30 @@ export default {
         return true;
       } catch (e) {
         return false;
+      }
+    },
+    async handleCommunityAction() { // This method now handles both join and leave
+      if (!this.currentUser || !this.currentUser.userId) {
+        console.warn('User not logged in. Cannot perform community action.');
+        return;
+      }
+
+      const communityService = new CommunityApiService();
+      const communityId = this.community.id;
+      const userClientId = this.currentUser.userId; // Assuming userId from AuthService is userClientId
+
+      try {
+        if (this.isMember) {
+          await communityService.leaveCommunity(communityId, userClientId);
+          this.isMember = false; // Update state immediately on success
+          console.log('Successfully left community.');
+        } else {
+          await communityService.joinCommunity(communityId, userClientId);
+          this.isMember = true; // Update state immediately on success
+          console.log('Successfully joined community.');
+        }
+      } catch (error) {
+        console.error('Error performing community action:', error);
       }
     },
     async makePost() {
@@ -131,7 +166,13 @@ export default {
         <h1 class="h1__title">{{ community.name }}</h1>
         <h2 class="h2__title">{{ $t(`genres.${displayedGenreKey}`) }}</h2>
         <p>{{ community.description }}</p>
-        <button class="title__container-btn" aria-label="Join community">{{ $t("comm.join")}}</button>
+        <button
+            class="title__container-btn"
+            @click="handleCommunityAction()"
+            :aria-label="buttonText"
+        >
+          {{ buttonText }}
+        </button>
       </header>
 
       <section class="community__content-interaction">

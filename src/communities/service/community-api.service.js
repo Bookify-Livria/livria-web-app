@@ -21,4 +21,36 @@ export class CommunityApiService {
                 throw error;
             });
     }
+    async joinCommunity(communityId, userClientId) {
+        try {
+            const requestBody = {
+                userClientId: userClientId,
+                communityId: communityId
+            };
+
+            const response = await axios.post(API_URL + 'communities/join', requestBody, { headers: authHeader() });
+
+            console.log('Successfully joined community:', response.data);
+            return response.data;
+
+        } catch (error) {
+            console.error('Error joining community:', error);
+            throw error;
+        }
+    }
+    async leaveCommunity(communityId, userId) {
+        try {
+            const response = await axios.delete(
+                `${API_URL}communities/${communityId}/members/${userId}`,
+                { headers: authHeader() }
+            );
+
+            console.log(`Successfully left community ${communityId} for user ${userId}:`, response.data);
+            return response.data;
+
+        } catch (error) {
+            console.error('Error leaving community:', error);
+            throw error;
+        }
+    }
 }
