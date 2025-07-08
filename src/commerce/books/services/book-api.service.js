@@ -23,14 +23,6 @@ export class BookApiService {
             });
     }
 
-    updateBook(book) {
-        return axios.put(API_URL + `books/${book.id}`, book, { headers: authHeader()})
-            .catch(error => {
-                console.error('Error updating book:', error);
-                throw error;
-            });
-    }
-
     updateStockByBookId(bookId, quantityToAddValue) {
         const requestBody = {
             quantityToAdd: quantityToAddValue

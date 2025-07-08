@@ -2,7 +2,6 @@
 import { BookApiService } from '../services/book-api.service.js'
 import { CartApiService} from "../../shared-services/cart-api.service.js";
 import { FavoriteApiService } from "../services/favorite-api.service.js";
-import { BannedApiService } from "../services/banned-api.service.js";
 import { ReviewApiService } from "../services/review-api.service.js";
 import bookmarkIcon from "../../../assets/images/icons/Bookmark.svg";
 import minusIcon from "../../../assets/images/icons/Minus.svg";
@@ -35,9 +34,32 @@ export default {
       isFavorited: false,
       isBanned: false,
       currentUser: null,
+
+      localFavoritesCache: [],
+      localBannedCache: []
     }
   },
   methods: {
+    getLocalStorageKey(type, userId) {
+      return `${type}_${userId}`;
+    },
+    loadLocalStatus(type, userId) {
+      const key = this.getLocalStorageKey(type, userId);
+      const storedData = localStorage.getItem(key);
+      if (storedData) {
+        try {
+          return JSON.parse(storedData);
+        } catch (e) {
+          console.error(`Error parsing ${type} from localStorage:`, e);
+          return [];
+        }
+      }
+      return [];
+    },
+    saveLocalStatus(type, userId, data) {
+      const key = this.getLocalStorageKey(type, userId);
+      localStorage.setItem(key, JSON.stringify(data));
+    },
     async loadBook() { // Obtiene información del libro seleccionado y asigna su valor a una variable
       const book_Service = new BookApiService();
       const review_Service = new ReviewApiService();
@@ -68,7 +90,8 @@ export default {
           console.warn('Cannot load reviews or check book status: Book or User ID is not available.',
               'Book:', this.book,
               'CurrentUser:', this.currentUser);
-
+          this.isFavorited = false;
+          this.isBanned = false;
         }
       } catch (error) {
         console.error('Error in loadBook:', error);
@@ -78,13 +101,22 @@ export default {
       if (!this.currentUser || !this.book) return;
 
       const favoriteService = new FavoriteApiService();
-      const bannedService = new BannedApiService();
+      const bookId = this.book.id;
 
-      const favorites = await favoriteService.getFavorites();
-      const banned = await bannedService.getBanned();
+      try {
+        const favorites = await favoriteService.getFavoriteBooks(this.currentUser.userId);
+        this.localFavoritesCache = favorites.map(favBook => favBook.id);
+        this.isFavorited = this.localFavoritesCache.includes(bookId);
+        console.log("Favorite status from API:", this.isFavorited, "Cached favorites:", this.localFavoritesCache);
+      } catch (error) {
+        console.error("Error fetching favorite books from API:", error);
+        this.isFavorited = false;
+        this.localFavoritesCache = [];
+      }
 
-      this.isFavorited = favorites.some(fav => fav.userId === this.currentUser.userId && fav.bookId === this.book.id);
-      this.isBanned = banned.some(ban => ban.userId === this.currentUser.userId && ban.bookId === this.book.id);
+      this.localBannedCache = this.loadLocalStatus('banned', this.currentUser.userId);
+      this.isBanned = this.localBannedCache.includes(bookId);
+      console.log("Banned status from localStorage:", this.isBanned, "Cached banned:", this.localBannedCache);
     },
     async addToCart() { // Agrega al carrito de compras el libro seleccionado, con una cantidad seleccionada por el usuario
       try {
@@ -159,47 +191,38 @@ export default {
     },
     async toggleFavorite() {
       if (!this.currentUser || !this.book) {
-        console.log("Empty");
+        console.log("User or book data is empty. Cannot toggle favorite.");
         return;
       }
 
       const favoriteService = new FavoriteApiService();
-      const bannedService = new BannedApiService();
+      const bookId = this.book.id;
+      const userId = this.currentUser.userId;
 
       try {
         if (this.isFavorited) {
-          // Quitar si ya está como favorite
-          const favorites = await favoriteService.getFavorites();
-          const favItem = favorites.find(f => f.userId === this.currentUser.userId && f.bookId === this.book.id);
-          if (favItem) {
-            await favoriteService.deleteFavorite(favItem.id);
-            this.isFavorited = false;
-          }
+          await favoriteService.deleteFavoriteBook(userId, bookId);
+          this.isFavorited = false;
+          this.localFavoritesCache = this.localFavoritesCache.filter(id => id !== bookId);
+          this.$toast.add({
+            severity: 'info',
+            summary: this.$t('removed'),
+            detail: this.$t('remove-favorite'),
+            life: 3000
+          });
         } else {
-          // Añadir como favorite viendo que no esté en banned
           if (this.isBanned) {
-            const banned = await bannedService.getBanned();
-            const bannedItem = banned.find(b => b.userId === this.currentUser.userId && b.bookId === this.book.id);
-            if (bannedItem) {
-              await bannedService.deleteBanned(bannedItem.id);
-              this.isBanned = false;
-            }
+            this.localBannedCache = this.localBannedCache.filter(id => id !== bookId);
+            this.isBanned = false;
+            this.saveLocalStatus('banned', userId, this.localBannedCache);
+            this.$toast.add({severity:'info', summary: this.$t('removed'), detail: this.$t('remove-banned-auto'), life:3000});
           }
-          const newFavoriteId = String(
-              (await favoriteService.getFavorites()).length > 0
-                  ? Math.max(...(await favoriteService.getFavorites()).map(item => parseInt(item.id))) + 1
-                  : 1
-          );
 
-          const newFavorite = {
-            id: newFavoriteId,
-            userId: this.currentUser.userId,
-            userUsername: this.currentUser.username,
-            bookId: this.book.id,
-            bookTitle: this.book.title
-          };
-          await favoriteService.addFavorite(newFavorite);
+          await favoriteService.addBookToFavorites(userId, bookId);
           this.isFavorited = true;
+          if (!this.localFavoritesCache.includes(bookId)) {
+            this.localFavoritesCache.push(bookId);
+          }
           this.$toast.add({
             severity: 'secondary',
             summary: this.$t('success'),
@@ -209,50 +232,38 @@ export default {
         }
       } catch (error) {
         console.error('Error toggling favorite:', error);
+        this.isFavorited = !this.isFavorited;
       }
     },
     async toggleBanned() {
       if (!this.currentUser || !this.book) {
-        console.log("Empty");
+        console.log("User or book data is empty. Cannot toggle banned.");
         return;
       }
 
-      const bannedService = new BannedApiService();
+      const bookId = this.book.id;
+      const userId = this.currentUser.userId;
       const favoriteService = new FavoriteApiService();
 
       try {
         if (this.isBanned) {
-          // Quitar de banned si ya existe
-          const banned = await bannedService.getBanned();
-          const bannedItem = banned.find(b => b.userId === this.currentUser.userId && b.bookId === this.book.id);
-          if (bannedItem) {
-            await bannedService.deleteBanned(bannedItem.id);
-            this.isBanned = false;
-          }
+          this.localBannedCache = this.localBannedCache.filter(id => id !== bookId);
+          this.isBanned = false;
+          this.$toast.add({
+            severity: 'info',
+            summary: this.$t('removed'),
+            detail: this.$t('remove-banned'),
+            life: 3000
+          });
         } else {
-          // Añadir a banned viendo que no esté en favorite
           if (this.isFavorited) {
-            const favorites = await favoriteService.getFavorites();
-            const favItem = favorites.find(f => f.userId === this.currentUser.userId && f.bookId === this.book.id);
-            if (favItem) {
-              await favoriteService.deleteFavorite(favItem.id);
-              this.isFavorited = false;
-            }
+            await favoriteService.deleteFavoriteBook(userId, bookId);
+            this.isFavorited = false;
+            this.localFavoritesCache = this.localFavoritesCache.filter(id => id !== bookId);
+            this.$toast.add({severity:'info', summary: this.$t('removed'), detail: this.$t('remove-favorite-auto'), life:3000});
           }
-          const newBannedId = String(
-              (await bannedService.getBanned()).length > 0
-                  ? Math.max(...(await bannedService.getBanned()).map(item => parseInt(item.id))) + 1
-                  : 1
-          );
 
-          const newBanned = {
-            id: newBannedId,
-            userId: this.currentUser.userId,
-            userUsername: this.currentUser.username,
-            bookId: this.book.id,
-            bookTitle: this.book.title
-          };
-          await bannedService.addBanned(newBanned);
+          this.localBannedCache.push(bookId);
           this.isBanned = true;
           this.$toast.add({
             severity: 'secondary',
@@ -261,8 +272,11 @@ export default {
             life: 3000
           });
         }
+        this.saveLocalStatus('banned', userId, this.localBannedCache);
+
       } catch (error) {
         console.error('Error toggling banned:', error);
+        this.isBanned = !this.isBanned;
       }
     }
   },

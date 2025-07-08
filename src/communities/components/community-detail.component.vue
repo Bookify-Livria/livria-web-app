@@ -33,7 +33,7 @@ export default {
     displayedGenreKey() { // Esta propiedad computada buscará el 'key' del género basado en 'community.type'
       if (this.community && typeof this.community.type === 'number') {
         const foundGenre = this.genres.find(genre => genre.value === this.community.type);
-        return foundGenre ? foundGenre.key : '';
+        return foundGenre ? foundGenre.key : 'fiction';
       }
       return '';
     },
