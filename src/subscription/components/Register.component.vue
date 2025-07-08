@@ -35,7 +35,7 @@ export default {
       return this.value5 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value5);
     },
     passwordLengthError() {
-      return this.value6 && (this.value6.length < 6 || this.value6.length > 50);
+      return this.value6 && (this.value6.length < 8 || this.value6.length > 50);
     },
     passwordMatchError() {
       return this.value6 && this.value7 && this.value6 !== this.value7;
