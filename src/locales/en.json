@@ -193,7 +193,7 @@
     "username": "Letters or numbers only (max. 20 characters).",
     "url": "Must be a valid link.",
     "email": "Invalid email.",
-    "password-length": "Must be at least 6 characters."
+    "password-length": "Must be at least 8 characters."
   },
 
   "createacc": "Don't have an account?",
