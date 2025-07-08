@@ -42,6 +42,9 @@ export default {
     }
   },
   methods: {
+    getMembershipLocalStorageKey(communityId, userId) {
+      return `community_member_${communityId}_${userId}`;
+    },
     loadInfo() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
       const service = new CommunityApiService();
       const communityTitle = this.$route.params.name
@@ -61,8 +64,22 @@ export default {
 
           this.currentUser = AuthService.getCurrentUser();
 
-          this.isMember = false;
-          console.warn('Membership status cannot be determined on page load without a dedicated API endpoint for it.');
+          if (this.currentUser && this.currentUser.userId) {
+            const localStorageKey = this.getMembershipLocalStorageKey(communityId, this.currentUser.userId);
+            const storedMembership = localStorage.getItem(localStorageKey);
+
+            if (storedMembership !== null) { // Check if a value exists
+              this.isMember = JSON.parse(storedMembership); // Parse the stored boolean
+              console.log(`Membership status loaded from localStorage: ${this.isMember}`);
+            } else {
+              // If nothing in localStorage, assume not a member by default for this user/community
+              this.isMember = false;
+              console.warn('No membership status found in localStorage for this user/community. Defaulting to not a member.');
+            }
+          } else {
+            this.isMember = false; // Not logged in, so definitely not a member
+            console.warn('User not logged in. Cannot check or store membership status.');
+          }
 
         } else {
           console.warn('Community not found:', this.community);
@@ -80,7 +97,7 @@ export default {
         return false;
       }
     },
-    async handleCommunityAction() { // This method now handles both join and leave
+    async handleCommunityAction() {
       if (!this.currentUser || !this.currentUser.userId) {
         console.warn('User not logged in. Cannot perform community action.');
         return;
@@ -88,17 +105,20 @@ export default {
 
       const communityService = new CommunityApiService();
       const communityId = this.community.id;
-      const userClientId = this.currentUser.userId; // Assuming userId from AuthService is userClientId
+      const userClientId = this.currentUser.userId;
+      const localStorageKey = this.getMembershipLocalStorageKey(communityId, userClientId);
 
       try {
         if (this.isMember) {
           await communityService.leaveCommunity(communityId, userClientId);
-          this.isMember = false; // Update state immediately on success
-          console.log('Successfully left community.');
+          this.isMember = false; // Update state
+          localStorage.setItem(localStorageKey, JSON.stringify(false));
+          console.log('Successfully left community and updated localStorage.');
         } else {
           await communityService.joinCommunity(communityId, userClientId);
-          this.isMember = true; // Update state immediately on success
-          console.log('Successfully joined community.');
+          this.isMember = true; // Update state
+          localStorage.setItem(localStorageKey, JSON.stringify(true));
+          console.log('Successfully joined community and updated localStorage.');
         }
       } catch (error) {
         console.error('Error performing community action:', error);

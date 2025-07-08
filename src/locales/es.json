@@ -153,6 +153,7 @@
   "comm" : {
     "thoughts": "¿En qué estás pensando?",
     "join": "Unirse +",
+    "leave": "Salirse -",
     "post": "Publicar",
     "image": "Pega aquí la URL de una imagen que quieras agregar."
   },

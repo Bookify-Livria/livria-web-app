@@ -153,6 +153,7 @@
   "comm" : {
     "thoughts": "What are your thoughts?",
     "join": "Join +",
+    "leave": "Leave -",
     "post": "Post",
     "image": "Paste here the url from an image you'd like to add."
   },
