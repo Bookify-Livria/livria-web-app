@@ -1,7 +1,7 @@
 export class Shipping {
-    constructor(address, district, reference) {
+    constructor(address, city, district, reference) {
         this.address = address;
-        this.city = "Lima Metropolitana";
+        this.city = city;
         this.district = district;
         this.reference = reference;
     }

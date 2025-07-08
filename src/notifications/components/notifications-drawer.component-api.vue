@@ -1,12 +1,9 @@
 <script>
-import trashIcon from "../../assets/images/icons/Trash.svg";
 import {NotificationApiService} from "../services/notification-api.service.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "notifications-drawer.component-api",
-  components: {
-    trashIcon,
-  },
   data() {
     return {
       visibleRight: false,
@@ -24,18 +21,11 @@ export default {
     async loadNotis() {  // Permite cargar la información relacionada a notificaciones dentro de la Fake API
       try {
         const service = new NotificationApiService();
-        this.notisItems = await service.getNotifications();
+        const user = AuthService.getCurrentUser();
+
+        this.notisItems = await service.getNotifications(user.userId);
       } catch (error) {
-        console.error("Error fetching cart:", error)
-      }
-    },
-    async removeItem(id) { // Permite eliminar una notificación de la bandeja de notificaciones según su id
-      try {
-        const service = new NotificationApiService();
-        await service.removeFromList(id)
-        this.notisItems = await service.getNotifications();
-      } catch (error) {
-        console.error("Error deleting item:", error)
+        console.error("Error fetching notis:", error)
       }
     },
     async emptyList() { // Permite eliminar todos los elementos almacenados dentro de la bandjea de notificaciones
@@ -81,9 +71,6 @@ export default {
         <div class="notis-list__noti-info">
           <strong>{{ noti.title }}</strong><br />
           <span>{{ noti.content }}</span><br />
-        </div>
-        <div class="notis-list__actions">
-          <button @click="removeItem(noti.id)"><trashIcon /></button>
         </div>
       </div>
     </pv-drawer>

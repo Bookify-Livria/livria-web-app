@@ -2,85 +2,20 @@
 
 import 'primeicons/primeicons.css';
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
-import {notifyEvent} from "../../public/shared-services/to-notify.js";
-import { UserApiService } from "../service/user-api.service.js";
-
-const value1 = '';
-const value2 = '';
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "Login",
   components: {
-    LanguageSwitcher,
+    LanguageSwitcher
   },
   data() {
     return {
-      value1: '',
-      value2: ''
+      username: '',
+      password: ''
     }
   },
   methods: {
-    async clearLogin() { // Permite al sistema eliminar los datos almacenados en userlogin
-      try {
-        const response = new UserApiService();
-        const users = await response.getLoggedInUser();
-
-        await Promise.all(users.map(user =>
-            response.deleteLoggedInUser(user.id)
-        ));
-
-        console.log("Cleared login.");
-      } catch (error) {
-        console.error("Error clearing login:", error);
-      }
-    },
-
-    async createLogin(userId, valueA, valueB) { // Permite al sistema registrar la información de login al momento de completarse
-      const newUser = {
-        id: userId,
-        username: valueA,
-        password: valueB
-      };
-
-      try {
-        const response = new UserApiService();
-        const user = await response.createLoggedInUser(newUser);
-        console.log("Login session created for:", user.username);
-      } catch (error) {
-        console.error("Error creating login session:", error);
-      }
-    },
-
-    async validateLogin(valueA, valueB) { // Permite al sistema comparar la información registrada en el login con la de los usuarios registrados en la Fake API
-      try {
-        const response = new UserApiService();
-        const clients = await response.getUsers();
-
-        const admin = await response.getAdminUser();
-
-        const matchedUser = clients.find(
-            user => user.username === valueA && user.password === valueB
-        );
-
-        if (matchedUser) {
-          console.log("Login successful:", matchedUser.display);
-          return matchedUser;
-        } else {
-          const matchedAdmin = admin.username === valueA && admin.password === valueB ? admin : null;
-
-          if (matchedAdmin) {
-            console.log("Login successful:", matchedAdmin.display);
-            return matchedAdmin;
-          } else {
-            console.warn("Login failed: invalid credentials.");
-            return null;
-          }
-        }
-      } catch (error) {
-        console.error("Error validating login:", error);
-        return null;
-      }
-    },
     goToHome() { // Permite al usuario acceder a la ruta de "Home"
       this.$router.push('/home');
     },
@@ -90,33 +25,29 @@ export default {
     goToAdminAccess(){ // Permite al usuario acceder a la ruta de "Acceso de Administrador"
       this.$router.push('/access');
     },
-    async handleLogin(valueA, valueB) { // Permite validar el inicio de sesión y registar la información del usuario loggeado
-      const matchedUser = await this.validateLogin(valueA, valueB);
-      if (matchedUser && valueA!=='' && valueB!=='') {
-        await this.createLogin(matchedUser.id, valueA, valueB);
-        if (matchedUser.adminAccess) {
-          this.goToAdminAccess();
-        } else {
-          this.goToHome();
-        }
-      } else {
-        this.showFail();
-      }
-    },
-
-    showLogin() { // Muestra un mensaje flotante (Toast) de confirmación de inicio de sesión si es exitoso
+    async handleLogin() { // Permite validar el inicio de sesión y registar la información del usuario loggeado
       try {
-        this.$refs.toast.add({
-          severity: 'success',
-          summary: this.$t('login-success'),
-          detail: this.$t('login-success-details'),
-          life: 3000
-        });
+        const credentials = {
+          username: this.username,
+          password: this.password
+        };
+
+        await AuthService.loginAsClient(credentials);
+
+        const currentUser = AuthService.getCurrentUser();
+
+        if (currentUser && currentUser.token) {
+          this.goToHome();
+        } else {
+          this.showFail();
+        }
       } catch (error) {
-        console.error("Error adding toast:", error);
+        console.error("Client login failed:", error);
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          this.showFail();
+        }
       }
     },
-
     showFail() { // Muestra un mensaje flotante (Toast) de error de inicio de sesión si es fallido
       try {
         this.$refs.toast.add({
@@ -130,9 +61,8 @@ export default {
       }
     }
   },
-
   mounted() { // Al iniciar el componente, elimina los datos registrados en el Login
-    this.clearLogin();
+    AuthService.logOut();
   },
 }
 </script>
@@ -154,7 +84,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-input-text v-model="value1" class="form-input" aria-label="User input"/>
+              <pv-input-text v-model="username" class="form-input" aria-label="User input"/>
             </div>
           </div>
 
@@ -164,7 +94,7 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-password v-model="value2" class="form-input" :feedback="false" />
+              <pv-password v-model="password" class="form-input" :feedback="false" />
             </div>
 
             <div class="link-class">
@@ -175,15 +105,21 @@ export default {
 
         <template #footer>
           <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-          <pv-button @click="handleLogin(value1, value2)" class="form-button" aria-label="Login button">{{ $t('login')}}</pv-button>
+          <pv-button @click="handleLogin()" class="form-button" aria-label="Login button">{{ $t('login')}}</pv-button>
         </template>
       </pv-card>
       <div class="division">{{ $t('or')}}</div>
       <pv-card>
         <template #content class="ext-buttons">
-          <div>
-            <p style="text-align: center">{{ $t("createacc")}}</p>
-            <pv-button @click="goToRegister()" class="justify-center external"  :label="$t('register')" iconPos="left" aria-label="Register button"/>
+          <div class="same-line">
+            <div>
+              <p style="text-align: center">{{ $t("createacc")}}</p>
+              <pv-button @click="goToRegister()" class="justify-center external"  :label="$t('register')" iconPos="left" aria-label="Register button"/>
+            </div>
+            <div>
+              <p style="text-align: center">{{ $t("enterasadmin")}}</p>
+              <pv-button @click="goToAdminAccess()" class="justify-center external"  label="admin" iconPos="right" aria-label="Admin button"/>
+            </div>
           </div>
         </template>
       </pv-card>
@@ -329,6 +265,13 @@ export default {
     margin-left: 4vh;
 
   }
+}
+
+.same-line {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .ext-buttons {

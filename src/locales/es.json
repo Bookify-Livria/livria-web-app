@@ -78,13 +78,13 @@
   },
 
   "genres": {
-    "literatura": "Literatura",
-    "ficcion": "Ficción",
-    "noficcion": "No Ficción",
-    "mangasycomics": "Mangas y Cómics",
-    "juvenil": "Juvenil",
-    "infantil": "Infantil",
-    "ebooks": "eBooks",
+    "literature": "Literatura",
+    "fiction": "Ficción",
+    "non_fiction": "No Ficción",
+    "mangas_comics": "Mangas y Cómics",
+    "juvenile": "Juvenil",
+    "children": "Infantil",
+    "ebooks_audiobooks": "eBooks",
     "default": "Género"
   },
 
@@ -125,7 +125,7 @@
     "not-status": "Notificaciones de estado de pedido",
     "not-email": "Notificaciones por correo",
     "visibility": "Visibilidad del perfil",
-    "current-password": "Cambiar contraseña",
+    "change-info": "Editar información de usuario",
     "new-password": "Nueva contraseña"
   },
 
@@ -134,15 +134,26 @@
   "create-community": "Crear Comunidad",
   "form": {
     "name": "Nombre",
+    "select_category": "Seleccione la categoría",
     "description": "Descripción",
     "category": "Categoría",
-    "image": "URL de la imagen"
+    "image": "URL de la imagen",
+    "title": "Título",
+    "author": "Autor(a)",
+    "genre": "Género",
+    "language": "Lenguaje",
+    "cover": "URL de Imagen de la Portada",
+    "purchase-price": "Precio de Compra",
+    "sale-price": "Precio de Venta",
+    "stock": "Stock",
+    "add": "Añadir nuevo libro"
   },
   "see-more": "Ver Más +",
 
   "comm" : {
     "thoughts": "¿En qué estás pensando?",
     "join": "Unirse +",
+    "leave": "Salirse -",
     "post": "Publicar",
     "image": "Pega aquí la URL de una imagen que quieras agregar."
   },
@@ -177,10 +188,13 @@
     "nickname": "Solo letras (máx. 20 caracteres).",
     "username": "Solo letras o números (máx. 20 caracteres).",
     "url": "Debe ser un enlace válido.",
-    "email": "Correo electrónico no válido."
+    "email": "Correo electrónico no válido.",
+    "password-length": "Debe tener al menos 6 caracteres."
+    
   },
 
   "createacc": "¿No tienes una cuenta?",
+  "enterasadmin": "Ingresa como Administrador",
   "subscription": "Suscripción",
   "yes-subs": "Plan Communidad",
   "no-subs": "Plan Free",
@@ -200,8 +214,8 @@
   "register-success": "Registro exitoso",
   "register-success-details": "¡Bienvenido a Livria!",
 
-  "update-success": "Contraseña actualizada exitosamente",
-  "update-success-details": "La contraseña ha sido actualizada.",
+  "update-success": "Info actualizada exitosamente",
+  "update-success-details": "La info ha sido actualizada.",
   "update-fill-fail": "Debe llenar todos los campos",
   "update-fill-fail-details": "Error: debe llenar todos los campos del formulario",
   "update-password-fail": "Contraseña incorrecta",
@@ -225,6 +239,7 @@
     "pay": "Completar Orden",
     "notice": "Espera!!!",
     "cart-empty": "No podemos continuar con la compra porque su carrito está vacío.",
+    "no-money": "We can't proceed with the purchase because you don't have enough money.",
     "field-missing": "No podemos continuar con la compra porque faltan uno o más campos.",
     "info-recipient": "Información del Destinatario",
     "delivery": "Información de Entrega",
@@ -328,7 +343,8 @@
     "inventory": "Inventario",
     "statistics": "Estadísticas",
     "settings": "Ajustes",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "capital": "Tu Capital"
   },
 
   "sidebar.categories": "Géneros",
@@ -409,6 +425,7 @@
     "shipping-info": "Información de Envío",
     "shipping-address": "Dirección de Envío",
     "shipping-district": "Distrito de Envío",
+    "shipping-city": "Ciudad de Envío",
     "shipping-reference": "Referencia de Envío",
     "order-items": "Artículos del Pedido",
     "item": "Artículo",
@@ -421,6 +438,15 @@
     "update-status": "Actualizar Estado",
     "print": "Imprimir",
     "close": "Cerrar"
+  },
+
+  "dashboard-statistics": {
+    "title": "Gestión y estadísticas",
+    "subtitle": "Gestionar las ventas y las ganancias de Livria",
+    "top3": "Los tres libros más vendidos",
+    "sold-count": "{count} vendidos",
+    "genres": "Ingresos según los géneros",
+    "pitch": "Flujo de capital y operaciones"
   },
 
   "dashboard-settings": {

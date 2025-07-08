@@ -1,8 +1,7 @@
 <script>
-import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 import {UserApiService} from "../service/user-api.service.js";
 import confirmation from "../components/Subscription-confirmation.component.vue"
-import {notifyEvent} from "../../public/shared-services/to-notify.js";
 
 export default {
   name: "CommunityPlanComponent",
@@ -14,10 +13,19 @@ export default {
       acceptedTerms: false,
       acceptedPrivacy: false,
       showConfirmation: false,
+      planAccess: false
     };
   },
-
   methods: {
+    loadInfo() {
+      const freshUser = AuthService.getCurrentUser();
+      this.user = freshUser;
+
+      if (this.user.subscription === "communityplan") {
+        this.goCommunities();
+      }
+
+    },
     goCommunities(){ // Permite al usuario acceder directamente a la ruta de "communitites"
       this.$router.push('/communities');
     },
@@ -29,26 +37,28 @@ export default {
         life: 3000
       });
     },
-    async updateSubs() { // Permite asignar el valor de la suscripción del usuario loggeado a "verdadero"
+    async updateSubs() { // Permite asignar la suscripción a comunidades del usuario loggeado
       const service = new UserApiService();
-      const freshUser = await getLoggedInUser();
-      this.user = freshUser;
 
+      if (!this.user) {
+        console.error('No se pudo obtener el usuario loggeado. Operación de actualización cancelada.');
+        return;
+      }
 
       try {
-        await service.updateUser({
-          ...this.user,
-          subscription: true
-        });
+        await service.updateUserSubscription(this.user.userId, "communityplan");
+
         this.showConfirmation = true;
         console.log('showConfirmation:', this.showConfirmation);
-        await notifyEvent("plan");
         this.youveGotANoti();
       } catch (error) {
         console.error('Fail!!!!!!!', error);
       }
     },
   },
+  mounted(){
+    this.loadInfo();
+  }
 };
 </script>
 

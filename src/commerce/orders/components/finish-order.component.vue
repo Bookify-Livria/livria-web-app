@@ -2,9 +2,6 @@
 import { CartApiService } from "../../shared-services/cart-api.service.js";
 import { OrderApiService } from "../services/order-api.service.js";
 import { UserApiService } from "../../../subscription/service/user-api.service.js";
-import { generateOrderCode } from "../services/order-code.generator.js";
-import { getLoggedInUser } from "../../../public/shared-services/get-logged-user.js";
-import { notifyEvent } from "../../../public/shared-services/to-notify.js";
 import OrderConfirmation from "./order-confirmation.component.vue";
 
 import trashIcon from "../../../assets/images/icons/Trash.svg";
@@ -12,6 +9,7 @@ import cartIcon from "../../../assets/images/icons/Shop_kart.svg";
 import userIcon from "../../../assets/images/icons/User_alt.svg";
 import packageIcon from "../../../assets/images/icons/Package.svg";
 import cardIcon from "../../../assets/images/icons/Credit_card.svg";
+import AuthService from "../../../public/shared-services/authentication.service.js";
 
 export default {
   name: "finish-order.component" ,
@@ -25,7 +23,7 @@ export default {
   },
   data() {
     return {
-      code: "",
+      lastOrderCode: "",
       cartItems: [],
       recipient: {
         name: "",
@@ -37,8 +35,8 @@ export default {
       delivery: false,
       shipping: {
         address: "",
-        city: "",
-        region: "",
+        city: "Lima",
+        district: "",
         reference: ""
       },
       status: 'pending',
@@ -63,7 +61,7 @@ export default {
     async loadCart() { // Obtiene la información almacenada dentro de carrito de compras
       try {
         const service = new CartApiService()
-        this.cartItems = await service.getCart()
+        this.cartItems = await service.getCart(this.currentUser.id);
       } catch (error) {
         console.error("Error fetching cart:", error)
       }
@@ -79,62 +77,72 @@ export default {
     },
     async removeItem(Id) { // Elimina un producto de la lista de compras en base a su id
       try {
-        const service = new CartApiService()
-        await service.removeFromCart(Id)
-        this.cartItems = await service.getCart()
+        const service = new CartApiService();
+        await service.removeFromCart(Id, this.currentUser.id);
+        this.cartItems = await service.getCart(this.currentUser.id);
       } catch (error) {
         console.error("Error deleting item:", error)
       }
     },
-    async createOrder(phone, delivery) { // Registra una nueva orden con los datos del usuario y de entrega, además genera un código de orden aleatorio
+    async createOrder() { // Registra una nueva orden con los datos del usuario y de entrega, además genera un código de orden aleatorio
       try {
         const service = new OrderApiService();
-        const orders = await service.getOrders();
-
-        const newId = String(
-            orders.length > 0
-                ? Math.max(...orders.map(item => parseInt(item.id))) + 1
-                : 1
-        );
-        this.code = generateOrderCode();
-        const statusOptions = ["pending", "in progress", "delivered"];
-        this.status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
 
         const newOrder = {
-          id: newId,
-          code: this.code,
-          items: this.cartItems,
-          userId: this.currentUser.id,
-          userName: this.currentUser.display,
-          email: this.currentUser.email,
+          userClientId: this.currentUser.id,
+          userEmail: this.currentUser.email,
+          userPhone: this.recipient.phone,
+          userFullName: this.currentUser.display,
           recipientName: `${this.recipient.name} ${this.recipient.lastname}`,
-          phone,
-          delivery,
-          shipping: this.delivery === true || this.delivery === 'true' ? { ...this.shipping } : null,
-          total: this.getTotal(),
-          date: new Date().toISOString(),
           status: this.status,
+          isDelivery: this.delivery,
+          shipping: this.delivery ? {
+            address: this.shipping.address,
+            city: this.shipping.city,
+            district: this.shipping.district,
+            reference: this.shipping.reference
+          } : null,
         };
-        await service.createOrder(newOrder);
+        const createdOrder = await service.createOrder(newOrder);
 
         const deleteService = new CartApiService();
-        await deleteService.clearCart();
+        await deleteService.clearCart(this.currentUser.id);
 
+        this.cartItems= [],
+        this.recipient.name = "";
+        this.recipient.lastname = "";
+        this.recipient.phone = "";
+        this.delivery = false;
+        this.shipping.address = "";
+        this.shipping.district = "";
+        this.shipping.reference = "";
+
+        return createdOrder;
       } catch (error) {
         console.error("Error creating order:", error);
-        this.showFail();
       }
     },
     async loadUserData() { // Carga la información del usuario loggeado y obtiene su parámetro "email"
       try {
-        const user = await getLoggedInUser();
-        if (user) {
-          this.currentUser = user;
-          this.userEmail = user.email;
-          console.log(this.currentUser.id, this.currentUser.display)
+        const userService = new UserApiService();
+        const user = AuthService.getCurrentUser();
+        const authUser = await userService.getUserById(user.userId);
+
+        if (authUser) {
+          this.currentUser = authUser;
+          this.userEmail = authUser.email;
+          await this.loadCart();
         }
       } catch (error) {
         console.error("Error fetching user:", error);
+      }
+    },
+    async updateBookQuantity(cartId, quantity) { //Actualiza la cantidad de un libro en el carrito
+      try {
+        const service = new CartApiService();
+        await service.updateQuantity(cartId, this.currentUser.id, quantity);
+      } catch (error) {
+        console.error("Error updating quantity of cart item:", error)
       }
     },
     showMissingFields() { // Muestra un mensaje flotante (Toast) que informa al usuario sobre un error de validación relacionado all llenado de campos del formulario
@@ -190,48 +198,32 @@ export default {
     goToStep4(activateCallback) { // Valida que, para continuar desde el paso 4 de la compra, el cliente haya completado el paso 3
       if (this.validateStep3()) {
         activateCallback('4');
+        console.log(this.recipient.phone);
+        console.log(this.delivery);
+        console.log(this.shipping);
       } else {
         this.showMissingFields();
       }
     },
-    async handleSubmit(activateCallback) { // Valida que se hayan completado todos los pasos correctamente para proceder con el registro de la orden
+    async handleSubmit() { // Valida que se hayan completado todos los pasos correctamente para proceder con el registro de la orden
       if (!this.validateStep4()) {
         this.showMissingFields();
         return;
       }
       try {
-        await this.createOrder(this.recipient.phone, this.delivery);
+        const createdOrder = await this.createOrder();
 
-        const service = new UserApiService();
-        const freshUser = await getLoggedInUser();
-        this.user = freshUser;
-
-        const newId = String(
-            this.user.order.length > 0
-                ? Math.max(...this.user.order.map(item => parseInt(item.id))) + 1
-                : 1
-        );
-
-        const newOrder = {
-          id: newId,
-          code: this.code,
-          status: this.status
-        };
-
-        try {
-          await service.updateUser({
-            ...this.user,
-            order: [...this.user.order, newOrder]
-          });
-          this.showConfirmation = true;
-
-        } catch (error) {
-          console.error('Fail!!!!!!!', error);
+        if (createdOrder && createdOrder.code) {
+          this.lastOrderCode = createdOrder.code;
+          console.log("Last created order code:", this.lastOrderCode);
+        } else {
+          console.warn("Order was not created or code is missing.");
+          return;
         }
 
         this.showConfirmation = true;
-        await notifyEvent("order");
         this.youveGotANoti();
+
       } catch (err) {
         console.error(err);
       }
@@ -241,7 +233,6 @@ export default {
     }
   },
   mounted() {
-    this.loadCart();
     this.loadUserData();
   }
 }
@@ -261,7 +252,7 @@ export default {
             <span>S/ {{ item.book.salePrice.toFixed(2) }}</span>
           </div>
           <div class="shopping-cart__actions">
-            <select v-model="item.quantity">
+            <select v-model="item.quantity" @change="updateBookQuantity(item.id, item.quantity)">
               <option v-for="n in 3" :key="n" :value="n">{{ n }}</option>
             </select>
             <button @click="removeItem(item.id)"><trashIcon /></button>
@@ -448,7 +439,7 @@ export default {
               <div class="nav-buttons">
                 <pv-toast position="top-right" style="margin-top: 10rem" />
                 <button type="button" @click="activateCallback('3')">{{$t("purchase.back")}}</button>
-                <button type="button" @click="handleSubmit(activateCallback)" aria-label="Confirm payment and finish purchase">
+                <button type="button" @click="handleSubmit()" aria-label="Confirm payment and finish purchase">
                   {{ $t("purchase.pay") }}
                 </button>
               </div>
@@ -460,7 +451,7 @@ export default {
 
   </div>
   <!-- Confirmation -->
-  <OrderConfirmation v-if="showConfirmation" @close="goHome" :orderCode="code" ></OrderConfirmation>
+  <OrderConfirmation v-if="showConfirmation" @close="goHome" :orderCode="lastOrderCode" ></OrderConfirmation>
 </template>
 
 <style scoped>

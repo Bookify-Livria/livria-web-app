@@ -4,7 +4,7 @@ import footerComponent from "../components/footer-content.component.vue";
 import genreBooks from "../../commerce/books/components/genre-books.component.vue";
 
 export default {
-  name: "book-literature.component",
+  name: "genre-cardshow.component",
   components: {
     toolbarComponent,
     footerComponent,
@@ -19,13 +19,13 @@ export default {
   computed: {
     genreTitle() {
       const genreKeys = [
-        "literatura",
-        "ficcion",
-        "noficcion",
-        "mangasycomics",
-        "juvenil",
-        "infantil",
-        "ebooks"
+        "literature",
+        "fiction",
+        "non_fiction",
+        "mangas_comics",
+        "juvenile",
+        "children",
+        "ebooks_audiobooks"
       ]
       return genreKeys.includes(this.genre)
           ? this.$t(`genres.${this.genre}`)

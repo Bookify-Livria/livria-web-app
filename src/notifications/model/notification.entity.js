@@ -1,8 +1,12 @@
 export class Notification {
-    constructor(id, date, title, content) {
+    constructor(id, userClientId, createdAt, type, title, content, isRead, isHidden) {
         this.id = id;
-        this.date = date;
+        this.userClientId = userClientId;
+        this.createdAt = createdAt;
+        this.type = type;
         this.title = title;
         this.content = content;
+        this.isRead = isRead;
+        this.isHidden = isHidden;
     }
 }

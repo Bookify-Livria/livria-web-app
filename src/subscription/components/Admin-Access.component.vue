@@ -1,6 +1,7 @@
 <script>
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
 import { UserApiService } from "../service/user-api.service.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "Admin-Access",
@@ -11,6 +12,7 @@ export default {
     return {
       pin: '',
       password: '',
+      adminUsername: ''
     }
   },
   methods: {
@@ -32,26 +34,40 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-    async validateLogin(valueA, valueB) { // Valida las credenciales del administrador
+    async validateAdminAccess() { // Esta función maneja la autenticación completa del administrador
+      if (!this.adminUsername || !this.password || !this.pin) {
+        this.showFail();
+        return;
+      }
+
+      const credentials = {
+        username: this.adminUsername,
+        password: this.password,
+        securityPin: this.pin
+      };
+
       try {
-        const response = new UserApiService();
-        const admin = await response.getAdminUser();
+        await AuthService.loginAsAdmin(credentials);
 
-        const matchedAdmin = admin.password === valueA && admin.securityPin === valueB ? admin : null;
+        const currentUser = AuthService.getCurrentUser();
 
-        if (matchedAdmin) {
-          console.log("Login successful:", matchedAdmin.display);
+        if (currentUser && currentUser.token && currentUser.role === 'Admin') {
+          console.log("Admin access confirmed! Redirecting to dashboard.");
           this.goAdminPage();
         } else {
-          console.warn("Login failed: invalid credentials.");
+          console.warn("Admin access verification failed (Backend check). Invalid credentials or role mismatch.");
           this.showFail();
         }
       } catch (error) {
-        console.error("Error validating login:", error);
+        console.error("Error during admin access validation:", error);
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          this.showFail();
+        }
       }
     }
   },
   mounted() {
+
   },
 
 }
@@ -69,7 +85,17 @@ export default {
         <template #content>
           <div class="form-group">
             <div class="label-class">
-              <label class="form-label">{{ $t('confpass') }}</label>
+              <label class="form-label">{{ $t('userinput')}}</label>
+            </div>
+
+            <div class="input-class">
+              <pv-input-text v-model="adminUsername" class="form-input" aria-label="User input"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-class">
+              <label class="form-label">{{ $t('passinput') }}</label>
             </div>
 
             <div class="input-class">
@@ -92,7 +118,7 @@ export default {
           <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
           <div class="same-line">
             <pv-button @click="goBack()" class="form-button">{{ $t('go-back') }}</pv-button>
-            <pv-button @click="validateLogin(password, pin)" class="form-button" aria-label="Login button">{{ $t('login') }}</pv-button>
+            <pv-button @click="validateAdminAccess" class="form-button" aria-label="Login button">{{ $t('login') }}</pv-button>
           </div>
         </template>
       </pv-card>

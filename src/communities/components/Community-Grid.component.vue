@@ -62,7 +62,7 @@ export default {
     </div>
     <!-- Communities Grid -->
     <div
-        v-for="community in communities"
+        v-for="community in [...communities].reverse()"
         :key="community.id"
         class="custom-card-wrapper"
     >

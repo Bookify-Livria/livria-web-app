@@ -4,10 +4,33 @@ import { Shipping } from '../model/shipping.entity.js';
 
 export class OrderAssembler {
     static toEntityFromResource(resource) {
-        const items = resource.items.map(CartAssembler.toEntityFromResource);
+        //const items = resource.items.map(CartAssembler.toEntityFromResource);
+        const items = resource.items ? resource.items.map(itemResource => {
+            const simulatedBookResource = {
+                id: itemResource.bookId,
+                title: itemResource.bookTitle,
+                description: "",
+                author: itemResource.bookAuthor,
+                salePrice: itemResource.bookPrice,
+                purchasePrice: (itemResource.bookPrice)/1.65,
+                stock: 0,
+                cover: itemResource.bookCover,
+                genre: "",
+                language: ""
+            };
+            const simulatedCartItemResource = {
+                id: itemResource.id, // The item ID from the order response
+                book: simulatedBookResource, // The newly created nested book object
+                quantity: itemResource.quantity,
+                userClientId: resource.userClientId // User ID from the main order resource
+            };
+            return CartAssembler.toEntityFromResource(simulatedCartItemResource);
+        }) : [];
+
         const shipping = resource.shipping
             ? new Shipping(
                 resource.shipping.address,
+                resource.shipping.city,
                 resource.shipping.district,
                 resource.shipping.reference
             )
@@ -16,17 +39,17 @@ export class OrderAssembler {
         return new Order(
             resource.id,
             resource.code,
-            items,
-            resource.userId,
-            resource.userName,
-            resource.email,
+            resource.userClientId,
+            resource.userEmail,
+            resource.userPhone,
+            resource.userFullName,
             resource.recipientName,
-            resource.phone,
-            resource.delivery,
+            resource.status,
+            resource.isDelivery,
             shipping,
             resource.total,
             resource.date,
-            resource.status,
+            items,
         );
     }
 
@@ -35,26 +58,25 @@ export class OrderAssembler {
     }
 
     static toResource(order) {
+        let shippingDetailsPayload = null;
+        if (order.isDelivery && order.shipping) {
+            shippingDetailsPayload = {
+                address: order.shipping.address,
+                city: order.shipping.city,
+                district: order.shipping.district,
+                reference: order.shipping.reference
+            };
+        }
+
         return {
-            id: order.id,
-            code: order.code,
-            items: order.items.map(CartAssembler.toResource),
-            userId: order.userId,
-            userName: order.userName,
-            email: order.email,
+            userClientId: order.userClientId,
+            userEmail: order.userEmail,
+            userPhone: order.userPhone,
+            userFullName: order.userFullName,
             recipientName: order.recipientName,
-            phone: order.phone,
-            delivery: order.delivery,
-            shipping: order.delivery
-                ? {
-                    address: order.shipping.address,
-                    district: order.shipping.district,
-                    reference: order.shipping.reference
-                }
-                : null,
-            total: order.total,
-            date: order.date,
             status: order.status,
+            isDelivery: order.isDelivery,
+            shippingDetails: shippingDetailsPayload,
         };
     }
 

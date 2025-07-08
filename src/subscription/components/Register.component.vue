@@ -1,11 +1,8 @@
 <script>
-import axios from 'axios';
 
-import { ref } from 'vue';
 import 'primeicons/primeicons.css';
-import {UserApiService} from "../service/user-api.service.js";
 import LanguageSwitcher from "../../public/components/language-switcher.component.vue";
-import {notifyEvent} from "../../public/shared-services/to-notify.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "Register",
@@ -14,14 +11,13 @@ export default {
   },
   data() {
     return {
-
-      value1: '',
-      value2: '',
-      value3: '',
-      value4: '',
-      value5: '',
-      value6: '',
-      value7: '',
+      value1: '', // display
+      value2: '', // username
+      value3: '', // phrase
+      value4: '', // icon
+      value5: '', // email
+      value6: '', // password
+      value7: '', // confirmPassword
       info: []
     }
   },
@@ -38,15 +34,14 @@ export default {
     emailError() {
       return this.value5 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value5);
     },
+    passwordLengthError() {
+      return this.value6 && (this.value6.length < 6 || this.value6.length > 50);
+    },
+    passwordMatchError() {
+      return this.value6 && this.value7 && this.value6 !== this.value7;
+    }
   },
   methods: {
-    InvocaAPI() { // Permite obtener la información de los usuarios registrados en la Fake API
-      const service = new UserApiService()
-      service.getUsers().then(data => {
-        this.info = data
-        console.log(this.info)
-      })
-    },
     goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
@@ -77,52 +72,57 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-    async createUserWithAutoId() { // Permite registrar un nuevo usuario con una id auto asignada en base a la cantidad de usuario registrados
-      if (this.nicknameError || this.usernameError || this.urlError || this.emailError) {
+    async registerUser() { // Permite registrar un nuevo usuario con una id auto asignada en base a la cantidad de usuario registrados
+      if (this.nicknameError || this.usernameError || this.urlError || this.emailError || this.passwordMatchError) {
         this.showFail();
-      } else if (
-          this.value6 === this.value7 &&
-          this.value1 &&
-          this.value2 &&
-          this.value3 &&
-          this.value4 &&
-          this.value5 &&
-          this.value6
-      ) {
-        try {
-          const service = new UserApiService();
-          const users = await service.getUsers();
+        return;
+      }
 
-          const newId = String(
-              users.length > 0
-                  ? Math.max(...users.map(item => parseInt(item.id))) + 1
-                  : 1
-          );
+      if (!this.value1 || !this.value2 || !this.value3 || !this.value4 || !this.value5 || !this.value6 || !this.value7) {
+        this.showFail();
+        return;
+      }
 
-          const newUser = {
-            id: newId,
-            display: this.value1,
-            username: this.value2,
-            email: this.value5,
-            icon: this.value4,
-            password: this.value6,
-            phrase: this.value3,
-            order: [],
-            subscription: false
-          };
+      if (this.value6 !== this.value7) {
+        this.showFail();
+        return;
+      }
 
-          await service.createUser(newUser);
-          this.goToLogin()
+      try {
+        const newUser = {
+          display: this.value1,
+          username: this.value2,
+          phrase: this.value3,
+          icon: this.value4,
+          email: this.value5,
+          password: this.value6,
+          confirmPassword: this.value7
+        };
 
-        } catch (error) {
-          console.error("Error creating user:", error);
+        const response = await AuthService.register(newUser);
+
+        if (response.status === 200 || response.status === 201) {
+          this.showSuccess();
+          this.goToLogin();
+        } else {
+          this.showFail();
+        }
+
+      } catch (error) {
+        console.error("Error registering user:", error);
+        if (error.response) {
+          if (error.response.status === 400 && error.response.data.message) {
+            this.showFail(error.response.data.message);
+          } else {
+            this.showFail();
+          }
+        } else {
+          this.showFail();
         }
       }
     }
   },
-
-  mounted() { // Al iniciar el componente, se obtienen los datos de todos los usuario registrados en la Fake API
-    this.InvocaAPI();
+  mounted() {
   }
 }
 </script>
@@ -228,7 +228,16 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-password v-model="value6" :feedback="false" class="form-input" aria-label="Password input"/>
+              <pv-password
+                  v-model="value6"
+                  :feedback="false"
+                  class="form-input"
+                  aria-label="Password input"
+                  :class="{ 'is-invalid': passwordLengthError }"
+              />
+              <div v-if="passwordLengthError" class="error-msg">
+                {{ $t('errors.password-length') }}
+              </div>
             </div>
           </div>
 
@@ -238,7 +247,13 @@ export default {
             </div>
 
             <div class="input-class">
-              <pv-password v-model="value7" :feedback="false" class="form-input" aria-label="Confirm password input"/>
+              <pv-password
+                  v-model="value7"
+                  :feedback="false"
+                  class="form-input"
+                  aria-label="Confirm password input"
+                  :class="{ 'is-invalid': passwordMatchError && value7 !== '' }"
+              />
             </div>
           </div>
         </template>
@@ -247,7 +262,7 @@ export default {
           <pv-toast ref="toast" position="top-right" style="margin-top: 8.5rem"/>
           <div class="same-line">
             <pv-button @click="goToLogin()" class="form-button">{{ $t('go-back') }}</pv-button>
-            <pv-button type="submit" @click="createUserWithAutoId()" class="form-button" aria-label="Register button">{{ $t('register') }}</pv-button>
+            <pv-button type="submit" @click="registerUser" class="form-button" aria-label="Register button">{{ $t('register') }}</pv-button>
           </div>
         </template>
       </pv-card>

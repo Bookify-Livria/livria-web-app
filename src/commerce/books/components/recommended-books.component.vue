@@ -2,8 +2,9 @@
 import BookItem from './book-item.component.vue'
 import { BookApiService } from '../services/book-api.service.js'
 import { FavoriteApiService} from "../services/favorite-api.service.js";
-import { BannedApiService} from "../services/banned-api.service.js";
 import { UserApiService } from "../../../subscription/service/user-api.service.js";
+import { RecommendationsApiService } from "../services/recommendations-api.service.js";
+import AuthService from "../../../public/shared-services/authentication.service.js";
 
 export default {
   name: "recommended-books",
@@ -16,6 +17,8 @@ export default {
       allAvailableBooks: [],
       recommendedBooksPool: [],
       loading: true,
+      error: null,
+      currentUser: null
     };
   },
   methods : {
@@ -23,52 +26,49 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const bookApi = new BookApiService();
-        const favoriteApi = new FavoriteApiService();
-        const bannedApi = new BannedApiService();
-        const userApi = new UserApiService();
+        this.currentUser = await AuthService.getCurrentUser();
+        if (!this.currentUser || !this.currentUser.userId) {
+          this.error = "User not logged in or user ID not available.";
+          this.loading = false;
+          return;
+        }
+        const userClientId = this.currentUser.userId;
 
-        this.allAvailableBooks = await bookApi.getBooks();
+        const recommendationsApiService = new RecommendationsApiService();
+        let recommendedBooks = [];
+        try {
+          const apiResponse = await recommendationsApiService.getRecommendations(userClientId);
+          recommendedBooks = apiResponse.recommendedBooks || [];
+        } catch (err) {
+          console.warn("Could not fetch user-specific recommendations, falling back to general pool.", err);
+        }
 
-        const loggedInUsers = await userApi.getLoggedInUser();
-        const currentUser = loggedInUsers.length > 0 ? loggedInUsers[0] : null;
+        // Fetch all books for fallback if recommendations are empty or unavailable
+        const bookApiService = new BookApiService();
+        this.allAvailableBooks = await bookApiService.getBooks();
 
-        let potentialRecommendations = [...this.allAvailableBooks];
+        // Get banned books from localStorage
+        const bannedBooks = JSON.parse(localStorage.getItem('bannedBooks')) || [];
 
-        if (currentUser) {
-          const allFavorites = await favoriteApi.getFavorites();
-          const userFavorites = allFavorites.filter(f => f.userId === currentUser.id);
+        // Filter out banned books from recommendedBooks first
+        let filteredRecommendedBooks = recommendedBooks.filter(recBook =>
+            !bannedBooks.some(bannedBook => bannedBook.id === recBook.id)
+        );
 
-          const allBanned = await bannedApi.getBanned();
-          const userBanned = allBanned.filter(b => b.userId === currentUser.id);
-
-          const favoriteGenres = new Set();
-          userFavorites.forEach(fav => {
-            const book = this.allAvailableBooks.find(b => b.id === fav.bookId);
-            if (book && book.genre) {
-              favoriteGenres.add(book.genre);
-            }
-          });
-
-          if (favoriteGenres.size > 0) {
-            potentialRecommendations = this.allAvailableBooks.filter(book =>
-                favoriteGenres.has(book.genre)
-            );
-          }
-
-          const bannedBookIds = new Set(userBanned.map(b => b.bookId));
-          this.recommendedBooksPool = potentialRecommendations.filter(book =>
-              !bannedBookIds.has(book.id)
+        // If filteredRecommendedBooks is empty, use allAvailableBooks (after filtering banned) as the pool
+        if (filteredRecommendedBooks.length === 0) {
+          this.recommendedBooksPool = this.allAvailableBooks.filter(book =>
+              !bannedBooks.some(bannedBook => bannedBook.id === book.id)
           );
         } else {
-          // Si no hay usuario logueado, el pool de recomendaciones es simplemente todos los libros disponibles
-          this.recommendedBooksPool = [...this.allAvailableBooks];
+          this.recommendedBooksPool = filteredRecommendedBooks;
         }
 
         this.displayRandomSixBooks();
 
       } catch (err) {
         console.error("Error al inicializar recomendaciones:", err);
+        this.error = "Failed to load recommendations: " + err.message;
       } finally {
         this.loading = false;
       }
@@ -78,11 +78,12 @@ export default {
         this.books = [];
         return;
       }
-
       let tempPool = [...this.recommendedBooksPool];
       const selectedBooks = [];
 
-      for (let i = 0; i < 6 && tempPool.length > 0; i++) {
+      const numberOfBooksToSelect = Math.min(6, tempPool.length);
+
+      for (let i = 0; i < numberOfBooksToSelect; i++) {
         const randomIndex = Math.floor(Math.random() * tempPool.length);
         selectedBooks.push(tempPool[randomIndex]);
         tempPool.splice(randomIndex, 1);

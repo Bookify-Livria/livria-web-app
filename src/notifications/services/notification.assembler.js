@@ -2,7 +2,16 @@ import { Notification } from "../model/notification.entity.js"
 
 export class NotificationAssembler {
     static toEntityFromResource(resource) {
-        return new Notification(resource.id, resource.date, resource.title, resource.content);
+        return new Notification(
+            resource.id,
+            resource.userClientId,
+            resource.createdAt,
+            resource.type,
+            resource.title,
+            resource.content,
+            resource.isRead,
+            resource.isHidden,
+        );
     }
 
     static toEntitiesFromResponse(response) {
@@ -11,10 +20,9 @@ export class NotificationAssembler {
 
     static toResource(notification) {
         return {
-            id: notification.id,
-            date: notification.date,
-            title: notification.title,
-            content: notification.content
+            userClientId: notification.userClientId,
+            type: notification.type,
+            createdAt: notification.createdAt,
         };
     }
 }

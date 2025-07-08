@@ -8,20 +8,33 @@ export default {
       newCommunity: {
         name: '',
         description: '',
-        type: '',
+        type: 0,
         image: '',
-        banner: '',
-        posts: []
-      }
+        banner: ''
+      },
+      genres: [
+        { value: 0, key: 'literature' },
+        { value: 1, key: 'non_fiction' },
+        { value: 2, key: 'fiction' },
+        { value: 3, key: 'mangas_comics' },
+        { value: 4, key: 'juvenile' },
+        { value: 5, key: 'children' },
+        { value: 6, key: 'ebooks_audiobooks' }
+      ]
     }
   },
   methods: {
     saveCommunity() { // Permite registrar una nueva comunidad
       const service = new CommunityApiService()
-      const neww = { ...this.newCommunity, id: Date.now().toString() }
+
+      const newId = this.posts?.length
+          ? (Math.max(...this.posts.map(p => parseInt(p.id))) + 1)
+          : 1;
+
+      const neww = { ...this.newCommunity, id: newId }
       service.createCommunity(neww).then(() => {
         this.$emit('created', neww)
-        this.newCommunity = { name: '', description: '', type: '', image: '', banner: '', posts: [] }
+        this.newCommunity = { name: '', description: '', type: 0, image: '', banner: ''}
       })
     },
     closeForm() { // Emite el evento "close" al cerrar el formulario
@@ -36,12 +49,36 @@ export default {
     <div id="overlay" @click="closeForm"></div>
     <div id="formContainer" aria-label="Form container">
       <form @submit.prevent="saveCommunity">
-        <input type="text" v-model="newCommunity.name" :placeholder="$t('form.name')" class="form-input" required>
-        <textarea v-model="newCommunity.type" :placeholder="$t('form.category')" class="form-input" required></textarea>
-        <input type="text" v-model="newCommunity.description" :placeholder="$t('form.description')" class="form-input" required>
-        <input type="url" v-model="newCommunity.image" :placeholder="$t('form.image')" class="form-input" required>
-        <input type="url" v-model="newCommunity.banner" :placeholder="$t('form.sidebar')" class="form-input" required>
-        <pv-button type="submit" class="submit-button">{{ $t('create-community')}}</pv-button>
+        <div class="top-group">
+          <div class="form-group">
+            <label>{{ $t("form.name")}}</label>
+            <input type="text" v-model="newCommunity.name" class="form-input-orange" required>
+          </div>
+          <div class="same-line">
+            <label>{{ $t("form.category")}}</label>
+            <select id="genre-filter" v-model="newCommunity.type" class="form-input-orange" required>
+              <option :value="0" disabled>{{ $t("form.select_category") }}</option>
+              <option v-for="genre in genres" :key="genre.value" :value="genre.value">
+                {{ $t(`genres.${genre.key}`) }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="bottom-group">
+          <div class="form-group">
+            <label>{{ $t("form.description")}}</label>
+            <textarea v-model="newCommunity.description" class="form-input" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>{{ $t("form.image")}}</label>
+            <input type="url" v-model="newCommunity.image" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label>{{ $t("form.sidebar")}}</label>
+            <input type="url" v-model="newCommunity.banner" class="form-input" required>
+          </div>
+        </div>
+        <button type="submit">{{ $t('create-community')}}</button>
       </form>
     </div>
   </div>
@@ -64,14 +101,14 @@ export default {
 }
 
 #formContainer {
+  margin: 10rem calc(-1 * ((100vw - 100%) / 2)) 0;
   color: var(--color-accent-light-yellow);
   width: 500px;
   position: fixed;
-  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--color-background);
-  padding: 20px;
+  padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   z-index: 999;
@@ -83,19 +120,37 @@ export default {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin: 1rem;
 }
 
+.top-group {
+  width: 100%;
+  border-bottom: 1px solid var(--color-text);
+  color: var(--color-accent-orange);
+  padding-bottom: 2rem;
+}
+
+.bottom-group {
+  width: 100%;
+  color: var(--color-primary);
+  padding-top: 1rem;
+}
+
+.form-input-orange,
 .form-input {
   background-color: rgba(var(--color-accent-yellow-rgb), 0.15);
-  margin: 1rem 0;
+  margin: 0;
   padding: 1rem;
-  width: 90%;
+  width: 100%;
   border-radius: 5px;
   border: 1px solid var(--color-background);
 }
 
+.form-input-orange {
+  background-color: rgba(var(--color-accent-orange-rgb), 0.15);
+}
+
 .form-input,
+.form-input-orange,
 textarea {
   color: var(--color-text);
   resize: none;
@@ -105,30 +160,26 @@ textarea {
 textarea::placeholder {
   color: var(--color-accent-light-yellow);
   font-family: var(--font-primary);
-
 }
 
 .form-input:focus {
   border-color: var(--color-background);
 }
 
-.submit-button {
-  background-color: rgba(var(--color-accent-orange-rgb), 0.15);
-  color: var(--color-accent-orange);
-  text-transform: uppercase;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
 }
 
-.submit-button.p-button:hover,
-.submit-button.p-button:focus,
-.submit-button.p-button:active {
-  background-color: var(--color-accent-orange) !important;
-  color: var(--color-light) !important;
-  border-color: transparent !important;
+.same-line {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 </style>

@@ -6,7 +6,8 @@ import Button from 'primevue/button'
 import toolbarComponent from "../components/toolbar.component.vue"
 import footerComponent from "../components/footer-content.component.vue"
 import bookCarousel from "../../commerce/books/components/books-carousel.component.vue"
-import { getLoggedInUser } from "../shared-services/get-logged-user.js";
+import {UserApiService} from "../../subscription/service/user-api.service.js";
+import AuthService from "../shared-services/authentication.service.js";
 
 export default {
   name: "home.component",
@@ -21,8 +22,12 @@ export default {
 
     const goToCommunity = async () => {
       try {
-        const user = await getLoggedInUser();
-        if (user.subscription) {
+        const service = new UserApiService();
+        const user = AuthService.getCurrentUser();
+
+        const authUser = await service.getUserById(user.userId);
+
+        if (authUser.subscription === "communityplan") {
           router.push("/communities");
         } else {
           router.push("/subscription");
@@ -52,13 +57,13 @@ export default {
     ]);
 
     const genres = ref([
-      { id: 'literatura', label: 'literature', colorClass: 'go--orange' },
-      { id: 'noficcion', label: 'non-fiction', colorClass: 'go--yellow' },
-      { id: 'ficcion', label: 'fiction', colorClass: 'go--blue' },
-      { id: 'mangasycomics', label: 'mangas and comics', colorClass: 'go--orange' },
-      { id: 'juvenil', label: 'juvenile', colorClass: 'go--yellow' },
-      { id: 'infantil', label: 'children', colorClass: 'go--blue' },
-      { id: 'ebooks', label: 'ebooks and audiobooks', colorClass: 'go--orange' },
+      { id: 'literature', label: 'literature', colorClass: 'go--orange' },
+      { id: 'non_fiction', label: 'non-fiction', colorClass: 'go--yellow' },
+      { id: 'fiction', label: 'fiction', colorClass: 'go--blue' },
+      { id: 'mangas_comics', label: 'mangas and comics', colorClass: 'go--orange' },
+      { id: 'juvenile', label: 'juvenile', colorClass: 'go--yellow' },
+      { id: 'children', label: 'children', colorClass: 'go--blue' },
+      { id: 'ebooks_audiobooks', label: 'ebooks and audiobooks', colorClass: 'go--orange' },
     ]);
 
     return { slides, genres, goToCommunity };

@@ -1,4 +1,3 @@
-import { Post } from '../model/post.entity.js';
 import { Community } from '../model/community.entity.js';
 
 export class CommunityAssembler {
@@ -16,11 +15,6 @@ export class CommunityAssembler {
         if (!item) {
             return null;
         }
-
-        const posts = Array.isArray(item.posts)
-            ? item.posts.map(post => new Post(post.id, post.username, post.content, post.img))
-            : [];
-
         return new Community(
             item.id,
             item.name,
@@ -28,8 +22,19 @@ export class CommunityAssembler {
             item.type,
             item.image,
             item.banner,
-            posts
         );
+    }
+
+    //Convert data to API item using the entity model
+    static toResource(community) {
+        return {
+            id: community.id,
+            name: community.name,
+            description: community.description,
+            type: community.type,
+            image: community.image,
+            banner: community.banner
+        }
     }
 
 }

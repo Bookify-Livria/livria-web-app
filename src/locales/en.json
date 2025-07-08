@@ -59,7 +59,11 @@
   "comments": "Comments",
   "success": "Success",
   "add-favorite": "You successfully added this book to your favorites!",
-  "add-banned": "You successfully added this book to you banned list!",
+  "remove-favorite": "You removed this book from your favorites",
+  "remove-favorite-auto": "We've removed this book from your favorites",
+  "add-banned": "You successfully added this book to your banned list!",
+  "remove-banned": "You removed this book from your banned list",
+  "remove-banned-auto": "We've removed this book from your banned list",
   "reviews": "Reviews",
   "make-review": "Leave a review for this book",
   "previous-reviews": "Check out other users' reviews",
@@ -78,13 +82,13 @@
   },
 
   "genres": {
-    "literatura": "Literature",
-    "ficcion": "Fiction",
-    "noficcion": "Non-Fiction",
-    "mangasycomics": "Manga & Comics",
-    "juvenil": "Young Adult",
-    "infantil": "Children",
-    "ebooks": "eBooks",
+    "literature": "Literature",
+    "fiction": "Fiction",
+    "non_fiction": "Non-Fiction",
+    "mangas_comics": "Manga & Comics",
+    "juvenile": "Juvenile",
+    "children": "Children",
+    "ebooks_audiobooks": "eBooks & Audiobooks",
     "default": "Genre"
   },
 
@@ -125,7 +129,7 @@
     "not-status": "Allow notifications for order status",
     "not-email": "Allow email notifications",
     "visibility": "Profile visibility",
-    "change-pass": "Change password",
+    "change-info": "Change user information",
     "new-password": "New password"
   },
 
@@ -134,15 +138,26 @@
   "form": {
     "name": "Name",
     "description": "Description",
+    "select_category": "Select a category",
     "category": "Category",
     "image": "Profile Image URL",
-    "sidebar": "Banner Image URL"
+    "sidebar": "Banner Image URL",
+    "title": "Title",
+    "author": "Author",
+    "genre": "Genre",
+    "language": "Language",
+    "cover": "URL Cover Image",
+    "purchase-price": "Purchase Price",
+    "sale-price": "Sale Price",
+    "stock": "Stock",
+    "add": "Add new book"
   },
   "see-more": "See More +",
 
   "comm" : {
     "thoughts": "What are your thoughts?",
     "join": "Join +",
+    "leave": "Leave -",
     "post": "Post",
     "image": "Paste here the url from an image you'd like to add."
   },
@@ -177,10 +192,12 @@
     "nickname": "Letters only (max. 20 characters).",
     "username": "Letters or numbers only (max. 20 characters).",
     "url": "Must be a valid link.",
-    "email": "Invalid email."
+    "email": "Invalid email.",
+    "password-length": "Must be at least 6 characters."
   },
 
   "createacc": "Don't have an account?",
+  "enterasadmin": "Sign In as Administrator",
   "subscription": "Subscription",
   "yes-subs": "Community Plan",
   "no-subs": "Free Plan",
@@ -200,8 +217,8 @@
   "register-success": "Register success",
   "register-success-details": "Welcome to Livria!",
 
-  "update-success": "Password updated successfully",
-  "update-success-details": "Password has been updated.",
+  "update-success": "Info updated successfully",
+  "update-success-details": "Info has been updated.",
   "update-fill-fail": "Must fill all camps",
   "update-fill-fail-details": "Error: fill all form camps",
   "update-password-fail": "Wrong password",
@@ -225,6 +242,7 @@
     "pay": "Complete Order",
     "notice": "Wait!!!",
     "cart-empty": "We can't proceed with the purchase because your cart is empty.",
+    "no-money": "We can't proceed with the purchase because you don't have enough money.",
     "field-missing": "We can't proceed with the purchase because there's one or more fields missing.",
     "info-recipient": "Recipient Information",
     "delivery": "Delivery Information",
@@ -329,7 +347,8 @@
     "inventory": "Inventory",
     "statistics": "Statistics",
     "settings": "Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "capital": "Your Capital"
   },
 
   "sidebar.categories": "Genres",
@@ -410,6 +429,7 @@
     "shipping-info": "Shipping Information",
     "shipping-address": "Shipping Address",
     "shipping-district": "Shipping District",
+    "shipping-city": "Shipping City",
     "shipping-reference": "Reference",
     "order-items": "Order Items",
     "item": "Item",
@@ -422,6 +442,15 @@
     "update-status": "Update Status",
     "print": "Print",
     "close": "Close"
+  },
+
+  "dashboard-statistics": {
+    "title": "Management and Statistics",
+    "subtitle": "Manage Livria's sales and profits",
+    "top3": "Top Three Best Selling Books",
+    "sold-count": "{count} Sold",
+    "genres": "Revenue according the genres",
+    "pitch": "Capital Flow and Operations"
   },
 
   "dashboard-settings": {

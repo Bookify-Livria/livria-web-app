@@ -3,7 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 import Home from '../public/pages/home.component.vue';
 import Account from '../public/pages/account.component.vue';
 import Communities from "../public/pages/communities.component.vue";
-import Booksss from '../public/pages/genre-cardshow.component.vue';
+import GenreCardshow from '../public/pages/genre-cardshow.component.vue';
 import SingularBook from '../public/pages/book-page.component.vue';
 import Recommendation from "../public/pages/recommendation.component.vue";
 import Search from "../public/pages/search-component.vue";
@@ -42,44 +42,44 @@ const router = createRouter({
         {
             path: '/bookl',
             name: 'LiteratureBooks',
-            component: Booksss,
-            props: { genre: 'literatura' }
+            component: GenreCardshow,
+            props: { genre: 'literature' }
         },
         {
             path: '/booknf',
             name: 'NoFictionBooks',
-            component: Booksss,
-            props: { genre: 'noficcion' }
+            component: GenreCardshow,
+            props: { genre: 'non_fiction' }
         },
         {
             path: '/bookf',
             name: 'FictionBooks',
-            component: Booksss,
-            props: { genre: 'ficcion' }
+            component: GenreCardshow,
+            props: { genre: 'fiction' }
         },
         {
             path: '/bookmc',
             name: 'MangasycomicsBooks',
-            component: Booksss,
-            props: { genre: 'mangasycomics' }
+            component: GenreCardshow,
+            props: { genre: 'mangas_comics' }
         },
         {
             path: '/bookj',
             name: 'JuvenilBooks',
-            component: Booksss,
-            props: { genre: 'juvenil' }
+            component: GenreCardshow,
+            props: { genre: 'juvenile' }
         },
         {
             path: '/bookc',
             name: 'ChildrenBooks',
-            component: Booksss,
-            props: { genre: 'infantil' }
+            component: GenreCardshow,
+            props: { genre: 'children' }
         },
         {
             path: '/bookea',
             name: 'EaBooks',
-            component: Booksss,
-            props: { genre: 'ebooks' }
+            component: GenreCardshow,
+            props: { genre: 'ebooks_audiobooks' }
         },
         {
             path: '/recommendations',

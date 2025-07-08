@@ -2,6 +2,8 @@
 import LanguageSwitcher from "./language-switcher.component.vue";
 import CartDrawer from "../../commerce/cart/components/cart-drawer.component.vue";
 import NotificationsDrawer from "../../notifications/components/notifications-drawer.component-api.vue";
+import AuthService from "../shared-services/authentication.service.js"
+import { UserApiService } from "../../subscription/service/user-api.service.js";
 // Icons
 import cartIcon from "../../assets/images/icons/Shop_kart.svg";
 import locationIcon from "../../assets/images/icons/Location.svg";
@@ -9,8 +11,6 @@ import bellIcon from "../../assets/images/icons/Bell.svg";
 import userIcon from "../../assets/images/icons/User_alt.svg";
 import crownIcon from "../../assets/images/icons/Crown.svg";
 import searchIcon from "../../assets/images/icons/Search_alt.svg";
-
-import { getLoggedInUser } from "../shared-services/get-logged-user.js";
 
 export default {
   name: "Toolbar.component",
@@ -55,8 +55,12 @@ export default {
     },
     async goToCommunity() {
       try {
-        const user = await getLoggedInUser();
-        if (user.subscription) {
+        const service = new UserApiService();
+        const user = AuthService.getCurrentUser();
+
+        const authUser = await service.getUserById(user.userId);
+
+        if (authUser.subscription === "communityplan") {
           this.$router.push("/communities");
         } else {
           this.$router.push("/subscription");

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { UserApiService } from "../service/user-api.service.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
+import {OrderApiService} from "../../commerce/orders/services/order-api.service.js";
 
 
 export default {
@@ -64,13 +66,12 @@ export default {
         icon: '',
         password: 'Loading...',
         phrase: 'Loading...',
-        order: [],
         subscription: 'false',
       },
+      orders: []
     };
   },
   methods: {
-
     showSuccess() { // Muestra un mensaje flotante (Toast) de confirmación de actualización de contraseña
       try {
         this.$refs.toast.add({
@@ -83,7 +84,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
     showFailFill() { // Muestra un mensaje flotante (Toast) de error si es que el usuario no ha llenado todos los campos del formulario
       try {
         this.$refs.toast.add({
@@ -96,45 +96,20 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-
-    showFailPassword() { // Muestra un mensaje flotante (Toast) de error si es que la contraseña es incorrecta
-      try {
-        this.$refs.toast.add({
-          severity: 'error',
-          summary: this.$t('update-password-fail'),
-          detail: this.$t('update-password-fail-details'),
-          life: 3000
-        });
-      } catch (error) {
-        console.error("Error adding toast:", error);
-      }
-    },
-
-    showFailConfirm() { // Muestra un mensaje flotante (Toast) de error si es que la nueva contraseña no coincide con "confirmar contraseña"
-      try {
-        this.$refs.toast.add({
-          severity: 'error',
-          summary: this.$t('update-confirm-fail'),
-          detail: this.$t('update-confirm-fail-details'),
-          life: 3000
-        });
-      } catch (error) {
-        console.error("Error adding toast:", error);
-      }
-    },
-
-    async InvocaAPI() { // Obtiene la información de los usuario registrados en la Fake API y asigna los valores del usuario loggeado a una variable contenedor
+    async InvocaAPI() { // Obtiene la información del usuario loggeado y asigna los valores del usuario loggeado a una variable contenedor
       const service = new UserApiService();
+      const user = AuthService.getCurrentUser();
 
       try {
-        const data = await service.getUsers();
-        this.info = data;
-        console.log("All users:", this.info);
+        const authUser = await service.getUserById(user.userId);
 
-        const loggedInUserId = await this.getLoggedInUserId();
+        if (authUser) {
+          this.user = authUser;
+          console.log("User found: ", this.user.username);
 
-        if (loggedInUserId) {
-          this.user = this.info.find(user => String(user.id) === String(loggedInUserId));
+          const orderService = new OrderApiService();
+          this.orders = await orderService.getUserOrders(this.user.id);
+
         } else {
           console.warn("No logged-in user found.");
         }
@@ -142,73 +117,38 @@ export default {
         console.error("Failed to load user data:", error);
       }
     },
-
-    async getLoggedInUserId() { // Obtiene y devuelve la id del usuario loggeado
-      try {
-        const response = await axios.get('https://livria-6efh.onrender.com/userlogin');
-        const loginEntries = response.data;
-
-        if (loginEntries.length > 0) {
-          const loggedInUserId = loginEntries[0].id;
-          console.log("Logged in user ID:", loggedInUserId);
-          return loggedInUserId;
-        } else {
-          console.warn("No user is currently logged in.");
-          return null;
-        }
-      } catch (error) {
-        console.error("Error fetching logged-in user ID:", error);
-        return null;
-      }
-    },
-
     goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
-
-    async changePassword(currentPassword, newPassword, confirmPassword) { // Permite validar los datos insertados en el formulario de cambio de contraseña y actualizar la información
-      if (!currentPassword || !newPassword || !confirmPassword) {
+    async changeInfo(display, phrase, icon) { // Permite validar los datos insertados en el formulario de cambio y actualizar la información
+      if (!display || !phrase || !icon) {
         this.showFailFill();
-        console.warn('All password fields must be filled.');
         return;
       }
-
       const service = new UserApiService();
       const freshUser = await service.getUserById(this.user.id);
       this.user = freshUser;
 
-      if (currentPassword !== this.user.password) {
-        console.warn('Current password is incorrect.');
-        this.showFailPassword();
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        this.showFailConfirm();
-        return;
-      }
-
       try {
         await service.updateUser({
           ...this.user,
-          password: newPassword
+          display: display,
+          phrase: phrase,
+          icon: icon
         });
 
         this.showSuccess();
-        this.goToLogin();
+        await this.InvocaAPI();
       } catch (error) {
-        console.error('Failed to update password:', error);
+        console.error('Failed to update info:', error);
       }
     },
-
     async deleteAccount() { // Permite al usuario borrar su cuenta de la Fake API
       const service = new UserApiService();
       this.goToLogin();
 
       try {
         await service.deleteUser(this.user.id);
-
-        await this.clearLogin();
 
         this.$refs.toast.add({
           severity: 'success',
@@ -262,35 +202,36 @@ export default {
         </pv-card>
       </div>
 
-      <div class="profile__info-half" v-if="user.order">
+      <div class="profile__info-half">
         <pv-card>
           <template #title>{{ $t('recent-orders') }}</template>
           <template #content>
-            <div v-if="user.order && user.order.length">
+            <p v-if="!orders">{{ $t('no-order') }}</p>
+            <div class="profile__info-half-orders">
               <div
                   class="same-line"
-                  v-for="order in user.order.slice().reverse()"
+                  v-for="order in orders"
                   :key="order.id"
               >
                 <p>{{ $t('order') }} #{{ order.code }}</p>
                 <div>
                   <pv-message
                       v-if="order.status === 'pending'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-accent-orange-rgb), 0.15); color: var(--color-accent-orange)"
                       aria-label="pending"
                   >
                     {{ $t('pending') }}
                   </pv-message>
                   <pv-message
                       v-if="order.status === 'in progress'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-accent-yellow-rgb), 0.15); color: var(--color-accent-yellow)"
                       aria-label="pending"
                   >
                     {{ $t('in-progress') }}
                   </pv-message>
                   <pv-message
                       v-else-if="order.status === 'delivered'"
-                      style="border-radius:6px; width: 100px; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
+                      style="border-radius:6px; width: 100px; margin-right: 0.5rem; padding: 0.3rem; background-color: rgba(var(--color-secondary-rgb), 0.15); color: var(--color-secondary)"
                       aria-label="delivered"
                   >
                     {{ $t('delivered') }}
@@ -298,7 +239,6 @@ export default {
                 </div>
               </div>
             </div>
-            <p v-else>{{ $t('no-order') }}</p>
           </template>
         </pv-card>
       </div>
@@ -326,23 +266,23 @@ export default {
             <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name" aria-label="Public / Private"/>
           </div>
 
-          <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('setting.change-pass') }}</h3>
+          <h3 class="h3__title go--orange" style="margin: 2rem 0 1rem">{{ $t('setting.change-info') }}</h3>
           <div class="same-line">
-            <p>{{ $t('passinput')}}</p>
-            <pv-password v-model="valueA" class="pas" :feedback="false" aria-label="Password input"/>
+            <p>{{ $t('displayinput')}}</p>
+            <input type="text" v-model="valueA" class="pas" aria-label="Change display name"/>
           </div>
           <div class="same-line">
-            <p>{{ $t('setting.new-password')}}</p>
-            <pv-password v-model="valueB" class="pas" :feedback="false" aria-label="New password input" />
+            <p>{{ $t('phraseinput')}}</p>
+            <input type="text" v-model="valueB" class="pas" aria-label="Change phrase" />
           </div>
           <div class="same-line">
-            <p>{{ $t('confpass')}}</p>
-            <pv-password v-model="valueC" class="pas" :feedback="false" aria-label="Confirm new password"/>
+            <p>{{ $t('icon-input')}}</p>
+            <input type="url" v-model="valueC" class="pas" aria-label="Change icon"/>
           </div>
           <div class="same-line">
             <p></p>
             <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
+            <pv-button class="buttonn" @click="changeInfo(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
           </div>
           <div class="set-options">
             <div class="buton">
@@ -436,10 +376,16 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
+  height: 100%;
 }
 
 .profile__info-half {
   flex: 0 0 45%;
+}
+
+.profile__info-half-orders {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .profile__config {
@@ -548,9 +494,11 @@ export default {
 }
 
 .pas {
-  width: 200px;
-  height: 30px;
+  width: 250px;
+  height: 35px;
   border: 2px solid #2364A0;
+  background-color: transparent;
+  color: var(--color-text);
   border-radius: 10px;
   padding: 0.5rem;
   display: flex;

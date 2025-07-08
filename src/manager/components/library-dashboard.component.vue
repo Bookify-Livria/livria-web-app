@@ -2,20 +2,21 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { BookApiService } from '../../commerce/books/services/book-api.service.js'
+import {ReviewApiService} from "../../commerce/books/services/review-api.service.js";
 
 export default {
   name: "libraryDashboard",
   setup() {
     const router = useRouter();
     const books = ref([]);
+    const reviews = ref([]);
     const genres = ref([]);
     const stats = ref({
       totalBooks: 0,
       totalGenres: 0,
       averagePrice: 0,
       mostReviewedBook: null,
-      booksInStock: 0,
-      bestSellingBook: null
+      booksInStock: 0
     });
     const loading = ref(true);
     const selectedGenre = ref('all');
@@ -32,12 +33,26 @@ export default {
       { code: 'en', name: 'English' },
     ]);
 
+    const bookReviewCounts = ref(new Map());
+
     const loadBooks = async () => {
       try {
         loading.value = true;
         const service = new BookApiService();
         const data = await service.getBooks();
         books.value = data;
+
+        const reviewsService = new ReviewApiService();
+        const allReviews = await reviewsService.getReviews();
+        reviews.value = allReviews;
+
+        const tempBookReviewCounts = new Map();
+        allReviews.forEach(review => {
+          if (review.bookId) {
+            tempBookReviewCounts.set(review.bookId, (tempBookReviewCounts.get(review.bookId) || 0) + 1);
+          }
+        });
+        bookReviewCounts.value = tempBookReviewCounts;
 
         // Extract unique genres
         const uniqueGenres = [...new Set(data.map(book => book.genre))];
@@ -54,8 +69,17 @@ export default {
     };
 
     const calculateStats = (books) => {
-      if (!books.length) return;
-
+      if (!books.length) {
+        // Reset stats if no books
+        stats.value = {
+          totalBooks: 0,
+          totalGenres: 0,
+          averagePrice: 0,
+          mostReviewedBook: null,
+          booksInStock: 0
+        };
+        return;
+      }
       stats.value.totalBooks = books.length;
       stats.value.totalGenres = [...new Set(books.map(book => book.genre))].length;
 
@@ -63,22 +87,21 @@ export default {
       const totalPrice = books.reduce((sum, book) => sum + book.salePrice, 0);
       stats.value.averagePrice = totalPrice / books.length;
 
-      // Find most reviewed book
-      let mostReviewed = books[0];
+      // Find most reviewed book using bookReviewCounts
+      let mostReviewed = null;
+      let maxReviews = -1;
+
       books.forEach(book => {
-        if ((book.reviews?.length || 0) > (mostReviewed.reviews?.length || 0)) {
+        const currentBookReviews = bookReviewCounts.value.get(book.id) || 0;
+        if (currentBookReviews > maxReviews) {
+          maxReviews = currentBookReviews;
           mostReviewed = book;
         }
       });
       stats.value.mostReviewedBook = mostReviewed;
 
       // Count books in stock
-      stats.value.booksInStock = books.filter(book => book.stock > 0).length;
-
-      // Find best selling book (mock data)
-      stats.value.bestSellingBook = books.reduce((best, current) => {
-        return (current.sales || 0) > (best.sales || 0) ? current : best;
-      }, books[0]);
+      stats.value.booksInStock = books.reduce((total, book) => total + book.stock, 0);
     };
 
     const filteredBooks = computed(() => {
@@ -138,6 +161,10 @@ export default {
       return lang ? lang.name : code;
     };
 
+    const getBookReviewCount = (bookId) => {
+      return bookReviewCounts.value.get(bookId) || 0;
+    };
+
     onMounted(() => {
       loadBooks();
     });
@@ -158,7 +185,8 @@ export default {
       languages,
       viewBook,
       closeModal,
-      getLanguageName
+      getLanguageName,
+      getBookReviewCount
     };
   }
 };
@@ -198,14 +226,7 @@ export default {
           <h3>{{ $t('dashboard.most-reviewed') }}</h3>
           <p class="stat-value long">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.mostReviewedBook">
-            {{ stats.mostReviewedBook.reviews?.length || 0 }} {{ $t('dashboard.reviews')  }}
-          </p>
-        </div>
-        <div class="stat-card">
-          <h3>{{ $t('dashboard.best-selling')  }}</h3>
-          <p class="stat-value long">{{ stats.bestSellingBook?.title || 'N/A' }}</p>
-          <p class="stat-detail" v-if="stats.bestSellingBook">
-            {{ stats.bestSellingBook.sales || 0 }} {{ $t('dashboard.copies') }}
+            {{ getBookReviewCount(stats.mostReviewedBook.id) }} {{ $t('dashboard.reviews')  }}
           </p>
         </div>
       </div>
@@ -271,11 +292,11 @@ export default {
             <p class="book-author">{{ book.author }}</p>
             <p class="book-price">S/ {{ book.salePrice.toFixed(2) }}</p>
             <div class="book-meta">
-              <span class="book-language">{{ getLanguageName(book.language) }}</span>
+              <span class="book-language" style="text-transform: capitalize">{{ getLanguageName(book.language) }}</span>
               <span class="book-stock">Stock: {{ book.stock || 0 }}</span>
             </div>
             <div class="book-reviews">
-              <span>{{ book.reviews?.length || 0 }} {{ $t('dashboard.reviews') }}</span>
+              <span>{{ getBookReviewCount(book.id) }} {{ $t('dashboard.reviews') }}</span>
             </div>
             <div class="book-actions">
               <button class="btn-edit" @click="viewBook(book)">
@@ -313,7 +334,7 @@ export default {
                 </div>
                 <div class="modal-body__right-form-group">
                   <div><strong>{{ $t(`genres.${currentBook.genre}`) || currentBook.genre }}</strong></div>
-                  <div>{{ getLanguageName(currentBook.language) }}</div>
+                  <div style="text-transform: capitalize">{{ getLanguageName(currentBook.language) }}</div>
                 </div>
               </div>
               <div class="modal-body__right-form-group">
@@ -450,15 +471,16 @@ export default {
 }
 
 .stats-container {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
   margin-bottom: 2.5rem;
 }
 
 .stat-card {
   background-color: rgba(var(--color-secondary-rgb), 0.15);
   border-radius: 12px;
+  width: 300px;
   padding: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -739,21 +761,6 @@ export default {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   color: var(--color-text);
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
-}
-
-.error-message {
-  color: #e53935;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-  display: block;
 }
 
 .modal-footer {

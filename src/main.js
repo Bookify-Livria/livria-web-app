@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import "./assets/styles/components/variables.css";
-import "./assets/styles/components/fonts.css";
 import './styles.css'
 import App from './App.vue'
 import i18n from "./i18n.js"
@@ -26,6 +25,7 @@ import StepPanel from "primevue/steppanel";
 import StepPanels from "primevue/steppanels";
 import Step from "primevue/step";
 import InputOtp from "primevue/inputotp";
+import Chart from "primevue/chart";
 
 import router from "./router/index.js";
 
@@ -54,7 +54,8 @@ app
     .component("pv-step-panel", StepPanel)
     .component("pv-step-panels", StepPanels)
     .component("pv-step", Step)
-    .component("pv-otp", InputOtp);
+    .component("pv-otp", InputOtp)
+    .component("pv-chart", Chart);
 
 
 app.mount("#app");

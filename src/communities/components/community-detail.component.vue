@@ -1,75 +1,171 @@
 <script>
 import { CommunityApiService } from "../service/community-api.service.js";
-import { getLoggedInUser } from "../../public/shared-services/get-logged-user.js";
-
-import heartIcon from "../../assets/images/icons/Favorite.svg";
-import commentIcon from "../../assets/images/icons/Chat.svg";
+import { PostApiService } from "../service/post-api.service.js";
+import AuthService from "../../public/shared-services/authentication.service.js";
 
 export default {
   name: "community-detail.component",
   components: {
-    heartIcon,
-    commentIcon
+
   },
   data() {
     return {
       community: null,
+      posts: [],
       newPost: {
         content: '',
         img: ''
+      },
+      genres: [
+        { value: 0, key: 'literature' },
+        { value: 1, key: 'non_fiction' },
+        { value: 2, key: 'fiction' },
+        { value: 3, key: 'mangas_comics' },
+        { value: 4, key: 'juvenile' },
+        { value: 5, key: 'children' },
+        { value: 6, key: 'ebooks_audiobooks' }
+      ],
+      isMember: false,
+      currentUser: null
+    }
+  },
+  computed: {
+    displayedGenreKey() { // Esta propiedad computada buscará el 'key' del género basado en 'community.type'
+      if (this.community && typeof this.community.type === 'number') {
+        const foundGenre = this.genres.find(genre => genre.value === this.community.type);
+        return foundGenre ? foundGenre.key : 'fiction';
       }
+      return '';
+    },
+    buttonText() {
+      return this.isMember ? this.$t("comm.leave") : this.$t("comm.join");
     }
   },
   methods: {
-    loadCommunity() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
+    getMembershipLocalStorageKey(communityId, userId) {
+      return `community_member_${communityId}_${userId}`;
+    },
+    loadInfo() { // Permite cargar la información almacenada para comunidades dentro de la Fake API
       const service = new CommunityApiService();
       const communityTitle = this.$route.params.name
 
       service.getCommunities().then(data => {
-        this.community = data.find(b => b.name.toString().toLowerCase() === communityTitle.toLowerCase())
+        this.community = data.find(b => b.name.toString().toLowerCase() === communityTitle.toLowerCase());
+
+        if (this.community && this.community.id) {
+          const communityId = this.community.id;
+          const derived = new PostApiService();
+
+          derived.getPosts().then(postsData => {
+            this.posts = postsData.filter(post => post.communityId === communityId);
+          }).catch(error => {
+            console.error('Error loading posts:', error);
+          });
+
+          this.currentUser = AuthService.getCurrentUser();
+
+          if (this.currentUser && this.currentUser.userId) {
+            const localStorageKey = this.getMembershipLocalStorageKey(communityId, this.currentUser.userId);
+            const storedMembership = localStorage.getItem(localStorageKey);
+
+            if (storedMembership !== null) { // Check if a value exists
+              this.isMember = JSON.parse(storedMembership); // Parse the stored boolean
+              console.log(`Membership status loaded from localStorage: ${this.isMember}`);
+            } else {
+              // If nothing in localStorage, assume not a member by default for this user/community
+              this.isMember = false;
+              console.warn('No membership status found in localStorage for this user/community. Defaulting to not a member.');
+            }
+          } else {
+            this.isMember = false; // Not logged in, so definitely not a member
+            console.warn('User not logged in. Cannot check or store membership status.');
+          }
+
+        } else {
+          console.warn('Community not found:', this.community);
+        }
       }).catch(error => {
-        console.error('Error loading community:', error)
-      })
+        console.error('Error loading community:', error);
+      });
 
     },
-    async makePost() { // Permite registrar una publicación con la información del usuario loggeado
+    isValidUrl(string) {
       try {
-        const service = new CommunityApiService();
-        const currentUser = await getLoggedInUser();
+        new URL(string);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    async handleCommunityAction() {
+      if (!this.currentUser || !this.currentUser.userId) {
+        console.warn('User not logged in. Cannot perform community action.');
+        return;
+      }
 
-        if (!this.newPost.content.trim()) {
+      const communityService = new CommunityApiService();
+      const communityId = this.community.id;
+      const userClientId = this.currentUser.userId;
+      const localStorageKey = this.getMembershipLocalStorageKey(communityId, userClientId);
+
+      try {
+        if (this.isMember) {
+          await communityService.leaveCommunity(communityId, userClientId);
+          this.isMember = false; // Update state
+          localStorage.setItem(localStorageKey, JSON.stringify(false));
+          console.log('Successfully left community and updated localStorage.');
+        } else {
+          await communityService.joinCommunity(communityId, userClientId);
+          this.isMember = true; // Update state
+          localStorage.setItem(localStorageKey, JSON.stringify(true));
+          console.log('Successfully joined community and updated localStorage.');
+        }
+      } catch (error) {
+        console.error('Error performing community action:', error);
+      }
+    },
+    async makePost() {
+      try {
+        const derived = new PostApiService();
+        const currentUser = AuthService.getCurrentUser();
+
+        if (!this.community || !this.community.id || !currentUser || !currentUser.username) {
+          console.error('Missing community ID or currentUser username:', this.community, currentUser);
+          return;
+        }
+        if (!this.newPost.content || !this.newPost.content.trim()) {
+          return;
+        }
+        if (!this.isValidUrl(this.newPost.img)) {
           return;
         }
 
-        const newId = this.community.posts?.length
-            ? String(Math.max(...this.community.posts.map(p => parseInt(p.id))) + 1)
-            : "1";
+        console.log('Community ID for post:', this.community.id);
+        console.log('Current User Username for post:', currentUser.username);
 
-        const newPost = {
-          id: newId,
-          username: currentUser.user,
+        const payloadToSend = {
+          username: currentUser.username,
           content: this.newPost.content,
           img: this.newPost.img
         };
 
-        const updatedCommunity = {
-          ...this.community,
-          posts: [...(this.community.posts || []), newPost]
-        };
+        const createdPost = await derived.createPost(payloadToSend, this.community.id);
 
-        await service.updateCommunity(updatedCommunity);
+        if (createdPost && createdPost.id) {
+          this.posts.push(createdPost);
+          this.newPost.content = '';
+          this.newPost.img = '';
 
-        this.community.posts.push(newPost);
-        this.newPost.content = '';
-        this.newPost.img = '';
-
+        } else {
+          console.error('Backend did not return a valid post object:', createdPost);
+        }
       } catch (error) {
-        console.error('Error posting!!!', error);
+        console.error('Error posting:', error); // Changed from 'Error posting!!!' for clarity
       }
     }
   },
-  mounted() { // AL iniciar el componente, automáticamente se carga la información de comunidades en la Fake API
-    this.loadCommunity();
+  mounted() { // Al iniciar el componente, automáticamente se carga la información de comunidades en la Fake API
+    this.loadInfo();
   }
 }
 </script>
@@ -88,9 +184,15 @@ export default {
     <main class="community__content">
       <header class="title__container">
         <h1 class="h1__title">{{ community.name }}</h1>
-        <h2 class="h2__title">{{ community.type }}</h2>
+        <h2 class="h2__title">{{ $t(`genres.${displayedGenreKey}`) }}</h2>
         <p>{{ community.description }}</p>
-        <button class="title__container-btn" aria-label="Join community">{{ $t("comm.join")}}</button>
+        <button
+            class="title__container-btn"
+            @click="handleCommunityAction()"
+            :aria-label="buttonText"
+        >
+          {{ buttonText }}
+        </button>
       </header>
 
       <section class="community__content-interaction">
@@ -104,7 +206,7 @@ export default {
 
         <div class="community__content-tweets">
           <article
-              v-for="post in community.posts.slice().reverse()"
+              v-for="post in this.posts.slice().reverse()"
               :key="post.id"
               class="community__tweets-post"
           >
