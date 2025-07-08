@@ -189,7 +189,7 @@
     "username": "Solo letras o números (máx. 20 caracteres).",
     "url": "Debe ser un enlace válido.",
     "email": "Correo electrónico no válido.",
-    "password-length": "Debe tener al menos 6 caracteres."
+    "password-length": "Debe tener al menos 8 caracteres."
     
   },
 
