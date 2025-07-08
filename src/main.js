@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import "./assets/styles/components/variables.css";
-import "./assets/styles/components/fonts.css";
 import './styles.css'
 import App from './App.vue'
 import i18n from "./i18n.js"
