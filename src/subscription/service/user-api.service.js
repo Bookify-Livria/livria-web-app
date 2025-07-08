@@ -84,14 +84,4 @@ export class UserApiService {
             });
     }
 
-    //logged-in user
-    getLoggedInUser() {
-        return axios.get('https://livria-6efh.onrender.com/userLogin')
-            .then(response => response.data)
-            .catch(error => {
-                console.error('Error fetching logged-in users:', error);
-                throw error;
-            });
-    }
-
 }

@@ -59,7 +59,7 @@ export default {
         genres.value = uniqueGenres;
 
         // Calculate statistics
-        calculateStats(booksData, bookReviewCounts.value);
+        calculateStats(data);
 
         loading.value = false;
       } catch (error) {
@@ -68,38 +68,41 @@ export default {
       }
     };
 
-    const calculateStats = (booksToProcess, reviewCountsMap) => {
-      if (!booksToProcess.length) return;
-
-      stats.value.totalBooks = booksToProcess.length;
-      stats.value.totalGenres = [...new Set(booksToProcess.map(book => book.genre))].length;
+    const calculateStats = (books) => {
+      if (!books.length) {
+        // Reset stats if no books
+        stats.value = {
+          totalBooks: 0,
+          totalGenres: 0,
+          averagePrice: 0,
+          mostReviewedBook: null,
+          booksInStock: 0
+        };
+        return;
+      }
+      stats.value.totalBooks = books.length;
+      stats.value.totalGenres = [...new Set(books.map(book => book.genre))].length;
 
       // Calculate average salePrice
-      const totalPrice = booksToProcess.reduce((sum, book) => sum + book.salePrice, 0);
-      stats.value.averagePrice = totalPrice / booksToProcess.length;
+      const totalPrice = books.reduce((sum, book) => sum + book.salePrice, 0);
+      stats.value.averagePrice = totalPrice / books.length;
 
-      // Find most reviewed book
-      let mostReviewedBookCandidate = null;
+      // Find most reviewed book using bookReviewCounts
+      let mostReviewed = null;
       let maxReviews = -1;
 
-      booksToProcess.forEach(book => {
-        // Get the review count for the current book from the pre-calculated map
-        const currentReviewsCount = reviewCountsMap.get(book.id) || 0;
-
-        if (currentReviewsCount > maxReviews) {
-          maxReviews = currentReviewsCount;
-          mostReviewedBookCandidate = book;
+      books.forEach(book => {
+        const currentBookReviews = bookReviewCounts.value.get(book.id) || 0;
+        if (currentBookReviews > maxReviews) {
+          maxReviews = currentBookReviews;
+          mostReviewed = book;
         }
       });
-      stats.value.mostReviewedBook = mostReviewedBookCandidate;
+      stats.value.mostReviewedBook = mostReviewed;
 
       // Count books in stock
-      stats.value.booksInStock = booksToProcess.reduce((total, book) => total + book.stock, 0);
+      stats.value.booksInStock = books.reduce((total, book) => total + book.stock, 0);
     };
-
-    const getBookReviewCount = (bookId) => {
-      return bookReviewCounts.value.get(bookId) || 0;
-    }
 
     const filteredBooks = computed(() => {
       let filtered = [...books.value];
@@ -143,11 +146,7 @@ export default {
     });
 
     const viewBook = (book) => {
-      const reviewCount = getBookReviewCount(book.id);
-      currentBook.value = {
-        ...book,
-        reviewsCount: reviewCount
-      };
+      currentBook.value = { ...book };
       showEditModal.value = true;
       formErrors.value = {};
     };
@@ -160,6 +159,10 @@ export default {
     const getLanguageName = (code) => {
       const lang = languages.value.find(lang => lang.code === code);
       return lang ? lang.name : code;
+    };
+
+    const getBookReviewCount = (bookId) => {
+      return bookReviewCounts.value.get(bookId) || 0;
     };
 
     onMounted(() => {
@@ -223,7 +226,7 @@ export default {
           <h3>{{ $t('dashboard.most-reviewed') }}</h3>
           <p class="stat-value long">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.mostReviewedBook">
-            {{ getBookReviewCount(stats.mostReviewedBook.id) }} {{ $t('dashboard.reviews') }}
+            {{ getBookReviewCount(stats.mostReviewedBook.id) }} {{ $t('dashboard.reviews')  }}
           </p>
         </div>
       </div>

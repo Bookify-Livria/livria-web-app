@@ -125,7 +125,7 @@
     "not-status": "Notificaciones de estado de pedido",
     "not-email": "Notificaciones por correo",
     "visibility": "Visibilidad del perfil",
-    "current-password": "Cambiar contraseña",
+    "change-info": "Editar información de usuario",
     "new-password": "Nueva contraseña"
   },
 
@@ -214,8 +214,8 @@
   "register-success": "Registro exitoso",
   "register-success-details": "¡Bienvenido a Livria!",
 
-  "update-success": "Contraseña actualizada exitosamente",
-  "update-success-details": "La contraseña ha sido actualizada.",
+  "update-success": "Info actualizada exitosamente",
+  "update-success-details": "La info ha sido actualizada.",
   "update-fill-fail": "Debe llenar todos los campos",
   "update-fill-fail-details": "Error: debe llenar todos los campos del formulario",
   "update-password-fail": "Contraseña incorrecta",

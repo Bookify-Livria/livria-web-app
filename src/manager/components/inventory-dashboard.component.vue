@@ -22,7 +22,6 @@ export default {
       searchQuery: '',
       showEditModal: false,
       currentBook: null,
-      newStock: 0,
       formErrors: {},
       admin: null,
       // Language options
@@ -115,26 +114,28 @@ export default {
       const quantityToAdd = parseInt(book.newStock);
 
       if (isNaN(quantityToAdd) || quantityToAdd <= 0) {
+        this.$toast.add({severity:'warn', summary: 'Warning', detail:this.$t('purchase.invalid-quantity'), life:3000});
         return;
       }
-        const amount = this.getAmount(book);
 
-        console.log(this.admin.capital)
-        console.log(amount)
+      const amount = book.purchasePrice * quantityToAdd;
 
-        if (this.admin.capital < amount) {
-          this.$toast.add({severity:'error', summary: 'Error', detail:this.$t('purchase.no-money'), life:5000});
-          return;
-        }
+      if (this.admin.capital < amount) {
+        this.$toast.add({severity:'error', summary: 'Error', detail:this.$t('purchase.no-money'), life:5000});
+        return;
+      }
 
       try {
         const service = new BookApiService();
         const newTotalStock = book.stock + quantityToAdd;
 
         await service.updateStockByBookId(book.id, newTotalStock);
-
         book.stock = newTotalStock;
         book.newStock = 0;
+
+        if (this.admin) {
+          this.admin.capital -= amount;
+        }
 
       } catch (error) {
         console.error(`Error al actualizar el stock de "${book.title}":`, error);

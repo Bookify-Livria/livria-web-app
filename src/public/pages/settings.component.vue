@@ -97,22 +97,6 @@ export default {
       this.profileErrors = errors;
       return Object.keys(errors).length === 0;
     },
-    validatePasswordForm() { // Valida que se ingresen los valores correctos de contraseña
-      const errors = {};
-      if (!this.passwordForm.currentPassword) {
-        errors.currentPassword = 'La contraseña actual es obligatoria';
-      }
-      if (!this.passwordForm.newPassword) {
-        errors.newPassword = 'La nueva contraseña es obligatoria';
-      } else if (this.passwordForm.newPassword.length < 8) {
-        errors.newPassword = 'La contraseña debe tener al menos 8 caracteres';
-      }
-      if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
-        errors.confirmPassword = 'Las contraseñas no coinciden';
-      }
-      this.passwordErrors = errors;
-      return Object.keys(errors).length === 0;
-    },
     async saveProfile() { // Actualiza los datos del administrador
       if (!this.validateProfileForm()) {
         this.saveStatus = 'error';
@@ -144,39 +128,6 @@ export default {
         }, 3000);
       } catch (error) {
         console.error("Error saving profile:", error);
-        this.saveStatus = 'error';
-      } finally {
-        this.loading = false;
-      }
-    },
-    async changePassword() { // Permite y realiza el cambio de contraseña
-      if (!this.validatePasswordForm()) {
-        this.saveStatus = 'error';
-        return;
-      }
-      try {
-        this.loading = true;
-        const userApiService = new UserApiService();
-
-        const updatedAdminData = {
-          ...this.admin,
-          password: this.passwordForm.newPassword
-        };
-
-        await userApiService.updateAdminUser(updatedAdminData);
-
-        this.saveStatus = 'success';
-        this.passwordForm.currentPassword = '';
-        this.passwordForm.newPassword = '';
-        this.passwordForm.confirmPassword = '';
-        this.showChangePassword = false;
-        this.passwordErrors = {};
-
-        setTimeout(() => {
-          this.saveStatus = '';
-        }, 3000);
-      } catch (error) {
-        console.error("Error changing password:", error);
         this.saveStatus = 'error';
       } finally {
         this.loading = false;
@@ -327,65 +278,11 @@ export default {
               </div>
 
               <div class="form-actions">
-                <button class="btn-password" @click="showChangePassword = !showChangePassword">
-                  {{ $t('dashboard-settings.change-password') }}
-                </button>
                 <button class="btn-save" @click="saveProfile" :disabled="loading">
                   <i class="pi pi-save" v-if="!loading"></i>
                   <i class="pi pi-spin pi-spinner" v-else></i>
                   {{ $t('dashboard-settings.save') }}
                 </button>
-              </div>
-
-              <div v-if="showChangePassword" class="password-form">
-                <div class="same-line">
-                  <div class="form-group">
-                    <label for="current-password">{{ $t('dashboard-settings.current-password') }}:</label>
-                    <input
-                        type="password"
-                        id="current-password"
-                        v-model="passwordForm.currentPassword"
-                        class="form-control"
-                        :class="{ 'error': passwordErrors.currentPassword }"
-                    />
-                    <span class="error-message" v-if="passwordErrors.currentPassword">{{ passwordErrors.currentPassword }}</span>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="new-password">{{ $t('dashboard-settings.new-password') }}:</label>
-                    <input
-                        type="password"
-                        id="new-password"
-                        v-model="passwordForm.newPassword"
-                        class="form-control"
-                        :class="{ 'error': passwordErrors.newPassword }"
-                    />
-                    <span class="error-message" v-if="passwordErrors.newPassword">{{ passwordErrors.newPassword }}</span>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="confirm-password">{{ $t('dashboard-settings.confirm-password') }}:</label>
-                    <input
-                        type="password"
-                        id="confirm-password"
-                        v-model="passwordForm.confirmPassword"
-                        class="form-control"
-                        :class="{ 'error': passwordErrors.confirmPassword }"
-                    />
-                    <span class="error-message" v-if="passwordErrors.confirmPassword">{{ passwordErrors.confirmPassword }}</span>
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button class="btn-cancel" @click="showChangePassword = false">
-                    {{ $t('dashboard-settings.cancel') }}
-                  </button>
-                  <button class="btn-save" @click="changePassword" :disabled="loading">
-                    <i class="pi pi-check" v-if="!loading"></i>
-                    <i class="pi pi-spin pi-spinner" v-else></i>
-                    {{ $t('dashboard-settings.update-password') }}
-                  </button>
-                </div>
               </div>
             </div>
 

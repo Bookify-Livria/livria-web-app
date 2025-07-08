@@ -207,13 +207,6 @@ export default {
         labels: sortedDates, // Dates for X-axis
         datasets: [
           {
-            label: 'Capital',
-            data: capitalLineData,
-            fill: false,
-            borderColor: 'rgba(75, 192, 192, 1)', // Greenish
-            tension: 0.1
-          },
-          {
             label: 'Ganancias por Órdenes',
             data: incomeLineData,
             fill: false,

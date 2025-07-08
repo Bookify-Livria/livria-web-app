@@ -129,7 +129,7 @@
     "not-status": "Allow notifications for order status",
     "not-email": "Allow email notifications",
     "visibility": "Profile visibility",
-    "change-pass": "Change password",
+    "change-info": "Change user information",
     "new-password": "New password"
   },
 
@@ -217,8 +217,8 @@
   "register-success": "Register success",
   "register-success-details": "Welcome to Livria!",
 
-  "update-success": "Password updated successfully",
-  "update-success-details": "Password has been updated.",
+  "update-success": "Info updated successfully",
+  "update-success-details": "Info has been updated.",
   "update-fill-fail": "Must fill all camps",
   "update-fill-fail-details": "Error: fill all form camps",
   "update-password-fail": "Wrong password",

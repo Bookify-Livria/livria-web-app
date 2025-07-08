@@ -96,30 +96,6 @@ export default {
         console.error("Error adding toast:", error);
       }
     },
-    showFailPassword() { // Muestra un mensaje flotante (Toast) de error si es que la contraseña es incorrecta
-      try {
-        this.$refs.toast.add({
-          severity: 'error',
-          summary: this.$t('update-password-fail'),
-          detail: this.$t('update-password-fail-details'),
-          life: 3000
-        });
-      } catch (error) {
-        console.error("Error adding toast:", error);
-      }
-    },
-    showFailConfirm() { // Muestra un mensaje flotante (Toast) de error si es que la nueva contraseña no coincide con "confirmar contraseña"
-      try {
-        this.$refs.toast.add({
-          severity: 'error',
-          summary: this.$t('update-confirm-fail'),
-          detail: this.$t('update-confirm-fail-details'),
-          life: 3000
-        });
-      } catch (error) {
-        console.error("Error adding toast:", error);
-      }
-    },
     async InvocaAPI() { // Obtiene la información del usuario loggeado y asigna los valores del usuario loggeado a una variable contenedor
       const service = new UserApiService();
       const user = AuthService.getCurrentUser();
@@ -144,38 +120,27 @@ export default {
     goToLogin() { // Permite al usuario acceder a la ruta de "Login"
       this.$router.push('/login');
     },
-    async changePassword(currentPassword, newPassword, confirmPassword) { // Permite validar los datos insertados en el formulario de cambio de contraseña y actualizar la información
-      if (!currentPassword || !newPassword || !confirmPassword) {
+    async changeInfo(display, phrase, icon) { // Permite validar los datos insertados en el formulario de cambio y actualizar la información
+      if (!display || !phrase || !icon) {
         this.showFailFill();
-        console.warn('All password fields must be filled.');
         return;
       }
-
       const service = new UserApiService();
       const freshUser = await service.getUserById(this.user.id);
       this.user = freshUser;
 
-      if (currentPassword !== this.user.password) {
-        console.warn('Current password is incorrect.');
-        this.showFailPassword();
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        this.showFailConfirm();
-        return;
-      }
-
       try {
         await service.updateUser({
           ...this.user,
-          password: newPassword
+          display: display,
+          phrase: phrase,
+          icon: icon
         });
 
         this.showSuccess();
-        this.goToLogin();
+        await this.InvocaAPI();
       } catch (error) {
-        console.error('Failed to update password:', error);
+        console.error('Failed to update info:', error);
       }
     },
     async deleteAccount() { // Permite al usuario borrar su cuenta de la Fake API
@@ -301,23 +266,23 @@ export default {
             <pv-select-button v-model="value4" :default-value="value4" :options="options4" optionLabel="name" aria-label="Public / Private"/>
           </div>
 
-          <h3 class="h3__title go--orange" style="margin-bottom: 0">{{ $t('setting.change-pass') }}</h3>
+          <h3 class="h3__title go--orange" style="margin: 2rem 0 1rem">{{ $t('setting.change-info') }}</h3>
           <div class="same-line">
-            <p>{{ $t('passinput')}}</p>
-            <pv-password v-model="valueA" class="pas" :feedback="false" aria-label="Password input"/>
+            <p>{{ $t('displayinput')}}</p>
+            <input type="text" v-model="valueA" class="pas" aria-label="Change display name"/>
           </div>
           <div class="same-line">
-            <p>{{ $t('setting.new-password')}}</p>
-            <pv-password v-model="valueB" class="pas" :feedback="false" aria-label="New password input" />
+            <p>{{ $t('phraseinput')}}</p>
+            <input type="text" v-model="valueB" class="pas" aria-label="Change phrase" />
           </div>
           <div class="same-line">
-            <p>{{ $t('confpass')}}</p>
-            <pv-password v-model="valueC" class="pas" :feedback="false" aria-label="Confirm new password"/>
+            <p>{{ $t('icon-input')}}</p>
+            <input type="url" v-model="valueC" class="pas" aria-label="Change icon"/>
           </div>
           <div class="same-line">
             <p></p>
             <pv-toast ref="toast"  position="top-right" style="margin-top: 2rem" />
-            <pv-button class="buttonn" @click="changePassword(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
+            <pv-button class="buttonn" @click="changeInfo(valueA, valueB, valueC)" severity="warn">{{ $t('change')}}</pv-button>
           </div>
           <div class="set-options">
             <div class="buton">
@@ -529,9 +494,11 @@ export default {
 }
 
 .pas {
-  width: 200px;
-  height: 30px;
+  width: 250px;
+  height: 35px;
   border: 2px solid #2364A0;
+  background-color: transparent;
+  color: var(--color-text);
   border-radius: 10px;
   padding: 0.5rem;
   display: flex;
