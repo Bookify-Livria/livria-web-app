@@ -14,6 +14,15 @@ export class ReviewApiService {
             });
     }
 
+    getReviewsByBook(bookId) {
+        return axios.get(API_URL + `reviews/book/${bookId}`, { headers: authHeader()})
+            .then(response => ReviewAssembler.toEntitiesFromResponse(response))
+            .catch(error => {
+                console.error('Error fetching reviews:', error);
+                throw error;
+            });
+    }
+
     createReview(review) {
         const adapted = ReviewAssembler.toResource(review);
 

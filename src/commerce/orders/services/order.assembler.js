@@ -12,7 +12,7 @@ export class OrderAssembler {
                 description: "",
                 author: itemResource.bookAuthor,
                 salePrice: itemResource.bookPrice,
-                purchasePrice: 0,
+                purchasePrice: (itemResource.bookPrice)/1.65,
                 stock: 0,
                 cover: itemResource.bookCover,
                 genre: "",

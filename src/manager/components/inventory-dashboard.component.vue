@@ -416,8 +416,8 @@ export default {
 .system-info {
   background-color: rgba(var(--color-accent-yellow-rgb), 0.05);
   border-radius: 10px;
-  padding: 0.75rem 1.5rem 1.5rem;
-  margin-bottom: 3rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .filter-section {
@@ -465,6 +465,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   gap: 2rem;
+  padding-right: 3rem;
 }
 
 .mini-block {

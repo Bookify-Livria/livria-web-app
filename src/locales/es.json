@@ -439,6 +439,15 @@
     "close": "Cerrar"
   },
 
+  "dashboard-statistics": {
+    "title": "Gestión y estadísticas",
+    "subtitle": "Gestionar las ventas y las ganancias de Livria",
+    "top3": "Los tres libros más vendidos",
+    "sold-count": "{count} vendidos",
+    "genres": "Ingresos según los géneros",
+    "pitch": "Flujo de capital y operaciones"
+  },
+
   "dashboard-settings": {
     "loading": "Cargando configuración ...",
     "title": "Configuración",

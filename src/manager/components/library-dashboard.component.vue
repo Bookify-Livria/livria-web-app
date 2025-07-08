@@ -2,12 +2,14 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { BookApiService } from '../../commerce/books/services/book-api.service.js'
+import {ReviewApiService} from "../../commerce/books/services/review-api.service.js";
 
 export default {
   name: "libraryDashboard",
   setup() {
     const router = useRouter();
     const books = ref([]);
+    const reviews = ref([]);
     const genres = ref([]);
     const stats = ref({
       totalBooks: 0,
@@ -31,6 +33,8 @@ export default {
       { code: 'en', name: 'English' },
     ]);
 
+    const bookReviewCounts = ref(new Map());
+
     const loadBooks = async () => {
       try {
         loading.value = true;
@@ -38,12 +42,24 @@ export default {
         const data = await service.getBooks();
         books.value = data;
 
+        const reviewsService = new ReviewApiService();
+        const allReviews = await reviewsService.getReviews();
+        reviews.value = allReviews;
+
+        const tempBookReviewCounts = new Map();
+        allReviews.forEach(review => {
+          if (review.bookId) {
+            tempBookReviewCounts.set(review.bookId, (tempBookReviewCounts.get(review.bookId) || 0) + 1);
+          }
+        });
+        bookReviewCounts.value = tempBookReviewCounts;
+
         // Extract unique genres
         const uniqueGenres = [...new Set(data.map(book => book.genre))];
         genres.value = uniqueGenres;
 
         // Calculate statistics
-        calculateStats(data);
+        calculateStats(booksData, bookReviewCounts.value);
 
         loading.value = false;
       } catch (error) {
@@ -52,28 +68,38 @@ export default {
       }
     };
 
-    const calculateStats = (books) => {
-      if (!books.length) return;
+    const calculateStats = (booksToProcess, reviewCountsMap) => {
+      if (!booksToProcess.length) return;
 
-      stats.value.totalBooks = books.length;
-      stats.value.totalGenres = [...new Set(books.map(book => book.genre))].length;
+      stats.value.totalBooks = booksToProcess.length;
+      stats.value.totalGenres = [...new Set(booksToProcess.map(book => book.genre))].length;
 
       // Calculate average salePrice
-      const totalPrice = books.reduce((sum, book) => sum + book.salePrice, 0);
-      stats.value.averagePrice = totalPrice / books.length;
+      const totalPrice = booksToProcess.reduce((sum, book) => sum + book.salePrice, 0);
+      stats.value.averagePrice = totalPrice / booksToProcess.length;
 
       // Find most reviewed book
-      let mostReviewed = books[0];
-      books.forEach(book => {
-        if ((book.reviews?.length || 0) > (mostReviewed.reviews?.length || 0)) {
-          mostReviewed = book;
+      let mostReviewedBookCandidate = null;
+      let maxReviews = -1;
+
+      booksToProcess.forEach(book => {
+        // Get the review count for the current book from the pre-calculated map
+        const currentReviewsCount = reviewCountsMap.get(book.id) || 0;
+
+        if (currentReviewsCount > maxReviews) {
+          maxReviews = currentReviewsCount;
+          mostReviewedBookCandidate = book;
         }
       });
-      stats.value.mostReviewedBook = mostReviewed;
+      stats.value.mostReviewedBook = mostReviewedBookCandidate;
 
       // Count books in stock
-      stats.value.booksInStock = books.reduce((total, book) => total + book.stock, 0);
+      stats.value.booksInStock = booksToProcess.reduce((total, book) => total + book.stock, 0);
     };
+
+    const getBookReviewCount = (bookId) => {
+      return bookReviewCounts.value.get(bookId) || 0;
+    }
 
     const filteredBooks = computed(() => {
       let filtered = [...books.value];
@@ -117,7 +143,11 @@ export default {
     });
 
     const viewBook = (book) => {
-      currentBook.value = { ...book };
+      const reviewCount = getBookReviewCount(book.id);
+      currentBook.value = {
+        ...book,
+        reviewsCount: reviewCount
+      };
       showEditModal.value = true;
       formErrors.value = {};
     };
@@ -152,7 +182,8 @@ export default {
       languages,
       viewBook,
       closeModal,
-      getLanguageName
+      getLanguageName,
+      getBookReviewCount
     };
   }
 };
@@ -192,7 +223,7 @@ export default {
           <h3>{{ $t('dashboard.most-reviewed') }}</h3>
           <p class="stat-value long">{{ stats.mostReviewedBook?.title || 'N/A' }}</p>
           <p class="stat-detail" v-if="stats.mostReviewedBook">
-            {{ stats.mostReviewedBook.reviews?.length || 0 }} {{ $t('dashboard.reviews')  }}
+            {{ getBookReviewCount(stats.mostReviewedBook.id) }} {{ $t('dashboard.reviews') }}
           </p>
         </div>
       </div>
@@ -262,7 +293,7 @@ export default {
               <span class="book-stock">Stock: {{ book.stock || 0 }}</span>
             </div>
             <div class="book-reviews">
-              <span>{{ book.reviews?.length || 0 }} {{ $t('dashboard.reviews') }}</span>
+              <span>{{ getBookReviewCount(book.id) }} {{ $t('dashboard.reviews') }}</span>
             </div>
             <div class="book-actions">
               <button class="btn-edit" @click="viewBook(book)">
@@ -300,7 +331,7 @@ export default {
                 </div>
                 <div class="modal-body__right-form-group">
                   <div><strong>{{ $t(`genres.${currentBook.genre}`) || currentBook.genre }}</strong></div>
-                  <div>{{ getLanguageName(currentBook.language) }}</div>
+                  <div style="text-transform: capitalize">{{ getLanguageName(currentBook.language) }}</div>
                 </div>
               </div>
               <div class="modal-body__right-form-group">

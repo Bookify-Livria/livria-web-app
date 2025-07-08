@@ -14,6 +14,15 @@ export class BookApiService {
             });
     }
 
+    getBookById(Id) {
+        return axios.get(API_URL + `books/${Id}`, { headers: authHeader()})
+            .then(response => response.data)
+            .catch(error => {
+                console.error('Error getting book:', error);
+                throw error;
+            });
+    }
+
     updateBook(book) {
         return axios.put(API_URL + `books/${book.id}`, book, { headers: authHeader()})
             .catch(error => {

@@ -439,6 +439,15 @@
     "close": "Close"
   },
 
+  "dashboard-statistics": {
+    "title": "Management and Statistics",
+    "subtitle": "Manage Livria's sales and profits",
+    "top3": "Top Three Best Selling Books",
+    "sold-count": "{count} Sold",
+    "genres": "Revenue according the genres",
+    "pitch": "Capital Flow and Operations"
+  },
+
   "dashboard-settings": {
     "loading": "Loading settings ...",
     "title": "Settings",
